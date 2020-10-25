@@ -1,0 +1,66 @@
+.userBlock {
+    margin: 20px;
+    display: grid;
+    grid-template-columns: 1fr 7fr;
+    grid-template-areas: "imgAndButton rightBlock";
+
+}
+
+.imgAndButton {
+    grid-area: imgAndButton;
+    display: grid;
+    grid-template-rows: 4fr 1fr;
+    grid-template-areas: "photo"
+                         "button";
+}
+
+.rightBlock {
+    margin-left: 10px;
+    border: 1px solid gray;
+    border-radius: 20px;
+    overflow: auto;
+    grid-area: rightBlock;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: "nameAndLocation"
+                         "status";
+}
+
+.nameAndLocation {
+    grid-area: nameAndLocation;
+}
+
+.photo {
+    grid-area: photo;
+    text-align: center;
+}
+
+.photo img {
+    width: 70px;
+}
+
+.button {
+    grid-area: button;
+}
+
+.name {
+    margin: 10px;
+    float: left;
+}
+
+.status {
+    margin-left: 10px;
+    grid-area: status;
+}
+
+.location {
+    margin: 10px;
+    float: right;
+}
+
+.buttonMore {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+
