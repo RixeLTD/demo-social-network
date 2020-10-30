@@ -1,12 +1,37 @@
 import React, {useEffect} from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
-import {getUserProfile, getUserStatus, updateUserStatus} from "../../redux/profile-reducer";
+import {
+    getUserProfile,
+    getUserStatus,
+    updateProfile,
+    updateUserPhoto,
+    updateUserStatus
+} from "../../redux/profile-reducer";
 import {withRouter} from "react-router-dom";
 import {compose} from "redux";
-import {getAuthUserId, getProfile, getStatus} from "../../redux/profile-selectors";
+import {
+    getAuthUserId,
+    getIsSubmittingSuccess,
+    getProfile,
+    getProfileFormErrors,
+    getStatus
+} from "../../redux/profile-selectors";
+import Preloader from "../common/preloader/preloader";
 
-const ProfileContainer = ({match, authUserId, history, getUserProfile, getUserStatus, ...props}) => {
+const ProfileContainer = ({match, authUserId, history,
+                              getUserProfile, getUserStatus, profile,
+                              errorMessage, isSubmittingSuccess, ...props}) => {
+
+    const onUpdateUserPhoto = (event) => {
+        if (event.target.files) {
+            props.updateUserPhoto(event.target.files[0]);
+        }
+    }
+
+    const submitUpdateProfile = (values) => {
+        props.updateProfile(values);
+    }
 
     useEffect( () => {
         let userId = match.params.userId;
@@ -20,9 +45,21 @@ const ProfileContainer = ({match, authUserId, history, getUserProfile, getUserSt
         getUserStatus(userId);
     }, [authUserId, match.params.userId, getUserProfile, getUserStatus, history])
 
+
+    if (!profile) {
+        return <Preloader/>
+    }
+
     return (
         <div>
-            <Profile authUserId={authUserId} profile={props.profile} status={props.status} updateUserStatus={props.updateUserStatus} />
+            <Profile authUserId={authUserId}
+                     profile={profile}
+                     status={props.status}
+                     updateUserStatus={props.updateUserStatus}
+                     onUpdateUserPhoto={onUpdateUserPhoto}
+                     submitUpdateProfile={submitUpdateProfile}
+                     errorMessage={errorMessage}
+                     isSubmittingSuccess={isSubmittingSuccess}/>
         </div>
     )
 }
@@ -32,6 +69,8 @@ let mapStateToProps = (state) => {
         profile: getProfile(state),
         status: getStatus(state),
         authUserId: getAuthUserId(state),
+        errorMessage: getProfileFormErrors(state),
+        isSubmittingSuccess: getIsSubmittingSuccess(state),
     }
 }
 
@@ -39,6 +78,8 @@ let mapDispatchToProps = {
     getUserProfile,
     getUserStatus,
     updateUserStatus,
+    updateUserPhoto,
+    updateProfile,
 }
 
 export default compose(

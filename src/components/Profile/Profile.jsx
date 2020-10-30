@@ -6,7 +6,14 @@ const Profile = (props) => {
 
     return (
         <div>
-            <ProfileInfo authUserId={props.authUserId} profile={props.profile} status={props.status} updateUserStatus={props.updateUserStatus}/>
+            <ProfileInfo authUserId={props.authUserId}
+                         profile={props.profile}
+                         status={props.status}
+                         updateUserStatus={props.updateUserStatus}
+                         onUpdateUserPhoto={props.onUpdateUserPhoto}
+                         submitUpdateProfile={props.submitUpdateProfile}
+                         errorMessage={props.errorMessage}
+                         isSubmittingSuccess={props.isSubmittingSuccess}/>
             <MyPostsContainer/>
         </div>
     )

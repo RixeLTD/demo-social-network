@@ -9,3 +9,11 @@ export const getStatus = (state) => {
 export const getAuthUserId = (state) => {
     return state.auth.userId;
 }
+
+export const getProfileFormErrors = (state) => {
+    return state.profilePage.errorMessage;
+}
+
+export const getIsSubmittingSuccess = (state) => {
+    return state.profilePage.isSubmittingSuccess;
+}

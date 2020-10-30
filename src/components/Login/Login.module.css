@@ -1,0 +1,38 @@
+.loginBlock {
+    margin: 10px;
+}
+
+.login {
+    margin-bottom: 5px;
+}
+
+.password {
+    margin-bottom: 5px;
+}
+
+.rememberMe {
+    margin-bottom: 5px;
+}
+
+.captcha {
+    margin-bottom: 5px;
+}
+
+.captchaImage {
+    margin-bottom: 5px;
+}
+
+.required {
+    color: red;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.errorInput {
+    border: 2px solid red;
+}
+
+.formError {
+    color: red;
+    margin-top: 5px;
+}

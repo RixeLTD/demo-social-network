@@ -25,6 +25,18 @@ export const profileAPI = {
     },
     updateStatus(status) {
         return instanse.put('profile/status', {status: status}).then(response => response.data);
+    },
+    updatePhoto(file) {
+        const formData = new FormData();
+        formData.append("image", file);
+        return instanse.put('profile/photo', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => response.data);
+    },
+    updateProfile(values) {
+        return instanse.put('profile', values).then(response => response.data);
     }
 }
 
@@ -50,7 +62,7 @@ export const authAPI = {
         });
     },
     logout() {
-        return instanse.delete('auth/login');
+        return instanse.delete('auth/login').then(response => response.data);
     },
     getCaptcha() {
         return instanse.get('security/get-captcha-url').then(response => response.data.url);

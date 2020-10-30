@@ -2,20 +2,55 @@ import React from 'react';
 import classes from './Dialogs.module.css';
 import DialogItem from "./DialogItem/DialogItem";
 import Message from "./Message/Message";
-import {Field, reduxForm} from "redux-form";
+import {Formik} from "formik";
 
-let DialogsForm = (props) => {
+let DialogsFormik = (props) => {
     return (
-        <form onSubmit={props.handleSubmit}>
-            <div><Field component={'textarea'} name={'message'} placeholder={'Enter your message'}/></div>
-            <div><button type={'submit'}>Send message</button></div>
-        </form>
+        <Formik
+            initialValues={{message: ''}}
+            validate={values => {
+                const errors = {};
+                if (values.message.length > 200) {
+                    errors.message = 'text more then 200 symbols';
+                }
+                return errors;
+            }}
+            onSubmit={(values, {setSubmitting}) => {
+                setTimeout(() => {
+                    props.onSubmit(values);
+                    values.message = '';
+                    setSubmitting(false);
+                }, 400);
+            }}
+        >
+            {({
+                  values,
+                  errors,
+                  handleChange,
+                  handleSubmit,
+                  isSubmitting,
+                  /* and other goodies */
+              }) => (
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <textarea className={`${classes.newMessage} ${errors.message ? classes.errorTextarea : null}`}
+                                  cols="40"
+                                  rows="4"
+                                  name="message"
+                                  onChange={handleChange}
+                                  value={values.message}
+                                  placeholder="Enter your message"
+                        />
+                        <div className={classes.errorLength}>{errors.message}</div>
+                    </div>
+                    <button type="submit" disabled={isSubmitting || errors.message || !values.message}>
+                        Send message
+                    </button>
+                </form>
+            )}
+        </Formik>
     )
 }
-
-DialogsForm = reduxForm({
-    form: 'messageForm'
-})(DialogsForm)
 
 const Dialogs = (props) => {
 
@@ -23,8 +58,8 @@ const Dialogs = (props) => {
 
     let messagesElements = props.messagesPage.messages.map(m => <Message message={m.message} isMe={m.isMe} key={m.id}/>);
 
-    const onSubmit =(formData) => {
-        props.onMessageClickContainer(formData.message);
+    const onSubmit =(values) => {
+        props.onMessageClickContainer(values.message);
     }
 
 
@@ -35,8 +70,9 @@ const Dialogs = (props) => {
             </div>
             <div className={classes.messages}>
                 {messagesElements}
-                <DialogsForm onSubmit={onSubmit}/>
+                <DialogsFormik onSubmit={onSubmit}/>
             </div>
+
         </div>
     );
 }

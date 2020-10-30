@@ -1,51 +1,117 @@
 import React from 'react';
-import {Field, reduxForm} from "redux-form";
-import {loginUser, logoutUser} from "../../redux/auth-reduces";
-import {Input} from "../common/FormsControl/FormsControl";
-import {maxLength, required} from "../../utils/validators";
+import {Formik, useFormikContext} from 'formik';
+import {loginUser} from "../../redux/auth-reduces";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
-import classes from "./../common/FormsControl/FormsControl.module.css";
+import classes from "./Login.module.css";
+import {getIsAuth, getIsCaptcha, getLoginFormErrors} from "../../redux/auth-selectors";
 
-let LoginForm = (props) => {
+const StopSubmitting = ({errorMessage}) => {
+    const { setSubmitting } = useFormikContext();
+    React.useEffect(() => {
+        if (errorMessage) {
+            setSubmitting(false);
+        }
+    }, [errorMessage, setSubmitting]);
+    return null;
+};
+
+const LoginFormik = (props) => {
     return (
-        <form onSubmit={props.handleSubmit}>
-            <div>
-                <Field component={Input} name={'email'} type="text" placeholder={'Email'}
-                       validate={[required]}/>
-            </div>
-            <div>
-                <Field component={Input} name={'password'} type="password" placeholder={'Password'}
-                       validate={[required]}/>
-            </div>
-            { props.error && (<div className={classes.summaryFormError}>{props.error}</div>) }
-            <div>
-                <label>
-                    <Field component={Input} name={'rememberMe'} type="checkbox"/>Remember me
-                </label>
-            </div>
-            {props.isCaptcha
-                ? <div>
-                    <Field component={Input} name={'captcha'} type="text" validate={[required]} placeholder={'Captcha'}/>
-                    <div><img src={props.isCaptcha} alt=""/></div>
-                </div>
-                : null
-            }
-            <div>
-                <button type={"submit"}>Login</button>
-            </div>
-        </form>
-    )
+        <div>
+            <Formik
+                initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
+                validate={values => {
+                    const errors = {};
+                    if (!values.email) {
+                        errors.email = 'Required';
+                    } else if (
+                        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+                    ) {
+                        errors.email = 'Invalid email address';
+                    }
+                    if (!values.password) {
+                        errors.password = 'Required';
+                    }
+                    return errors;
+                }}
+                onSubmit={(values) => {
+                    props.onSubmit(values);
+                    values.captcha = "";
+                }}
+            >
+                {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      isSubmitting,
+                      /* and other goodies */
+                  }) => {
+                    return(
+                    <form onSubmit={handleSubmit}>
+                        <div className={classes.login}>
+                            <input className={errors.email ? classes.errorInput : null}
+                                   type="email"
+                                   name="email"
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   value={values.email}
+                                   placeholder="Enter your email"
+                            />
+                            <div className={classes.required}>{errors.email && touched.email && errors.email}</div>
+                        </div>
+                        <div className={classes.password}>
+                            <input className={errors.password ? classes.errorInput : null}
+                                   autoComplete="off"
+                                   type="password"
+                                   name="password"
+                                   onChange={handleChange}
+                                   onBlur={handleBlur}
+                                   value={values.password}
+                                   placeholder="Enter your password"
+                            />
+                            <div className={classes.required}>{errors.password && touched.password && errors.password}</div>
+                        </div>
+                        <div className={classes.rememberMe}>
+                            <label htmlFor="rememberMe">Remember me</label>
+                            <input
+                                type="checkbox"
+                                name="rememberMe"
+                                id="rememberMe"
+                                onChange={handleChange}
+                                value={values.rememberMe}
+                            />
+                        </div>
+                        {props.isCaptcha ?
+                            <div className={classes.captcha}>
+                                <div className={classes.captchaImage}><img src={props.isCaptcha} alt=""/></div>
+                                <input className={errors.captcha ? classes.errorInput : null}
+                                       type="text"
+                                       name="captcha"
+                                       onChange={handleChange}
+                                       onBlur={handleBlur}
+                                       value={values.captcha}
+                                       placeholder="Enter captcha"
+                                />
+                            </div> : null
+                        }
+                        <button type="submit" disabled={isSubmitting}>
+                            Login
+                        </button>
+                        <StopSubmitting errorMessage={props.errorMessage}/>
+                    </form>
+                )}}
+            </Formik>
+        </div>
+    );
 }
-
-LoginForm = reduxForm({
-    form: "loginForm",
-})(LoginForm)
 
 const Login = (props) => {
 
     const onSubmit = (formData) => {
-
         props.loginUser(formData);
     }
 
@@ -54,20 +120,21 @@ const Login = (props) => {
     }
 
     return (
-        <div>
+        <div className={classes.loginBlock}>
             <h1>Login</h1>
-            <LoginForm isAuth={props.isAuth} isCaptcha={props.isCaptcha} onSubmit={onSubmit}/>
+            <LoginFormik isAuth={props.isAuth} isCaptcha={props.isCaptcha} onSubmit={onSubmit} errorMessage={props.errorMessage}/>
+            <div className={classes.formError}>{props.errorMessage}</div>
         </div>
-
     )
 }
 
 const mapStateToProps = (state) => {
     return {
-        isAuth: state.auth.isAuth,
-        isCaptcha: state.auth.isCaptcha,
+        isAuth: getIsAuth(state),
+        isCaptcha: getIsCaptcha(state),
+        errorMessage: getLoginFormErrors(state),
     }
 
 }
 
-export default connect(mapStateToProps, {loginUser, logoutUser})(Login);
+export default connect(mapStateToProps, {loginUser})(Login);

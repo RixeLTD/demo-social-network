@@ -91,7 +91,6 @@
     float: right;
 }
 
-.messages textarea{
-    width: 100%;
-    min-height: 50px;
+.messages .newMessage {
+    resize: none;
 }

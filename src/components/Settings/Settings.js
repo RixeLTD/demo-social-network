@@ -1,12 +1,23 @@
 import React from 'react';
-// import classes from './Settings.module.css';
+import classes from './Settings.module.css';
+import {connect} from "react-redux";
 
 const Settings = (props) => {
     return (
         <div>
-            Settings
+            <button className={classes.editProfile} onClick={props.onEditProfile}>Edit profile</button>
         </div>
     );
 }
 
-export default Settings;
+const mapStateToProps = (state) => {
+    return {
+
+    }
+}
+
+const mapDispatchToProps = {
+
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);

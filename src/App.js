@@ -15,11 +15,11 @@ import {compose} from "redux";
 import {initializeApp} from "./redux/app-reduces";
 import Preloader from "./components/common/preloader/preloader";
 
-const App = ({initializeApp, initialized, ...props}) => {
+const App = ({initializeApp, initialized}) => {
 
     useEffect(() => {
         initializeApp();
-    }, [initializeApp, initialized])
+    }, [initializeApp])
 
     if (!initialized) {
         return <Preloader/>
@@ -36,17 +36,17 @@ const App = ({initializeApp, initialized, ...props}) => {
                 <Route path={'/dialogs'}>
                     <DialogsContainer/>
                 </Route>
+                <Route path={'/users'}>
+                    <UsersContainer/>
+                </Route>
+                <Route path={'/settings'}>
+                    <Settings/>
+                </Route>
                 <Route path={'/news'}>
                     <News/>
                 </Route>
                 <Route path={'/music'}>
                     <Music/>
-                </Route>
-                <Route path={'/settings'}>
-                    <Settings/>
-                </Route>
-                <Route path={'/users'}>
-                    <UsersContainer/>
                 </Route>
                 <Route path={'/login'}>
                     <Login/>

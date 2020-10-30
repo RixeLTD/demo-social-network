@@ -28,10 +28,10 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, ...props}) => {
             <Users totalUsersCount={props.totalUsersCount}
                    pageSize={pageSize}
                    onPageChanged={onPageChanged}
-                   users={props.users}
                    currentPage={currentPage}
                    followingInProgress={props.followingInProgress}
                    followUnfollow={props.followUnfollow}
+                   users={props.users}
             />
         </>
     );

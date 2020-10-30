@@ -4,9 +4,8 @@ import noImage from "../../assets/images/noImage.png";
 import {NavLink} from "react-router-dom";
 
 const User = (props) => {
-
     return (
-        <div className={classes.userBlock} key={props.key}>
+        <div className={classes.userBlock}>
             <div className={classes.imgAndButton}>
                 <div className={classes.photo}>
                     <NavLink to={"/profile/" + props.user.id}>

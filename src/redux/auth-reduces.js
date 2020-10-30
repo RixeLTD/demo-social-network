@@ -1,8 +1,8 @@
 import {authAPI} from "../api/api";
-import {stopSubmit} from "redux-form";
 
-const SET_USER_DATA = 'SET_USER_DATA';
-const SET_CAPTCHA = 'SET_CAPTCHA';
+const SET_USER_DATA = 'AUTH_SET_USER_DATA';
+const SET_CAPTCHA = 'AUTH_SET_CAPTCHA';
+const SET_ERRORS = 'AUTH_SET_ERRORS';
 
 let initialState = {
     userId: null,
@@ -11,16 +11,22 @@ let initialState = {
     userPhoto: null,
     isAuth: false,
     isCaptcha: null,
+    errorMessage: null,
 };
 
-export const setUserData = (userId, email, login, isAuth) => ({
+const setUserData = (userId, email, login, isAuth) => ({
     type: SET_USER_DATA,
     data: {userId, email, login, isAuth}
 })
 
-export const setCaptcha = (url) => ({
+const setCaptcha = (url) => ({
     type: SET_CAPTCHA,
     isCaptcha: url
+})
+
+const setLoginFormErrors = (message) => ({
+    type: SET_ERRORS,
+    message
 })
 
 const authReducer = (state = initialState, action) => {
@@ -34,6 +40,11 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...state,
                 isCaptcha: action.isCaptcha,
+            }
+        case SET_ERRORS:
+            return {
+                ...state,
+                errorMessage: action.message,
             }
         default:
             return state;
@@ -49,30 +60,34 @@ export const getUserData = () => async (dispatch) => {
     }
 }
 
+export const getCaptcha = () => async (dispatch) => {
+    let url = await authAPI.getCaptcha();
+    dispatch(setCaptcha(url));
+}
 
 export const loginUser = (formData) => async (dispatch) => {
     let response = await authAPI.login(formData.email, formData.password, formData.rememberMe, formData.captcha);
-
+    dispatch(setLoginFormErrors(null));
     if (response.data.resultCode === 0) {
         dispatch(getUserData());
-    } else if (response.data.resultCode === 10) {
-        let url = await authAPI.getCaptcha();
-        dispatch(setCaptcha(url));
+        dispatch(setCaptcha(null));
     } else {
-        let message = response.data.messages ? response.data.messages[0] : "Some error";
-        dispatch(stopSubmit("loginForm", {_error: message}));
+        if (response.data.resultCode === 10) {
+            dispatch(getCaptcha());
+        }
+        dispatch(setLoginFormErrors(response.data.messages[0]));
     }
 }
 
 export const logoutUser = () => async (dispatch) => {
-    let response = await authAPI.logout();
-
-    if (response.data.resultCode === 0) {
+    let data = await authAPI.logout();
+    if (data.resultCode === 0) {
         dispatch(setUserData(null, null, null, false));
-    } else {
-        console.log(response.data.messages)
+        dispatch(setLoginFormErrors(null));
+    }
+    if (data.resultCode === 1) {
+        dispatch(setLoginFormErrors(data.messages[0]));
     }
 }
-
 
 export default authReducer;

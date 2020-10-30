@@ -26,13 +26,15 @@ const ProfileStatus = (props) => {
         <>
             {!editMode
                 ? <div>
-                    <span onDoubleClick={props.authUserId === props.profileId ?  activateEditMode : ""}>Статус: {status}</span>
+                    <span title="Double click to change"
+                        onDoubleClick={props.authUserId === props.profileId ? activateEditMode : null}><b>Статус:</b> {status}</span>
                 </div>
                 : <div>
-                    <span>Статус: </span><input autoFocus={true}
-                                                onBlur={deactivateEditMode}
-                                                value={status}
-                                                onChange={onChangeStatus} />
+                    <span><b>Статус:</b></span><input autoFocus={true}
+                                                      onBlur={deactivateEditMode}
+                                                      value={status}
+                                                      onChange={onChangeStatus}
+                                                      />
                 </div>
             }
         </>
