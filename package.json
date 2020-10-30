@@ -2,7 +2,6 @@
   "name": "react-kabzda-1",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://rixel-social-network-react.herokuapp.com/",
   "dependencies": {
     "axios": "^0.20.0",
     "formik": "^2.2.1",
