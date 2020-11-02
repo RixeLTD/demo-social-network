@@ -1,4 +1,5 @@
 import {profileAPI} from "../api/api";
+import { setGlobalError } from "./app-reduces";
 
 const ADD_POST = "PROFILE_ADD_POST";
 const SET_USER_PROFILE = "PROFILE_SET_USER_PROFILE";
@@ -22,9 +23,9 @@ let initialState = {
 
 export const addPostCreator = (postText) => ({type: ADD_POST, postText})
 
-const setUserProfile = (profile) => ({type: SET_USER_PROFILE, profile,})
+export const setUserProfile = (profile) => ({type: SET_USER_PROFILE, profile,})
 
-const setUserStatus = (status) => ({type: SET_STATUS, status,})
+export const setUserStatus = (status) => ({type: SET_STATUS, status,})
 
 const setUserPhoto = (photos) => ({type: SET_USER_PHOTO, photos,})
 
@@ -71,24 +72,42 @@ const profileReducer = (state = initialState, action) => {
 
 export const getUserProfile = (userId) => async (dispatch) => {
     if (userId) {
-        let data = await profileAPI.getProfile(userId);
-        dispatch(setUserProfile(data));
+        try {
+            let data = await profileAPI.getProfile(userId);
+            dispatch(setUserProfile(data));
+        } catch (error) {
+            dispatch(setGlobalError(error));
+        } 
     }
 }
 
 export const getUserStatus = (userId) => async (dispatch) => {
     if (userId) {
-        let status = await profileAPI.getStatus(userId);
-        dispatch(setUserStatus(status));
+        try {
+            let status = await profileAPI.getStatus(userId);
+            dispatch(setUserStatus(status));
+        } catch (error) {
+            dispatch(setGlobalError(error));
+            setTimeout(() => {
+                dispatch(setGlobalError(null));
+            }, 3000);
+        }
     }
 }
 
 export const updateUserStatus = (status) => async (dispatch) => {
-    let response = await profileAPI.updateStatus(status);
-
-    if (response.resultCode === 0) {
-        dispatch(setUserStatus(status));
+    try {
+        let response = await profileAPI.updateStatus(status);
+        if (response.resultCode === 0) {
+            dispatch(setUserStatus(status));
+        }
+    } catch (error) {
+        dispatch(setGlobalError(error));
+        setTimeout(() => {
+            dispatch(setGlobalError(null));
+        }, 3000);
     }
+   
 }
 
 export const updateUserPhoto = (file) => async (dispatch) => {

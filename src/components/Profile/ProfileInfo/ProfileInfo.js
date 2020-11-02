@@ -4,6 +4,7 @@ import ProfileStatus from "./ProfileStatus";
 import noImage from "./../../../assets/images/noImage.png"
 import ProfileBlockForm from "./ProfileBlockForm";
 import ProfileBlock from "./ProfileBlock";
+import GlobalError from '../../common/GlobalError/GlobalError';
 
 const ProfileInfo = (props) => {
 

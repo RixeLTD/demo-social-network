@@ -1,10 +1,37 @@
 import React from 'react';
-import preloader from "../../../assets/images/preloader.gif";
+import classes from "./Preloader.module.css";
+import {connect} from "react-redux";
+import GlobalError from '../GlobalError/GlobalError';
 
-const Preloader = (props) => {
+const Preloader = ({globalError}) => {
+    
     return (
-        <img src={preloader} alt=''/>
+        <div className={classes.ldsBlock}>
+            <div className={classes.ldsDefault}>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            {/* { globalError && <GlobalError globalError={globalError}/> } */}
+        </div>
+        
     )
 }
 
-export default Preloader;
+const mapStatetoProps = (state) => {
+    return {
+        globalError: state.app.globalError,
+    }
+    
+}
+
+export default connect(mapStatetoProps)(Preloader);

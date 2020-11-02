@@ -13,7 +13,8 @@ const Profile = (props) => {
                          onUpdateUserPhoto={props.onUpdateUserPhoto}
                          submitUpdateProfile={props.submitUpdateProfile}
                          errorMessage={props.errorMessage}
-                         isSubmittingSuccess={props.isSubmittingSuccess}/>
+                         isSubmittingSuccess={props.isSubmittingSuccess}
+                         globalError={props.globalError}/>
             <MyPostsContainer/>
         </div>
     )

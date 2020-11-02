@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react';
 import Profile from "./Profile";
+import classes from "./Profile.module.css";
 import {connect} from "react-redux";
 import {
     getUserProfile,
@@ -15,13 +16,15 @@ import {
     getIsSubmittingSuccess,
     getProfile,
     getProfileFormErrors,
-    getStatus
+    getStatus,
+    getGlobalError
 } from "../../redux/profile-selectors";
-import Preloader from "../common/preloader/preloader";
+import Preloader from "../common/Preloader/Preloader";
+import GlobalError from '../common/GlobalError/GlobalError';
 
 const ProfileContainer = ({match, authUserId, history,
                               getUserProfile, getUserStatus, profile,
-                              errorMessage, isSubmittingSuccess, ...props}) => {
+                              errorMessage, isSubmittingSuccess, globalError, ...props}) => {
 
     const onUpdateUserPhoto = (event) => {
         if (event.target.files) {
@@ -38,13 +41,16 @@ const ProfileContainer = ({match, authUserId, history,
         if (!userId) {
             userId = authUserId;
             if (!userId) {
-                history.push("/login/")
+                history.push("/login/");
             }
         }
         getUserProfile(userId);
         getUserStatus(userId);
     }, [authUserId, match.params.userId, getUserProfile, getUserStatus, history])
 
+    if (globalError) {
+        return <GlobalError globalError={globalError}/>
+    }
 
     if (!profile) {
         return <Preloader/>
@@ -59,7 +65,8 @@ const ProfileContainer = ({match, authUserId, history,
                      onUpdateUserPhoto={onUpdateUserPhoto}
                      submitUpdateProfile={submitUpdateProfile}
                      errorMessage={errorMessage}
-                     isSubmittingSuccess={isSubmittingSuccess}/>
+                     isSubmittingSuccess={isSubmittingSuccess}
+                     globalError={globalError}/>
         </div>
     )
 }
@@ -71,6 +78,7 @@ let mapStateToProps = (state) => {
         authUserId: getAuthUserId(state),
         errorMessage: getProfileFormErrors(state),
         isSubmittingSuccess: getIsSubmittingSuccess(state),
+        globalError: getGlobalError(state),
     }
 }
 

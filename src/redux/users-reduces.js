@@ -1,4 +1,5 @@
 import {followAPI, usersAPI} from "../api/api";
+import { setUserProfile, setUserStatus } from "./profile-reducer";
 
 const FOLLOW_UNFOLLOW = 'USERS_FOLLOW_UNFOLLOW';
 const SET_USERS = 'USERS_SET_USERS';
@@ -76,6 +77,11 @@ export const followUnfollow = (userId, action) => async (dispatch) => {
         dispatch(followUnfollowSuccess(userId, action));
     }
     dispatch(toggleFollowing(false, userId));
+}
+
+export const clearUserProfile = () => (dispatch) =>{
+    dispatch(setUserProfile(null));
+    dispatch(setUserStatus(null));
 }
 
 export default usersReducer;
