@@ -8,10 +8,9 @@ const User = (props) => {
         <div className={classes.userBlock}>
             <div className={classes.imgAndButton}>
                 <div className={classes.photo}>
-                    <NavLink to={"/profile/" + props.user.id}>
+                    <NavLink to={"/profile/" + props.user.id} onClick={props.clearUserProfile}>
                         <img src={props.user.photos.small || noImage} alt=""/>
                     </NavLink>
-
                 </div>
                 <button disabled={props.followingInProgress.some(id => id === props.user.id)} className={classes.button}
                         onClick={() => props.user.followed

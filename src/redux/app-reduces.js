@@ -1,13 +1,19 @@
-import {getUserData} from "./auth-reduces";
+import { getUserData } from "./auth-reduces";
 
 const INITIALIZED_SUCCESS = 'APP_INITIALIZED_SUCCESS';
+const SET_GLOBAL_ERROR = 'APP_SET_GLOBAL_ERROR';
 
 let initialState = {
     initialized: false,
+    globalError: null,
 };
 
 export const initializedSuccess = () => ({
     type: INITIALIZED_SUCCESS,
+})
+
+export const setGlobalError = (error) => ({
+    type: SET_GLOBAL_ERROR, error
 })
 
 const appReducer = (state = initialState, action) => {
@@ -16,6 +22,11 @@ const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 initialized: true,
+            }
+        case SET_GLOBAL_ERROR:
+            return {
+                ...state,
+                globalError: action.error,
             }
         default:
             return state;

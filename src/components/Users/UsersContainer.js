@@ -1,8 +1,8 @@
 import {connect} from 'react-redux';
-import {requestUsers, followUnfollow} from '../../redux/users-reduces';
+import {requestUsers, followUnfollow, clearUserProfile} from '../../redux/users-reduces';
 import Users from './Users';
 import React, {useEffect} from 'react';
-import Preloader from "../common/preloader/preloader";
+import Preloader from "../common/Preloader/Preloader";
 import {compose} from "redux";
 import {
     getCurrentPage,
@@ -32,6 +32,7 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, ...props}) => {
                    followingInProgress={props.followingInProgress}
                    followUnfollow={props.followUnfollow}
                    users={props.users}
+                   clearUserProfile={props.clearUserProfile}
             />
         </>
     );
@@ -51,6 +52,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     requestUsers,
     followUnfollow,
+    clearUserProfile,
 }
 
 export default compose(
