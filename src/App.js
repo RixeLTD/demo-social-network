@@ -6,7 +6,7 @@ import News from "./components/News/News";
 import Music from "./components/Music/Music";
 import Settings from "./components/Settings/Settings";
 import UsersContainer from './components/Users/UsersContainer';
-import {Route, withRouter} from "react-router-dom";
+import {Route, withRouter, Redirect, Switch} from "react-router-dom";
 import DialogsContainer from "./components/Dialogs/DialogsContainer";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
@@ -30,27 +30,36 @@ const App = ({initializeApp, initialized}) => {
             <HeaderContainer/>
             <Navbar />
             <div className='app-wrapper-content'>
-                <Route path={'/profile/:userId?'}>
-                    <ProfileContainer/>
-                </Route>
-                <Route path={'/dialogs'}>
-                    <DialogsContainer/>
-                </Route>
-                <Route path={'/users'}>
-                    <UsersContainer/>
-                </Route>
-                <Route path={'/settings'}>
-                    <Settings/>
-                </Route>
-                <Route path={'/news'}>
-                    <News/>
-                </Route>
-                <Route path={'/music'}>
-                    <Music/>
-                </Route>
-                <Route path={'/login'}>
-                    <Login/>
-                </Route>
+                <Switch>
+                    <Route path="/" exact>
+                        <Redirect to="/profile" />
+                    </Route>
+                    <Route path="/profile/:userId?">
+                        <ProfileContainer/>
+                    </Route>
+                    <Route path="/dialogs">
+                        <DialogsContainer/>
+                    </Route>
+                    <Route path="/users">
+                        <UsersContainer/>
+                    </Route>
+                    <Route path="/settings">
+                        <Settings/>
+                    </Route>
+                    <Route path="/news">
+                        <News/>
+                    </Route>
+                    <Route path="/music">
+                        <Music/>
+                    </Route>
+                    <Route path="/login">
+                        <Login/>
+                    </Route>
+                    <Route path="*">
+                        <div>404 Not Found</div>
+                    </Route>
+                </Switch>
+
             </div>
         </div>
     );
