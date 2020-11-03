@@ -1,7 +1,6 @@
 import React from 'react';
 import classes from "./Preloader.module.css";
 import {connect} from "react-redux";
-import GlobalError from '../GlobalError/GlobalError';
 
 const Preloader = ({globalError}) => {
     

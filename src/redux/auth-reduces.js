@@ -1,4 +1,5 @@
 import {authAPI} from "../api/api";
+import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
 
 const SET_USER_DATA = 'AUTH_SET_USER_DATA';
 const SET_CAPTCHA = 'AUTH_SET_CAPTCHA';
@@ -52,41 +53,61 @@ const authReducer = (state = initialState, action) => {
 }
 
 export const getUserData = () => async (dispatch) => {
-    let data = await authAPI.auth()
-
-    if (data.resultCode === 0) {
-        let {id, email, login} = data.data;
-        dispatch(setUserData(id, email, login, true));
+    try {
+        let data = await authAPI.auth();
+        if (data.resultCode === 0) {
+            let {id, email, login} = data.data;
+            dispatch(setUserData(id, email, login, true));
+        }
+    } catch (error) {
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
     }
 }
 
 export const getCaptcha = () => async (dispatch) => {
-    let url = await authAPI.getCaptcha();
-    dispatch(setCaptcha(url));
+    try {
+        let url = await authAPI.getCaptcha();
+        dispatch(setCaptcha(url));
+    } catch (error) {
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
+    }
+
 }
 
 export const loginUser = (formData) => async (dispatch) => {
-    let response = await authAPI.login(formData.email, formData.password, formData.rememberMe, formData.captcha);
-    dispatch(setLoginFormErrors(null));
-    if (response.data.resultCode === 0) {
-        dispatch(getUserData());
-        dispatch(setCaptcha(null));
-    } else {
-        if (response.data.resultCode === 10) {
-            dispatch(getCaptcha());
+    try {
+        let response = await authAPI.login(formData.email, formData.password, formData.rememberMe, formData.captcha);
+        dispatch(setLoginFormErrors(null));
+        if (response.data.resultCode === 0) {
+            dispatch(getUserData());
+            dispatch(setCaptcha(null));
+        } else {
+            if (response.data.resultCode === 10) {
+                dispatch(getCaptcha());
+            }
+            dispatch(setLoginFormErrors(response.data.messages[0]));
         }
-        dispatch(setLoginFormErrors(response.data.messages[0]));
+    } catch (error) {
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
     }
 }
 
 export const logoutUser = () => async (dispatch) => {
-    let data = await authAPI.logout();
-    if (data.resultCode === 0) {
-        dispatch(setUserData(null, null, null, false));
-        dispatch(setLoginFormErrors(null));
-    }
-    if (data.resultCode === 1) {
-        dispatch(setLoginFormErrors(data.messages[0]));
+    try {
+        let data = await authAPI.logout();
+        if (data.resultCode === 0) {
+            dispatch(setUserData(null, null, null, false));
+            dispatch(setLoginFormErrors(null));
+        }
+        if (data.resultCode === 1) {
+            dispatch(setLoginFormErrors(data.messages[0]));
+        }
+    } catch (error) {
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
     }
 }
 

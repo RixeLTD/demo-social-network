@@ -13,7 +13,8 @@ import Login from "./components/Login/Login";
 import {connect} from "react-redux";
 import {compose} from "redux";
 import {initializeApp} from "./redux/app-reduces";
-import Preloader from "./components/common/Preloader/Preloader";
+import Preloader from "./components/common/preloader/Preloader";
+import GlobalError from "./components/common/GlobalError/GlobalError";
 
 const App = ({initializeApp, initialized}) => {
 
@@ -29,6 +30,7 @@ const App = ({initializeApp, initialized}) => {
         <div className='app-wrapper'>
             <HeaderContainer/>
             <Navbar />
+            <GlobalError />
             <div className='app-wrapper-content'>
                 <Switch>
                     <Route path="/" exact>
@@ -59,7 +61,6 @@ const App = ({initializeApp, initialized}) => {
                         <div>404 Not Found</div>
                     </Route>
                 </Switch>
-
             </div>
         </div>
     );

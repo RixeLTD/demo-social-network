@@ -117,7 +117,7 @@ const ProfileBlockForm = ({profile, disableEditMode, submitUpdateProfile, errorM
                         </div>
                     })}</div>
 
-                    <button onClick={disableEditMode}>
+                    <button type="button" onClick={disableEditMode}>
                         Cancel
                     </button>
                     <button type="submit" disabled={isSubmitting || errors.aboutMe || errors.lookingForAJobDescription}>

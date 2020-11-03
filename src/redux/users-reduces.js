@@ -1,5 +1,6 @@
 import {followAPI, usersAPI} from "../api/api";
 import { setUserProfile, setUserStatus } from "./profile-reducer";
+import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
 
 const FOLLOW_UNFOLLOW = 'USERS_FOLLOW_UNFOLLOW';
 const SET_USERS = 'USERS_SET_USERS';
@@ -61,22 +62,32 @@ export const toggleIsFetching = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFe
 export const toggleFollowing = (isFetching, userId) => ({type: TOGGLE_IS_FOLLOWING, isFetching, userId})
 
 export const requestUsers = (page, pageSize) => async (dispatch) => {
-    dispatch(setCurrentPage(page));
-    dispatch(toggleIsFetching(true));
-    let data = await usersAPI.getUsers(page, pageSize);
-    dispatch(toggleIsFetching(false));
-    dispatch(setUsers(data.items));
-    dispatch(setTotalUsersCount(data.totalCount));
+    try {
+        dispatch(setCurrentPage(page));
+        dispatch(toggleIsFetching(true));
+        let data = await usersAPI.getUsers(page, pageSize);
+        dispatch(toggleIsFetching(false));
+        dispatch(setUsers(data.items));
+        dispatch(setTotalUsersCount(data.totalCount));
+    } catch (error) {
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
+    }
 }
 
 export const followUnfollow = (userId, action) => async (dispatch) => {
-    dispatch(toggleFollowing(true, userId));
-    let data = (action === 'following') ? await followAPI.followUser(userId) : (action === 'unfollowing') ? await followAPI.unfollowUser(userId) : null;
+    try {
+        dispatch(toggleFollowing(true, userId));
+        let data = (action === 'following') ? await followAPI.followUser(userId) : (action === 'unfollowing') ? await followAPI.unfollowUser(userId) : null;
 
-    if (data.resultCode === 0) {
-        dispatch(followUnfollowSuccess(userId, action));
+        if (data.resultCode === 0) {
+            dispatch(followUnfollowSuccess(userId, action));
+        }
+        dispatch(toggleFollowing(false, userId));
+    } catch (error) {
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
     }
-    dispatch(toggleFollowing(false, userId));
 }
 
 export const clearUserProfile = () => (dispatch) =>{

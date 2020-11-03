@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import {requestUsers, followUnfollow, clearUserProfile} from '../../redux/users-reduces';
 import Users from './Users';
 import React, {useEffect} from 'react';
-import Preloader from "../common/Preloader/Preloader";
+import Preloader from "../common/preloader/Preloader";
 import {compose} from "redux";
 import {
     getCurrentPage,

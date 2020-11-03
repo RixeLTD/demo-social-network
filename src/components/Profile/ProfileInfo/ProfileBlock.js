@@ -11,7 +11,7 @@ const ProfileBlock = (props) => {
                 <div>
                     <span><b>В поисках работы:</b> </span>{props.profile.lookingForAJob ? 'YES' : 'NO'}
                 </div>
-                {props.profile.lookingForAJob &&
+                { props.profile.lookingForAJob &&
                 <div>
                     <span><b>Статус поиска работы:</b> </span>{props.profile.lookingForAJobDescription}
                 </div>
@@ -25,7 +25,6 @@ const ProfileBlock = (props) => {
             {props.ownProfile
                 ? <button onClick={props.enableEditMode}>Edit profile</button> : null}
         </div>
-
     )
 }
 

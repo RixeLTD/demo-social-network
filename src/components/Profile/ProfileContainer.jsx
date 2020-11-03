@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import Profile from "./Profile";
-import classes from "./Profile.module.css";
 import {connect} from "react-redux";
 import {
     getUserProfile,
@@ -19,7 +18,7 @@ import {
     getStatus,
     getGlobalError
 } from "../../redux/profile-selectors";
-import Preloader from "../common/Preloader/Preloader";
+import Preloader from "../common/preloader/Preloader";
 import GlobalError from '../common/GlobalError/GlobalError';
 
 const ProfileContainer = ({match, authUserId, history,

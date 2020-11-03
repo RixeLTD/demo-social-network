@@ -24,7 +24,7 @@ export const profileAPI = {
         return instanse.get(`profile/status/` + userId).then(response => response.data);
     },
     updateStatus(status) {
-        return instanse.put('profile/statuss', {status: status}).then(response => response.data);
+        return instanse.put('profile/status', {status: status}).then(response => response.data);
     },
     updatePhoto(file) {
         const formData = new FormData();

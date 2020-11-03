@@ -4,6 +4,7 @@ import noImage from "../../assets/images/noImage.png";
 import {NavLink} from "react-router-dom";
 
 const User = (props) => {
+
     return (
         <div className={classes.userBlock}>
             <div className={classes.imgAndButton}>
@@ -20,11 +21,9 @@ const User = (props) => {
             </div>
             <div className={classes.rightBlock}>
                 <div className={classes.nameAndLocation}>
-                    <span className={classes.name}>{props.user.name}</span>
-                    <span
-                        className={classes.location}>{'user.location.cityName'}, {'user.location.country'}</span>
+                    <span className={classes.name}>Name: {props.user.name}</span>
                 </div>
-                <div className={classes.status}>{props.user.status}</div>
+                <div className={classes.status}><span>Status: {props.user.status}</span></div>
             </div>
         </div>
     )

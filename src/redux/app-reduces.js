@@ -1,11 +1,13 @@
-import { getUserData } from "./auth-reduces";
+import {getUserData} from "./auth-reduces";
 
 const INITIALIZED_SUCCESS = 'APP_INITIALIZED_SUCCESS';
 const SET_GLOBAL_ERROR = 'APP_SET_GLOBAL_ERROR';
+const IS_GLOBAL_ERROR = 'APP_IS_GLOBAL_ERROR';
 
 let initialState = {
     initialized: false,
     globalError: null,
+    isVisibleGlobalError: false,
 };
 
 export const initializedSuccess = () => ({
@@ -14,6 +16,10 @@ export const initializedSuccess = () => ({
 
 export const setGlobalError = (error) => ({
     type: SET_GLOBAL_ERROR, error
+})
+
+const isVisibleGlobalErrorAC = (value) => ({
+    type: IS_GLOBAL_ERROR, value
 })
 
 const appReducer = (state = initialState, action) => {
@@ -28,6 +34,11 @@ const appReducer = (state = initialState, action) => {
                 ...state,
                 globalError: action.error,
             }
+        case IS_GLOBAL_ERROR:
+            return {
+                ...state,
+                isVisibleGlobalError: action.value,
+            }
         default:
             return state;
     }
@@ -36,6 +47,10 @@ const appReducer = (state = initialState, action) => {
 export const initializeApp = () => async (dispatch) => {
     await dispatch(getUserData());
     dispatch(initializedSuccess());
+}
+
+export const setIsVisibleGlobalError = (value) => (dispatch) => {
+    dispatch(isVisibleGlobalErrorAC(value));
 }
 
 export default appReducer;

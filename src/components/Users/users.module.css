@@ -3,7 +3,6 @@
     display: grid;
     grid-template-columns: 1fr 7fr;
     grid-template-areas: "imgAndButton rightBlock";
-
 }
 
 .imgAndButton {
@@ -51,11 +50,6 @@
 .status {
     margin-left: 10px;
     grid-area: status;
-}
-
-.location {
-    margin: 10px;
-    float: right;
 }
 
 .buttonMore {

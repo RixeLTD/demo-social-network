@@ -1,5 +1,5 @@
 import {profileAPI} from "../api/api";
-import { setGlobalError } from "./app-reduces";
+import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
 
 const ADD_POST = "PROFILE_ADD_POST";
 const SET_USER_PROFILE = "PROFILE_SET_USER_PROFILE";
@@ -76,7 +76,8 @@ export const getUserProfile = (userId) => async (dispatch) => {
             let data = await profileAPI.getProfile(userId);
             dispatch(setUserProfile(data));
         } catch (error) {
-            dispatch(setGlobalError(error));
+            dispatch(setGlobalError(error.message));
+            dispatch(setIsVisibleGlobalError(true));
         } 
     }
 }
@@ -87,10 +88,8 @@ export const getUserStatus = (userId) => async (dispatch) => {
             let status = await profileAPI.getStatus(userId);
             dispatch(setUserStatus(status));
         } catch (error) {
-            dispatch(setGlobalError(error));
-            setTimeout(() => {
-                dispatch(setGlobalError(null));
-            }, 3000);
+            dispatch(setGlobalError(error.message));
+            dispatch(setIsVisibleGlobalError(true));
         }
     }
 }
@@ -102,32 +101,44 @@ export const updateUserStatus = (status) => async (dispatch) => {
             dispatch(setUserStatus(status));
         }
     } catch (error) {
-        dispatch(setGlobalError(error));
-        setTimeout(() => {
-            dispatch(setGlobalError(null));
-        }, 3000);
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
     }
    
 }
 
 export const updateUserPhoto = (file) => async (dispatch) => {
-    let data = await profileAPI.updatePhoto(file);
-    if (data.resultCode === 0) {
-        dispatch(setUserPhoto(data.data.photos));
+    if (file) {
+        try {
+            let data = await profileAPI.updatePhoto(file);
+            if (data.resultCode === 0) {
+                dispatch(setUserPhoto(data.data.photos));
+            }
+        } catch (error) {
+            dispatch(setGlobalError(error.message));
+            dispatch(setIsVisibleGlobalError(true));
+        }
     }
+
 }
 
 export const updateProfile = (values) => async (dispatch) => {
-    dispatch(setProfileFormErrors(null))
-    let data = await profileAPI.updateProfile(values);
-    if (data.resultCode === 0) {
-        dispatch(setSubmittingSuccess(true));
-        dispatch(getUserProfile(values.userId));
-        dispatch(setSubmittingSuccess(false));
-    } else {
-        dispatch(setSubmittingSuccess(false));
-        dispatch(setProfileFormErrors(data.messages[0]));
+    try {
+        dispatch(setProfileFormErrors(null))
+        let data = await profileAPI.updateProfile(values);
+        if (data.resultCode === 0) {
+            dispatch(setSubmittingSuccess(true));
+            dispatch(getUserProfile(values.userId));
+            dispatch(setSubmittingSuccess(false));
+        } else {
+            dispatch(setSubmittingSuccess(false));
+            dispatch(setProfileFormErrors(data.messages[0]));
+        }
+    } catch (error) {
+        dispatch(setGlobalError(error.message));
+        dispatch(setIsVisibleGlobalError(true));
     }
+
 }
 
 export default profileReducer;

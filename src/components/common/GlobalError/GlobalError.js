@@ -1,20 +1,37 @@
 import React from 'react';
 import classes from "./GlobalError.module.css";
+import {connect} from "react-redux";
+import {setGlobalError, setIsVisibleGlobalError} from "../../../redux/app-reduces";
 
-const GlobalError = (props) => {
+const GlobalError = ({isVisibleGlobalError, globalError, setIsVisibleGlobalError}) => {
+
+    const onClickButton = () => {
+        setIsVisibleGlobalError(false);
+        setGlobalError(null);
+    }
 
     return (
-        <div>
-            <button class={classes.toggleButton} id={classes.centeredToggleButton}>Toggle</button>
-            <div class={classes.modal} id={classes.modal}>
-                <h2>Modal Window</h2>
-                <div class={classes.content}>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis deserunt corrupti, ut fugit magni qui quasi nisi amet repellendus non fuga omnis a sed impedit explicabo accusantium nihil doloremque consequuntur.</div>
-                <div class={classes.actions}>
-                    <button class={classes.toggleButton}>OK</button>
+        <>
+        { isVisibleGlobalError ? <div className={classes.modal}>
+                <div className={classes.content}>{globalError}</div>
+                <div className={classes.actions}>
+                    <button className={classes.toggleButton} onClick={onClickButton}>X</button>
                 </div>
-            </div>
-        </div>
+            </div> : null
+        }
+        </>
     )
 }
 
-export default GlobalError;
+const mapStateToProps = (state) => {
+    return {
+        globalError: state.app.globalError,
+        isVisibleGlobalError: state.app.isVisibleGlobalError,
+    }
+}
+
+const mapDispatchToProps = {
+    setIsVisibleGlobalError,
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalError);
