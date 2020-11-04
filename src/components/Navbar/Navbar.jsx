@@ -3,17 +3,18 @@ import classes from './Navbar.module.css';
 import FriendsBar from "./FriendsBar/FriendsBar";
 import {NavLink} from "react-router-dom";
 import { connect } from 'react-redux';
-import {clearUserProfile} from '../../redux/users-reduces';
 import { getAuthUserId, getProfile } from '../../redux/profile-selectors';
+import {setUserProfile, setUserStatus} from "../../redux/profile-reducer";
 
-const Navbar = ({profile, authUserId, clearUserProfile, ...props}) => {
+const Navbar = ({profile, authUserId, setUserProfile, setUserStatus}) => {
 
     return (
         <nav className={classes.nav}>
             <div className={classes.item}>
                 <NavLink to={'/profile/'} activeClassName={classes.active} onClick={ () => {
                     if (profile && profile.userId !== authUserId) {
-                        clearUserProfile();
+                        setUserProfile(null);
+                        setUserStatus(null);
                     }
                 }}>Profile</NavLink>
             </div>
@@ -48,7 +49,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-    clearUserProfile,
+    setUserProfile,
+    setUserStatus,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

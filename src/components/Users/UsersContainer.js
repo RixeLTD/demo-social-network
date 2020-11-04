@@ -1,5 +1,6 @@
 import {connect} from 'react-redux';
-import {requestUsers, followUnfollow, clearUserProfile} from '../../redux/users-reduces';
+import {requestUsers, followUnfollow} from '../../redux/users-reduces';
+import {setUserProfile, setUserStatus} from "../../redux/profile-reducer";
 import Users from './Users';
 import React, {useEffect} from 'react';
 import Preloader from "../common/preloader/Preloader";
@@ -12,7 +13,7 @@ import {
     getTotalUsersCount, getUsers
 } from "../../redux/users-selectors";
 
-const UsersContainer = ({requestUsers, currentPage, pageSize, ...props}) => {
+const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, setUserStatus, ...props}) => {
 
     useEffect(() => {
         requestUsers(currentPage, pageSize);
@@ -20,6 +21,11 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, ...props}) => {
 
     const onPageChanged = (pageNumber) => {
         requestUsers(pageNumber, pageSize);
+    }
+
+    const clearUserProfile = () => {
+        setUserProfile(null);
+        setUserStatus(null);
     }
 
     return (
@@ -32,7 +38,7 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, ...props}) => {
                    followingInProgress={props.followingInProgress}
                    followUnfollow={props.followUnfollow}
                    users={props.users}
-                   clearUserProfile={props.clearUserProfile}
+                   clearUserProfile={clearUserProfile}
             />
         </>
     );
@@ -52,7 +58,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     requestUsers,
     followUnfollow,
-    clearUserProfile,
+    setUserProfile,
+    setUserStatus,
 }
 
 export default compose(

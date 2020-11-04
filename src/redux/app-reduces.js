@@ -18,7 +18,7 @@ export const setGlobalError = (error) => ({
     type: SET_GLOBAL_ERROR, error
 })
 
-const isVisibleGlobalErrorAC = (value) => ({
+export const setIsVisibleGlobalError = (value) => ({
     type: IS_GLOBAL_ERROR, value
 })
 
@@ -47,10 +47,6 @@ const appReducer = (state = initialState, action) => {
 export const initializeApp = () => async (dispatch) => {
     await dispatch(getUserData());
     dispatch(initializedSuccess());
-}
-
-export const setIsVisibleGlobalError = (value) => (dispatch) => {
-    dispatch(isVisibleGlobalErrorAC(value));
 }
 
 export default appReducer;

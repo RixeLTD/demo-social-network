@@ -56,13 +56,13 @@ const MyPosts = (props) => {
     let postsElements = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount} key={p.id}/>);
 
     const onSubmit = (values) => {
-        props.onPostClickContainer(values.post);
+        props.addPost(values.post);
     }
 
     return (
         <div className={classes.postsBlock}>
             <h3>My posts</h3>
-            <MyPostsFormik onSubmit={onSubmit}/>
+            {props.ownProfile ? <MyPostsFormik onSubmit={onSubmit}/> : null }
             <div className={classes.posts}>
                 {postsElements}
             </div>

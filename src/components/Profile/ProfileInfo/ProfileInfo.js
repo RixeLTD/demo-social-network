@@ -23,17 +23,15 @@ const ProfileInfo = (props) => {
         setEditMode(false);
     }
 
-    const ownProfile = props.authUserId === props.profile.userId;
-
     return (
         <div className={classes.descriptionBlock}>
             <div>
                 <img className={classes.userImage} src={props.profile.photos.large || noImage} alt=""/>
-                {ownProfile
+                {props.ownProfile
                     ? <div>
                         <input id={'file'} type={'file'} onChange={props.onUpdateUserPhoto}/>
                     </div> : null}
-                <ProfileStatus authUserId={props.authUserId} profileId={props.profile.userId} status={props.status}
+                <ProfileStatus ownProfile={props.ownProfile} status={props.status}
                                updateUserStatus={props.updateUserStatus}/>
             </div>
             {editMode
@@ -43,7 +41,7 @@ const ProfileInfo = (props) => {
                                 errorMessage={errorMessage}
                                 isSubmittingSuccess={props.isSubmittingSuccess}/>
             : <ProfileBlock profile={props.profile}
-                            ownProfile={ownProfile}
+                            ownProfile={props.ownProfile}
                             enableEditMode={enableEditMode}/>
             }
         </div>

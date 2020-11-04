@@ -1,5 +1,4 @@
 import {followAPI, usersAPI} from "../api/api";
-import { setUserProfile, setUserStatus } from "./profile-reducer";
 import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
 
 const FOLLOW_UNFOLLOW = 'USERS_FOLLOW_UNFOLLOW';
@@ -70,7 +69,7 @@ export const requestUsers = (page, pageSize) => async (dispatch) => {
         dispatch(setUsers(data.items));
         dispatch(setTotalUsersCount(data.totalCount));
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Request users error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
 }
@@ -85,14 +84,9 @@ export const followUnfollow = (userId, action) => async (dispatch) => {
         }
         dispatch(toggleFollowing(false, userId));
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Follow or unfollow error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
-}
-
-export const clearUserProfile = () => (dispatch) =>{
-    dispatch(setUserProfile(null));
-    dispatch(setUserStatus(null));
 }
 
 export default usersReducer;

@@ -17,7 +17,3 @@ export const getProfileFormErrors = (state) => {
 export const getIsSubmittingSuccess = (state) => {
     return state.profilePage.isSubmittingSuccess;
 }
-
-export const getGlobalError = (state) => {
-    return state.app.getGlobalError;
-}

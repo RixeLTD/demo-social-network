@@ -60,7 +60,7 @@ export const getUserData = () => async (dispatch) => {
             dispatch(setUserData(id, email, login, true));
         }
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Get auth data error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
 }
@@ -70,7 +70,7 @@ export const getCaptcha = () => async (dispatch) => {
         let url = await authAPI.getCaptcha();
         dispatch(setCaptcha(url));
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Get captcha error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
 
@@ -90,7 +90,7 @@ export const loginUser = (formData) => async (dispatch) => {
             dispatch(setLoginFormErrors(response.data.messages[0]));
         }
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Login user error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
 }
@@ -106,7 +106,7 @@ export const logoutUser = () => async (dispatch) => {
             dispatch(setLoginFormErrors(data.messages[0]));
         }
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Logout user error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
 }

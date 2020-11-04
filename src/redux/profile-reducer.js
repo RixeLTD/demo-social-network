@@ -21,7 +21,7 @@ let initialState = {
     isSubmittingSuccess: false,
 }
 
-export const addPostCreator = (postText) => ({type: ADD_POST, postText})
+export const addPost = (postText) => ({type: ADD_POST, postText})
 
 export const setUserProfile = (profile) => ({type: SET_USER_PROFILE, profile,})
 
@@ -76,7 +76,7 @@ export const getUserProfile = (userId) => async (dispatch) => {
             let data = await profileAPI.getProfile(userId);
             dispatch(setUserProfile(data));
         } catch (error) {
-            dispatch(setGlobalError(error.message));
+            dispatch(setGlobalError(`Get user profile error: ${error.message}`));
             dispatch(setIsVisibleGlobalError(true));
         } 
     }
@@ -88,7 +88,7 @@ export const getUserStatus = (userId) => async (dispatch) => {
             let status = await profileAPI.getStatus(userId);
             dispatch(setUserStatus(status));
         } catch (error) {
-            dispatch(setGlobalError(error.message));
+            dispatch(setGlobalError(`Get user status error: ${error.message}`));
             dispatch(setIsVisibleGlobalError(true));
         }
     }
@@ -101,7 +101,7 @@ export const updateUserStatus = (status) => async (dispatch) => {
             dispatch(setUserStatus(status));
         }
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Update status error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
    
@@ -115,7 +115,7 @@ export const updateUserPhoto = (file) => async (dispatch) => {
                 dispatch(setUserPhoto(data.data.photos));
             }
         } catch (error) {
-            dispatch(setGlobalError(error.message));
+            dispatch(setGlobalError(`Update user photo error: ${error.message}`));
             dispatch(setIsVisibleGlobalError(true));
         }
     }
@@ -135,7 +135,7 @@ export const updateProfile = (values) => async (dispatch) => {
             dispatch(setProfileFormErrors(data.messages[0]));
         }
     } catch (error) {
-        dispatch(setGlobalError(error.message));
+        dispatch(setGlobalError(`Update user profile error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
 

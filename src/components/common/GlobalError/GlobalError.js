@@ -3,7 +3,7 @@ import classes from "./GlobalError.module.css";
 import {connect} from "react-redux";
 import {setGlobalError, setIsVisibleGlobalError} from "../../../redux/app-reduces";
 
-const GlobalError = ({isVisibleGlobalError, globalError, setIsVisibleGlobalError}) => {
+const GlobalError = ({isVisibleGlobalError, setGlobalError, globalError, setIsVisibleGlobalError}) => {
 
     const onClickButton = () => {
         setIsVisibleGlobalError(false);
@@ -32,6 +32,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
     setIsVisibleGlobalError,
+    setGlobalError
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GlobalError);

@@ -1,8 +1,7 @@
 import React from 'react';
 import classes from "./Preloader.module.css";
-import {connect} from "react-redux";
 
-const Preloader = ({globalError}) => {
+const Preloader = () => {
     
     return (
         <div className={classes.ldsBlock}>
@@ -20,17 +19,9 @@ const Preloader = ({globalError}) => {
                 <div></div>
                 <div></div>
             </div>
-            {/* { globalError && <GlobalError globalError={globalError}/> } */}
         </div>
         
     )
 }
 
-const mapStatetoProps = (state) => {
-    return {
-        globalError: state.app.globalError,
-    }
-    
-}
-
-export default connect(mapStatetoProps)(Preloader);
+export default Preloader;

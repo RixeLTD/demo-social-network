@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import Profile from "./Profile";
 import {connect} from "react-redux";
 import {
+    addPost,
     getUserProfile,
     getUserStatus,
     updateProfile,
@@ -16,24 +17,12 @@ import {
     getProfile,
     getProfileFormErrors,
     getStatus,
-    getGlobalError
 } from "../../redux/profile-selectors";
 import Preloader from "../common/preloader/Preloader";
-import GlobalError from '../common/GlobalError/GlobalError';
 
 const ProfileContainer = ({match, authUserId, history,
                               getUserProfile, getUserStatus, profile,
-                              errorMessage, isSubmittingSuccess, globalError, ...props}) => {
-
-    const onUpdateUserPhoto = (event) => {
-        if (event.target.files) {
-            props.updateUserPhoto(event.target.files[0]);
-        }
-    }
-
-    const submitUpdateProfile = (values) => {
-        props.updateProfile(values);
-    }
+                              errorMessage, isSubmittingSuccess, ...props}) => {
 
     useEffect( () => {
         let userId = match.params.userId;
@@ -47,17 +36,25 @@ const ProfileContainer = ({match, authUserId, history,
         getUserStatus(userId);
     }, [authUserId, match.params.userId, getUserProfile, getUserStatus, history])
 
-    if (globalError) {
-        return <GlobalError globalError={globalError}/>
+    const onUpdateUserPhoto = (event) => {
+        if (event.target.files) {
+            props.updateUserPhoto(event.target.files[0]);
+        }
+    }
+
+    const submitUpdateProfile = (values) => {
+        props.updateProfile(values);
     }
 
     if (!profile) {
         return <Preloader/>
     }
 
+    const ownProfile = authUserId === profile.userId;
+
     return (
         <div>
-            <Profile authUserId={authUserId}
+            <Profile ownProfile={ownProfile}
                      profile={profile}
                      status={props.status}
                      updateUserStatus={props.updateUserStatus}
@@ -65,7 +62,8 @@ const ProfileContainer = ({match, authUserId, history,
                      submitUpdateProfile={submitUpdateProfile}
                      errorMessage={errorMessage}
                      isSubmittingSuccess={isSubmittingSuccess}
-                     globalError={globalError}/>
+                     posts={props.posts}
+                     addPost={props.addPost}/>
         </div>
     )
 }
@@ -77,7 +75,7 @@ let mapStateToProps = (state) => {
         authUserId: getAuthUserId(state),
         errorMessage: getProfileFormErrors(state),
         isSubmittingSuccess: getIsSubmittingSuccess(state),
-        globalError: getGlobalError(state),
+        posts: state.profilePage.posts,
     }
 }
 
@@ -87,6 +85,7 @@ let mapDispatchToProps = {
     updateUserStatus,
     updateUserPhoto,
     updateProfile,
+    addPost,
 }
 
 export default compose(

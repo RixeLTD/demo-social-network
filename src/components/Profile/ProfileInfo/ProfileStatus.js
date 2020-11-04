@@ -27,7 +27,7 @@ const ProfileStatus = (props) => {
             {!editMode
                 ? <div>
                     <span title="Double click to change"
-                        onDoubleClick={props.authUserId === props.profileId ? activateEditMode : null}><b>Статус:</b> {status}</span>
+                        onDoubleClick={props.ownProfile ? activateEditMode : null}><b>Статус:</b> {props.status}</span>
                 </div>
                 : <div>
                     <span><b>Статус:</b></span><input autoFocus={true}
