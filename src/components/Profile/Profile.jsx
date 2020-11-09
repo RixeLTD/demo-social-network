@@ -16,7 +16,8 @@ const Profile = (props) => {
                          isSubmittingSuccess={props.isSubmittingSuccess}/>
             <MyPosts ownProfile={props.ownProfile}
                      posts={props.posts}
-                     addPost={props.addPost}/>
+                     addPost={props.addPost}
+                     photo={props.profile.photos.small}/>
         </div>
     )
 }
