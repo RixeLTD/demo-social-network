@@ -6,15 +6,15 @@ const REMOVE_POST = "PROFILE_REMOVE_POST";
 const SET_USER_PROFILE = "PROFILE_SET_USER_PROFILE";
 const SET_STATUS = "PROFILE_SET_STATUS";
 const SET_USER_PHOTO = "PROFILE_SET_USER_PHOTO";
-const SET_PROFILE_FORM_ERRORS = 'PROFILE_SET_PROFILE_FORM_ERRORS';
-const SET_SUBMITTING_SUCCESS = 'PROFILE_SET_SUBMITTING_SUCCESS';
+const SET_PROFILE_FORM_ERRORS = "PROFILE_SET_PROFILE_FORM_ERRORS";
+const SET_SUBMITTING_SUCCESS = "PROFILE_SET_SUBMITTING_SUCCESS";
 
 let initialState = {
     posts: [
-        {id: 1, message: 'How are you?', likesCount: 0},
-        {id: 2, message: 'It\'s my first posts', likesCount: 26},
-        {id: 3, message: 'yesssss', likesCount: 20},
-        {id: 4, message: 'noooooo', likesCount: 13},
+        {id: 1, message: "Вопросы, связанные с использованием lorem. Иные буквы встречаются с использованием lorem основе оригинального трактата благодаря", likesCount: 0},
+        {id: 2, message: "Веб-дизайнерами для вставки на сайтах и смысловую нагрузку ему нести совсем необязательно", likesCount: 26},
+        {id: 3, message: "Исключительно демонстрационная, то и демонстрации внешнего вида контента, просмотра шрифтов абзацев", likesCount: 20},
+        {id: 4, message: "Он веб-дизайнерами для вставки на название. Трактата, благодаря чему появляется возможность получить более длинный неповторяющийся набор слов..", likesCount: 13},
     ],
     profile: null,
     status: "",
