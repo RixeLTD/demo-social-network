@@ -1,24 +1,24 @@
 import React from 'react';
-import classes from './../Dialogs.module.css';
+import s from './Message.module.scss';
 
 const Message = (props) => {
 
-    let style = {
-        'image': '',
-        'side': ''
-    };
-    if (props.isMe === 1) {
-        style.image = classes.leftImage;
-        style.side = classes.left;
-    } else {
-        style.image = classes.rightImage;
-        style.side = classes.right;
+    const removeMessage = () => {
+        props.removeMessage(props.activeDialog ,props.id);
     }
 
     return (
-        <div className={classes.message}>
-                <div className={style.image}> </div>
-                <div className={style.side}>{props.message}</div>
+        <div className={s.block}>
+            <div>
+                <div className={s.photoContainer}>
+                    <img className={s.photo} src={props.photo} alt=""/>
+                </div>
+            </div>
+            <div className={s.userNameAndMessage}>
+                <div className={s.userName}>{props.userName}</div>
+                <div className={s.message}>{props.message}</div>
+            </div>
+            <div className={s.remove} onClick={removeMessage}>X</div>
         </div>
     );
 }

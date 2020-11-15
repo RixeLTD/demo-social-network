@@ -1,4 +1,4 @@
-import {authAPI} from "../api/api";
+import {authAPI, profileAPI} from "../api/api";
 import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
 
 const SET_USER_DATA = 'AUTH_SET_USER_DATA';
@@ -9,15 +9,16 @@ let initialState = {
     userId: null,
     email: null,
     login: null,
-    userPhoto: null,
+    fullName: null,
+    photo: null,
     isAuth: false,
     isCaptcha: null,
     errorMessage: null,
 };
 
-const setUserData = (userId, email, login, isAuth) => ({
+const setUserData = (userId, email, login, fullName, photo, isAuth) => ({
     type: SET_USER_DATA,
-    data: {userId, email, login, isAuth}
+    data: {userId, email, login, fullName, photo, isAuth}
 })
 
 const setCaptcha = (url) => ({
@@ -57,7 +58,10 @@ export const getUserData = () => async (dispatch) => {
         let data = await authAPI.auth();
         if (data.resultCode === 0) {
             let {id, email, login} = data.data;
-            dispatch(setUserData(id, email, login, true));
+            let profile = await profileAPI.getProfile(id);
+            let fullName = profile.fullName;
+            let photo = profile.photos.small;
+            dispatch(setUserData(id, email, login, fullName, photo, true));
         }
     } catch (error) {
         dispatch(setGlobalError(`Get auth data error: ${error.message}`));

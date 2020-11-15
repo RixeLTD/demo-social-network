@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from "./GlobalError.module.css";
+import classes from "./GlobalError.module.scss";
 import {connect} from "react-redux";
 import {setGlobalError, setIsVisibleGlobalError} from "../../../redux/app-reduces";
 

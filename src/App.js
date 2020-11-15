@@ -1,13 +1,10 @@
 import React, {useEffect} from 'react';
-import './App.css';
+import s from './App.module.scss';
 import Navbar from './components/Navbar/Navbar';
 import ProfileContainer from './components/Profile/ProfileContainer';
-import News from "./components/News/News";
-import Music from "./components/Music/Music";
-import Settings from "./components/Settings/Settings";
 import UsersContainer from './components/Users/UsersContainer';
 import {Route, Redirect, Switch} from "react-router-dom";
-import DialogsContainer from "./components/Dialogs/DialogsContainer";
+import Dialogs from "./components/Dialogs/Dialogs";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
 import {connect} from "react-redux";
@@ -26,41 +23,36 @@ const App = ({initializeApp, initialized}) => {
     }
 
     return (
-        <div className='app-wrapper'>
+        <div className={s.mainContainer}>
             <HeaderContainer/>
-            <Navbar />
-            <GlobalError />
-            <div className='app-wrapper-content'>
-                <Switch>
-                    <Route path="/" exact>
-                        <Redirect to="/profile" />
-                    </Route>
-                    <Route path="/profile/:userId?">
-                        <ProfileContainer/>
-                    </Route>
-                    <Route path="/dialogs">
-                        <DialogsContainer/>
-                    </Route>
-                    <Route path="/users">
-                        <UsersContainer/>
-                    </Route>
-                    <Route path="/settings">
-                        <Settings/>
-                    </Route>
-                    <Route path="/news">
-                        <News/>
-                    </Route>
-                    <Route path="/music">
-                        <Music/>
-                    </Route>
-                    <Route path="/login">
-                        <Login/>
-                    </Route>
-                    <Route path="*">
-                        <div>404 Not Found</div>
-                    </Route>
-                </Switch>
+            <div className={s.mainBlock}>
+                <nav className={s.nav}>
+                    <Navbar />
+                </nav>
+                <main className={s.content}>
+                    <Switch>
+                        <Route path="/" exact>
+                            <Redirect to="/profile" />
+                        </Route>
+                        <Route path="/profile/:userId?">
+                            <ProfileContainer/>
+                        </Route>
+                        <Route path="/dialogs/:userId?">
+                            <Dialogs/>
+                        </Route>
+                        <Route path="/users">
+                            <UsersContainer/>
+                        </Route>
+                        <Route path="/login">
+                            <Login/>
+                        </Route>
+                        <Route path="*">
+                            <div>404 Not Found</div>
+                        </Route>
+                    </Switch>
+                </main>
             </div>
+            <GlobalError />
         </div>
     );
 

@@ -1,43 +1,38 @@
 import React from 'react';
-import classes from './Navbar.module.css';
-import FriendsBar from "./FriendsBar/FriendsBar";
+import s from './Navbar.module.scss';
 import {NavLink} from "react-router-dom";
-import { connect } from 'react-redux';
-import { getAuthUserId, getProfile } from '../../redux/profile-selectors';
+import {connect} from 'react-redux';
+import {getAuthUserId, getProfile} from '../../redux/profile-selectors';
 import {setUserProfile, setUserStatus} from "../../redux/profile-reducer";
 
 const Navbar = ({profile, authUserId, setUserProfile, setUserStatus}) => {
 
     return (
-        <nav className={classes.nav}>
-            <div className={classes.item}>
-                <NavLink to={'/profile/'} activeClassName={classes.active} onClick={ () => {
-                    if (profile && profile.userId !== authUserId) {
-                        setUserProfile(null);
-                        setUserStatus(null);
-                    }
-                }}>Profile</NavLink>
-            </div>
-            <div className={classes.item}>
-                <NavLink to={'/dialogs/'} activeClassName={classes.active}>Messages</NavLink>
-            </div>
-            <div className={classes.item}>
-                <NavLink to={'/users/'} activeClassName={classes.active}>Users</NavLink>
-            </div>
-            <div className={classes.item}>
-                <span>Settings</span>
-            </div>
-            <div className={classes.item}>
-                <span>News</span>
-            </div>
-            <div className={classes.item}>
-                <span>Music</span>
-            </div>
-            <div className={classes.friendBar}>
-                <span>Friends</span>
-                <div className={classes.friendsImg}><FriendsBar /></div>
-            </div>
-        </nav>
+        <>
+            <NavLink to={'/profile/'} className={s.navLink} activeClassName={s.active} onClick={() => {
+                if (profile && profile.userId !== authUserId) {
+                    setUserProfile(null);
+                    setUserStatus(null);
+                }
+            }}>
+                <div className={s.navLinkText}>Профиль</div>
+            </NavLink>
+            <NavLink to={'/dialogs/'} className={s.navLink} activeClassName={s.active}>
+                <div className={s.navLinkText}>Сообщения</div>
+            </NavLink>
+            <NavLink to={'/users/'} className={s.navLink} activeClassName={s.active}>
+                <div className={s.navLinkText}>Пользователи</div>
+            </NavLink>
+            <span className={s.navLink}>
+                <div className={s.navLinkTextDisabled}>Настройки</div>
+            </span>
+            <span className={s.navLink}>
+                <div className={s.navLinkTextDisabled}>Новости</div>
+            </span>
+            <span className={s.navLink}>
+                <div className={s.navLinkTextDisabled}>Музыка</div>
+            </span>
+        </>
     );
 }
 

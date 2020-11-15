@@ -3,6 +3,7 @@ import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
 
 const FOLLOW_UNFOLLOW = 'USERS_FOLLOW_UNFOLLOW';
 const SET_USERS = 'USERS_SET_USERS';
+const CLEAR_USERS = 'USERS_CLEAR_USERS';
 const SET_CURRENT_PAGE = 'USERS_SET_CURRENT_PAGE';
 const SET_TOTAL_USERS_COUNT = 'USERS_SET_TOTAL_USERS_COUNT';
 const TOGGLE_IS_FETCHING = 'USERS_TOGGLE_IS_FETCHING';
@@ -33,7 +34,12 @@ const usersReducer = (state = initialState, action) => {
             let arrayId = state.users.map( item => item.id);
             return {
                 ...state,
-                users: [...state.users, ...action.users.filter((user) => !arrayId.includes(user.id))],
+                users: [...state.users, ...action.users.filter((user) => !arrayId.includes(user.id)).reverse()],
+            }
+            case CLEAR_USERS:
+            return {
+                ...state,
+                users: [],
             }
         case SET_CURRENT_PAGE:
             return {...state, currentPage: action.currentPage}
@@ -55,6 +61,7 @@ const usersReducer = (state = initialState, action) => {
 
 export const followUnfollowSuccess = (userId, action) => ({type: FOLLOW_UNFOLLOW, userId, action})
 export const setUsers = (users) => ({type: SET_USERS, users})
+export const clearUsers = () => ({type: CLEAR_USERS})
 export const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage})
 export const setTotalUsersCount = (totalUsersCount) => ({type: SET_TOTAL_USERS_COUNT, totalUsersCount})
 export const toggleIsFetching = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFetching})

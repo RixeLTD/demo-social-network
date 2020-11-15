@@ -3,7 +3,7 @@ import {Formik, useFormikContext} from 'formik';
 import {loginUser} from "../../redux/auth-reduces";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
-import classes from "./Login.module.css";
+import classes from "./Login.module.scss";
 import {getIsAuth, getIsCaptcha, getLoginFormErrors} from "../../redux/auth-selectors";
 
 const StopSubmitting = ({errorMessage}) => {
@@ -95,6 +95,7 @@ const LoginFormik = (props) => {
                                        onBlur={handleBlur}
                                        value={values.captcha}
                                        placeholder="Enter captcha"
+                                       autoComplete="off"
                                 />
                             </div> : null
                         }

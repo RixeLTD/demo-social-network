@@ -1,20 +1,19 @@
 import React from 'react';
-import classes from './users.module.css';
+import s from './users.module.scss';
 import User from "./User";
 
 const Users = (props) => {
 
     return (
-        <div>
+        <div className={s.container}>
             {props.users.map(user => {
                 return <User user={user} followingInProgress={props.followingInProgress}
-                                           followUnfollow={props.followUnfollow} key={user.id}
-                                           clearUserProfile={props.clearUserProfile} />
+                             followUnfollow={props.followUnfollow} key={user.id}
+                             clearUserProfile={props.clearUserProfile}/>
             })}
-            <div className={classes.buttonMore}>
-                <button onClick={() => props.onPageChanged(props.currentPage + 1)}>More</button>
-            </div>
-
+            <button className={s.buttonMore} onClick={() => props.onPageChanged(props.currentPage - 1)}>
+                Показать еще
+            </button>
         </div>
     )
 }

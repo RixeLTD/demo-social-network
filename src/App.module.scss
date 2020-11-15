@@ -1,0 +1,21 @@
+.mainContainer {
+    padding: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.mainBlock {
+    display: flex;
+    max-width: 1000px;
+}
+
+.nav {
+    flex-basis: 150px;
+    min-width: 150px;
+}
+
+.content {
+    flex-basis: 800px;
+    min-width: 350px;
+    flex-grow: 2;
+}

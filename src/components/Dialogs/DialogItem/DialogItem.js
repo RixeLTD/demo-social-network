@@ -1,17 +1,30 @@
 import React from 'react';
-import classes from './../Dialogs.module.css';
+import s from '../Dialogs.module.scss';
 import {NavLink} from "react-router-dom";
 
-const DialogItem = (props) => {
-    let path = "/dialogs/" + props.id;
+const DialogItem = ({match, messages, ...props}) => {
+
+    let lastMessage;
+    try {
+        lastMessage = messages[messages.length - 1]["message"];
+    } catch (e)  {
+
+    }
 
     return (
-        <div className={classes.dialog}>
-            <NavLink to={path}>
-                <img src={props.image} alt=""/>
-                <div>{props.name}</div>
-            </NavLink>
-        </div>
+        <NavLink to={`/dialogs/${props.userId}`} className={s.link}>
+            <div className={s.block}>
+                <div>
+                    <div className={s.photoContainer}>
+                        <img className={s.photo} src={props.photo} alt=""/>
+                    </div>
+                </div>
+                <div className={s.userNameAndMessage}>
+                    <div className={s.userName}>{props.userName}</div>
+                    <div className={s.message}>{lastMessage}</div>
+                </div>
+            </div>
+        </NavLink>
     );
 }
 

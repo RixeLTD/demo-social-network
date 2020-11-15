@@ -1,80 +1,90 @@
-import React from 'react';
-import classes from './Dialogs.module.css';
-import DialogItem from "./DialogItem/DialogItem";
+import React, {useEffect, useState} from 'react';
+import {addMessage, removeMessage} from "../../redux/dialogs-reducer";
+import DialogsFormik from "./DialogsFormik";
+import {connect} from "react-redux";
+import {withAuthRedirect} from "../../hoc/withAuthRedirect";
+import {compose} from "redux";
+import {withRouter} from "react-router-dom";
 import Message from "./Message/Message";
-import {Formik} from "formik";
+import s from "./Dialogs.module.scss";
+import DialogItem from "./DialogItem/DialogItem";
 
-let DialogsFormik = (props) => {
+const Dialogs = ({match, dialogs, ...props}) => {
+
+    let [activeDialog, setActiveDialog] = useState(null);
+    let [messages, setMessages] = useState(null);
+
+    useEffect(() => {
+        let userId = Number(match.params.userId);
+        if (userId) {
+            setActiveDialog(userId);
+            let messages = dialogs.find(user => user.userId === userId);
+            setMessages(messages);
+        } else {
+            setActiveDialog(null);
+        }
+    }, [activeDialog, match.params.userId, dialogs]);
+
+    const onSubmit = (values) => {
+        props.addMessage(values.message, activeDialog);
+    }
+
+    if (activeDialog) {
+        let messagesElements = messages.messages.map(m => <Message key={m.id}
+                                                                   id={m.id}
+                                                                   activeDialog={activeDialog}
+                                                                   message={m.message}
+                                                                   userName={m.isMe ? props.myName : messages.userName}
+                                                                   photo={m.isMe ? props.myPhoto : messages.photo}
+                                                                   removeMessage={props.removeMessage}/>);
+
+        return (
+            <>
+                <div className={s.container}>
+                    {messagesElements}
+                    <DialogsFormik onSubmit={onSubmit}
+                                   activeDialog={activeDialog}/>
+                </div>
+
+            </>
+        )
+    }
+
+    let dialogsElements = dialogs.map(d => <DialogItem userId={d.userId}
+                                                       userName={d.userName}
+                                                       photo={d.photo}
+                                                       messages={d.messages}
+                                                       key={d.userId}
+                                                       match={match}
+                                                       setMessages={props.setMessages}/>);
+
     return (
-        <Formik
-            initialValues={{message: ''}}
-            validate={values => {
-                const errors = {};
-                if (values.message.length > 200) {
-                    errors.message = 'text more then 200 symbols';
-                }
-                return errors;
-            }}
-            onSubmit={(values, {setSubmitting}) => {
-                setTimeout(() => {
-                    props.onSubmit(values);
-                    values.message = '';
-                    setSubmitting(false);
-                }, 400);
-            }}
-        >
-            {({
-                  values,
-                  errors,
-                  handleChange,
-                  handleSubmit,
-                  isSubmitting,
-                  /* and other goodies */
-              }) => (
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <textarea className={`${classes.newMessage} ${errors.message ? classes.errorTextarea : null}`}
-                                  cols="40"
-                                  rows="4"
-                                  name="message"
-                                  onChange={handleChange}
-                                  value={values.message}
-                                  placeholder="Enter your message"
-                        />
-                        <div className={classes.errorLength}>{errors.message}</div>
-                    </div>
-                    <button type="submit" disabled={isSubmitting || errors.message || !values.message}>
-                        Send message
-                    </button>
-                </form>
-            )}
-        </Formik>
+        <>
+            <div className={s.container}>
+                <div className={s.search}>
+                    <input type="text" placeholder="поиск" className={s.searchInput}/>
+                </div>
+                {dialogsElements.reverse()}
+            </div>
+        </>
     )
 }
 
-const Dialogs = (props) => {
-
-    let dialogsElements = props.messagesPage.dialogs.map(d => <DialogItem name={d.name} id={d.id} image={d.image} key={d.id}/>);
-
-    let messagesElements = props.messagesPage.messages.map(m => <Message message={m.message} isMe={m.isMe} key={m.id}/>);
-
-    const onSubmit =(values) => {
-        props.onMessageClickContainer(values.message);
+const mapStateToProps = (state) => {
+    return {
+        dialogs: state.messagesPage.dialogs,
+        myPhoto: state.auth.photo,
+        myName: state.auth.fullName,
     }
-
-
-    return (
-        <div className={classes.dialogs}>
-            <div className={classes.dialogItems}>
-                {dialogsElements}
-            </div>
-            <div className={classes.messages}>
-                {messagesElements}
-                <DialogsFormik onSubmit={onSubmit}/>
-            </div>
-
-        </div>
-    );
 }
 
-export default Dialogs;
+const mapDispatchToProps = {
+    addMessage,
+    removeMessage,
+}
+
+export default compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    withAuthRedirect,
+    withRouter
+)(Dialogs);

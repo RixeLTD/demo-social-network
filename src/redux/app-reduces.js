@@ -1,4 +1,6 @@
 import {getUserData} from "./auth-reduces";
+import {clearUsers, setCurrentPage} from "./users-reduces";
+import {usersAPI} from "../api/api";
 
 const INITIALIZED_SUCCESS = 'APP_INITIALIZED_SUCCESS';
 const SET_GLOBAL_ERROR = 'APP_SET_GLOBAL_ERROR';
@@ -46,6 +48,10 @@ const appReducer = (state = initialState, action) => {
 
 export const initializeApp = () => async (dispatch) => {
     await dispatch(getUserData());
+    let data = await usersAPI.getUsers(1, 10);
+    let newCurrentPage = data["totalCount"] % 10 === 0 ? data["totalCount"] / 10 : Math.floor(data["totalCount"] / 10) + 1;
+    dispatch(setCurrentPage(newCurrentPage));
+    dispatch(clearUsers());
     dispatch(initializedSuccess());
 }
 

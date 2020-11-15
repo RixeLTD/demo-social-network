@@ -1,16 +1,18 @@
-import React from 'react';
-import classes from './MyPosts.module.css';
+import React from "react";
 import Post from "./Post/Post";
 import {Formik} from 'formik';
+import s from "../Profile.module.scss";
+import AutoHeightTextarea from "../../../utils/AutoHeightTextarea";
 
-const MyPostsFormik = (props) => (
-    <div>
+const MyPostsFormik = (props) => {
+
+    return (
         <Formik
             initialValues={{post: ''}}
             validate={values => {
                 const errors = {};
                 if (values.post.length > 200) {
-                    errors.post = 'text more then 200 symbols';
+                    errors.post = 'Вы ввели больше 200 символов';
                 }
                 return errors;
             }}
@@ -30,43 +32,44 @@ const MyPostsFormik = (props) => (
                   isSubmitting,
                   /* and other goodies */
               }) => (
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <textarea className={`${classes.post} ${errors.post ? classes.errorTextarea : null}`}
-                                  cols="50"
-                                  rows="4"
-                                  name="post"
-                                  onChange={handleChange}
-                                  value={values.post}
-                                  placeholder="Enter your post"
-                        />
-                        <div className={classes.errorLength}>{errors.post}</div>
+                <form onSubmit={handleSubmit} className={s.profileInfoSection}>
+                    <div className={s.textareaContainer}>
+                        <AutoHeightTextarea
+                        className={`${s.textarea} ${errors.post ? s.errorTextarea : null}`}
+                        name="post"
+                        onChange={handleChange}
+                        value={values.post}
+                        placeholder="Что у вас нового?"/>
                     </div>
-                    <button type="submit" disabled={isSubmitting || errors.post || !values.post}>
-                        Add post
+                    <div className={s.errorLength}>{errors.post}</div>
+                    <button className={s.buttonAddPost} type="submit" disabled={isSubmitting || errors.post || !values.post}>
+                        Опубликовать
                     </button>
                 </form>
             )}
         </Formik>
-    </div>
-);
+    );
+}
 
 const MyPosts = (props) => {
 
-    let postsElements = props.posts.map(p => <Post message={p.message} likesCount={p.likesCount} key={p.id} photo={props.photo}/>);
+    let postsElements = props.posts.map(p => <Post message={p.message}
+                                                   likesCount={p.likesCount}
+                                                   id={p.id}
+                                                   key={p.id}
+                                                   photo={props.photo}
+                                                   userName={props.userName}
+                                                   removePost={props.removePost}/>);
 
     const onSubmit = (values) => {
         props.addPost(values.post);
     }
 
     return (
-        <div className={classes.postsBlock}>
-            <h3>My posts</h3>
-            {props.ownProfile ? <MyPostsFormik onSubmit={onSubmit}/> : null }
-            <div className={classes.posts}>
-                {postsElements}
-            </div>
-        </div>
+        <>
+            {props.ownProfile ? <MyPostsFormik onSubmit={onSubmit}/> : null}
+            {postsElements}
+        </>
     );
 }
 

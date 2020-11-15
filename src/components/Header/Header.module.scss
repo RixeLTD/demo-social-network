@@ -1,0 +1,62 @@
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #4a76a8;
+    padding: 10px;
+    margin-bottom: 10px;
+    min-width: 730px;
+}
+
+.logo {
+    flex-basis: 30px;
+    min-width: 30px;
+    margin-right: auto;
+}
+
+.login {
+    flex-basis: 290px;
+    text-align: right;
+}
+
+.userName {
+    margin-right: 5px;
+    color: white;
+}
+
+.delimiter {
+    border-right: solid 1px white;
+    margin-right: 5px;
+}
+
+.logoutButton {
+    margin-right: 5px;
+    padding: 5px;
+    font-weight: bold;
+    color: white;
+}
+
+.logoutButton:hover {
+    cursor: pointer;
+    background-color: #25558c;
+    border-radius: 5px;
+}
+
+.loginButton {
+    margin-right: 5px;
+    padding: 5px;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+.loginButton:hover {
+    cursor: pointer;
+    background-color: #25558c;
+    border-radius: 5px;
+}
+
+@media (max-width: 1024px) {
+    .header {
+        min-width: 480px;
+    }
+}

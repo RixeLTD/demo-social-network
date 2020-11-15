@@ -2,6 +2,7 @@ import {profileAPI} from "../api/api";
 import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
 
 const ADD_POST = "PROFILE_ADD_POST";
+const REMOVE_POST = "PROFILE_REMOVE_POST";
 const SET_USER_PROFILE = "PROFILE_SET_USER_PROFILE";
 const SET_STATUS = "PROFILE_SET_STATUS";
 const SET_USER_PHOTO = "PROFILE_SET_USER_PHOTO";
@@ -12,8 +13,8 @@ let initialState = {
     posts: [
         {id: 1, message: 'How are you?', likesCount: 0},
         {id: 2, message: 'It\'s my first posts', likesCount: 26},
-        {id: 3, message: 'yesssss', likesCount: 26},
-        {id: 4, message: 'noooooo', likesCount: 26},
+        {id: 3, message: 'yesssss', likesCount: 20},
+        {id: 4, message: 'noooooo', likesCount: 13},
     ],
     profile: null,
     status: "",
@@ -22,6 +23,8 @@ let initialState = {
 }
 
 export const addPost = (postText) => ({type: ADD_POST, postText})
+
+export const removePost = (id) => ({type: REMOVE_POST, id})
 
 export const setUserProfile = (profile) => ({type: SET_USER_PROFILE, profile,})
 
@@ -39,6 +42,11 @@ const profileReducer = (state = initialState, action) => {
             return {
                 ...state,
                 posts: [...state.posts, {id: state.posts.length + 1, message: action.postText, likesCount: 0}],
+            };
+        case REMOVE_POST:
+            return {
+                ...state,
+                posts: [...state.posts.filter(u => u.id !== action.id)],
             };
         case SET_USER_PROFILE:
             return {
@@ -78,7 +86,7 @@ export const getUserProfile = (userId) => async (dispatch) => {
         } catch (error) {
             dispatch(setGlobalError(`Get user profile error: ${error.message}`));
             dispatch(setIsVisibleGlobalError(true));
-        } 
+        }
     }
 }
 
@@ -104,7 +112,7 @@ export const updateUserStatus = (status) => async (dispatch) => {
         dispatch(setGlobalError(`Update status error: ${error.message}`));
         dispatch(setIsVisibleGlobalError(true));
     }
-   
+
 }
 
 export const updateUserPhoto = (file) => async (dispatch) => {

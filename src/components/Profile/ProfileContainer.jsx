@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {
     addPost,
     getUserProfile,
-    getUserStatus,
+    getUserStatus, removePost,
     updateProfile,
     updateUserPhoto,
     updateUserStatus
@@ -13,7 +13,7 @@ import {withRouter} from "react-router-dom";
 import {compose} from "redux";
 import {
     getAuthUserId,
-    getIsSubmittingSuccess,
+    getIsSubmittingSuccess, getPosts,
     getProfile,
     getProfileFormErrors,
     getStatus,
@@ -25,7 +25,7 @@ const ProfileContainer = ({match, authUserId, history,
                               errorMessage, isSubmittingSuccess, ...props}) => {
 
     useEffect( () => {
-        let userId = match.params.userId;
+        let userId = Number(match.params.userId);
         if (!userId) {
             userId = authUserId;
             if (!userId) {
@@ -53,7 +53,7 @@ const ProfileContainer = ({match, authUserId, history,
     const ownProfile = authUserId === profile.userId;
 
     return (
-        <div>
+        <>
             <Profile ownProfile={ownProfile}
                      profile={profile}
                      status={props.status}
@@ -63,8 +63,10 @@ const ProfileContainer = ({match, authUserId, history,
                      errorMessage={errorMessage}
                      isSubmittingSuccess={isSubmittingSuccess}
                      posts={props.posts}
-                     addPost={props.addPost}/>
-        </div>
+                     addPost={props.addPost}
+                     removePost={props.removePost}
+                     />
+        </>
     )
 }
 
@@ -75,7 +77,7 @@ let mapStateToProps = (state) => {
         authUserId: getAuthUserId(state),
         errorMessage: getProfileFormErrors(state),
         isSubmittingSuccess: getIsSubmittingSuccess(state),
-        posts: state.profilePage.posts,
+        posts: getPosts(state),
     }
 }
 
@@ -86,6 +88,7 @@ let mapDispatchToProps = {
     updateUserPhoto,
     updateProfile,
     addPost,
+    removePost
 }
 
 export default compose(
