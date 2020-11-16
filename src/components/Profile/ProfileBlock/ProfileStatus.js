@@ -40,7 +40,12 @@ const ProfileStatus = (props) => {
                         onBlur={deactivateEditMode}
                         value={status}
                         onChange={onChangeStatus}
+                        onKeyUp={(event) => {
+                            if(event.keyCode === 13){
+                                deactivateEditMode()
+                        }}}
                     />
+
                     </div>
                 </>
             }

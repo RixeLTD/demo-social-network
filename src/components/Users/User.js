@@ -2,7 +2,7 @@ import React from 'react';
 import s from './users.module.scss';
 import noImage from "../../assets/images/noImage.png";
 import {NavLink} from "react-router-dom";
-import ButtonFollowUnfollow from "../common/ButtonFollowUnfollow/ButtonFollowUnfollow";
+import ButtonFollowUnfollow from "../../utils/ButtonFollowUnfollow/ButtonFollowUnfollow";
 
 const User = (props) => {
 

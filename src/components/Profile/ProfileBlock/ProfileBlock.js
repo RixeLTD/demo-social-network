@@ -47,7 +47,7 @@ const Contacts = (props) => {
     return (
         props.contactValue ? <div className={s.contactItem}>
             <div className={s.contactKey}>{props.contactTitle}:</div>
-            <span>{props.contactValue}</span>
+            <a href={props.contactValue} className={s.contactLink}>{props.contactValue}</a>
         </div> : null
 
     )

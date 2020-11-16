@@ -10,7 +10,7 @@ import Login from "./components/Login/Login";
 import {connect} from "react-redux";
 import {initializeApp} from "./redux/app-reduces";
 import Preloader from "./components/common/preloader/Preloader";
-import GlobalError from "./components/common/GlobalError/GlobalError";
+import GlobalError from "./utils/GlobalError/GlobalError";
 
 const App = ({initializeApp, initialized}) => {
 
