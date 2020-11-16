@@ -16,7 +16,7 @@ let DialogsFormik = (props) => {
             }}
             onSubmit={(values, {setSubmitting}) => {
                 setTimeout(() => {
-                    props.onSubmit(values);
+                    props.addMessage(values.message, props.activeDialog);
                     values.message = '';
                     setSubmitting(false);
                 }, 400);

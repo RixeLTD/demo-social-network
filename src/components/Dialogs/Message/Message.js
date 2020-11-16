@@ -1,24 +1,28 @@
 import React from 'react';
 import s from './Message.module.scss';
 
-const Message = (props) => {
+const Message = ({setFindText, findText, message, removeMessage, activeDialog, id, userName, photo, ...props}) => {
 
-    const removeMessage = () => {
-        props.removeMessage(props.activeDialog ,props.id);
+    let find;
+
+    if (findText) {
+        find = message.toLowerCase().includes(findText.toLowerCase());
     }
 
     return (
-        <div className={s.block}>
+        <div className={`${s.block} ${find ? s.find : null}`}>
             <div>
                 <div className={s.photoContainer}>
-                    <img className={s.photo} src={props.photo} alt=""/>
+                    <img className={s.photo} src={photo} alt=""/>
                 </div>
             </div>
             <div className={s.userNameAndMessage}>
-                <div className={s.userName}>{props.userName}</div>
-                <div className={s.message}>{props.message}</div>
+                <div className={s.userName}>{userName}</div>
+                <div className={s.message}>{message}</div>
             </div>
-            <div className={s.remove} onClick={removeMessage}>X</div>
+            <div className={s.remove} onClick={() => {
+                removeMessage(activeDialog, id);
+            }}>X</div>
         </div>
     );
 }

@@ -4,9 +4,6 @@
     align-items: center;
     margin: 10px auto;
     padding-left: 15px;
-    &:hover {
-        background-color: #eae7e7;
-    }
 }
 
 .photoContainer {
@@ -104,5 +101,22 @@
     &:hover {
         cursor: pointer;
         color: #000000;
+    }
+}
+
+.find {
+    animation: find;
+    animation-duration: 4s;
+}
+
+@keyframes find {
+    from {
+        background-color: #dbdbde;
+    }
+    50% {
+        background-color: #dbdbde;
+    }
+    to {
+        background-color: #ffffff;
     }
 }
