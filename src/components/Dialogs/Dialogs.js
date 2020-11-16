@@ -5,10 +5,10 @@ import {withAuthRedirect} from "../../hoc/withAuthRedirect";
 import {compose} from "redux";
 import {withRouter} from "react-router-dom";
 import s from "./Dialogs.module.scss";
-import DialogItem from "./DialogItem/DialogItem";
 import MessageContainer from "./Message/MessageContainer";
+import DialogItemContainer from "./DialogItem/DialogItemContainer";
 
-const Dialogs = ({match, dialogs, ...props}) => {
+const Dialogs = ({match, dialogs, myPhoto, myName, addMessage, removeMessage, ...props}) => {
 
     let [activeDialog, setActiveDialog] = useState(null);
     let [messages, setMessages] = useState(null);
@@ -22,21 +22,27 @@ const Dialogs = ({match, dialogs, ...props}) => {
             setMessages(dialogs.find(user => user.userId === userId));
         } else {
             setActiveDialog(null);
+            setMessages(null);
         }
         return () => {
             setFilteredUsers(dialogs);
         }
     }, [activeDialog, match.params.userId, dialogs]);
 
-    if (activeDialog) {
+    const filter = (e) => {
+        setFilteredUsers(dialogs.filter(u => u.userName.toLowerCase().includes(e.target.value.toLowerCase())
+            || u.messages.find(m => m.message.toLowerCase().includes(e.target.value.toLowerCase()))));
+        setFindText(e.target.value);
+    }
 
+    if (activeDialog) {
         return (
             <div className={s.container}>
-                <MessageContainer myPhoto={props.myPhoto}
-                                  myName={props.myName}
+                <MessageContainer myPhoto={myPhoto}
+                                  myName={myName}
                                   activeDialog={activeDialog}
-                                  addMessage={props.addMessage}
-                                  removeMessage={props.removeMessage}
+                                  addMessage={addMessage}
+                                  removeMessage={removeMessage}
                                   messages={messages}
                                   findText={findText}
                                   setFindText={setFindText}
@@ -45,28 +51,18 @@ const Dialogs = ({match, dialogs, ...props}) => {
         )
     }
 
-    const filter = (e) => {
-        setFilteredUsers(dialogs.filter(u => u.userName.toLowerCase().includes(e.target.value.toLowerCase())
-            || u.messages.find(m => m.message.toLowerCase().includes(e.target.value.toLowerCase()))));
-        setFindText(e.target.value);
-    }
-
-    let dialogsElements = filteredUsers.map(d => <DialogItem userId={d.userId}
-                                                             userName={d.userName}
-                                                             photo={d.photo}
-                                                             myPhoto={props.myPhoto}
-                                                             messages={d.messages}
-                                                             key={d.userId}
-                                                             match={match}
-                                                             findText={findText}/>);
-
     return (
         <>
             <div className={s.container}>
                 <div className={s.search}>
                     <input type="text" placeholder="поиск" className={s.searchInput} onChange={filter}/>
                 </div>
-                {dialogsElements.reverse()}
+                <DialogItemContainer myPhoto={myPhoto}
+                                     myName={myName}
+                                     findText={findText}
+                                     match={match}
+                                     filteredUsers={filteredUsers}
+                />
             </div>
         </>
     )
