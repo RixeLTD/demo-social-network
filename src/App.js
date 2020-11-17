@@ -14,7 +14,7 @@ import GlobalError from "./utils/GlobalError/GlobalError";
 
 const App = ({initializeApp, initialized}) => {
 
-    let [change, setChange] = useState(false);
+    let [mobileNav, setMobileNav] = useState(false);
 
     useEffect(() => {
         initializeApp();
@@ -27,45 +27,37 @@ const App = ({initializeApp, initialized}) => {
     return (
         <div className={s.mainContainer}>
             <header className={s.header}>
-                <HeaderContainer setChange={setChange}
-                                 change={change}/>
+                <HeaderContainer setMobileNav={setMobileNav}
+                                 mobileNav={mobileNav}/>
             </header>
             <div className={s.mainBlock}>
-                {
-                    change
-                        ? <nav className={s.nav} style={{display: "block"}}>
-                            <Navbar setChange={setChange}/>
-                        </nav>
-                        : <>
-                            <nav className={s.nav}>
-                                <Navbar />
-                            </nav>
-                            <main className={s.content}>
-                                <Switch>
-                                    <Route path="/" exact>
-                                        <Redirect to="/profile" />
-                                    </Route>
-                                    <Route path="/profile/:userId?">
-                                        <ProfileContainer/>
-                                    </Route>
-                                    <Route path="/dialogs/:userId?">
-                                        <Dialogs/>
-                                    </Route>
-                                    <Route path="/users">
-                                        <UsersContainer/>
-                                    </Route>
-                                    <Route path="/login">
-                                        <Login/>
-                                    </Route>
-                                    <Route path="*">
-                                        <div>404 Not Found</div>
-                                    </Route>
-                                </Switch>
-                            </main>
-                        </>
-                }
+                <nav className={`${s.nav} ${mobileNav ? s.navVisible : null}`}>
+                    <Navbar setMobileNav={setMobileNav}/>
+                </nav>
+                <main className={s.content}>
+                    <Switch>
+                        <Route path="/" exact>
+                            <Redirect to="/profile"/>
+                        </Route>
+                        <Route path="/profile/:userId?">
+                            <ProfileContainer/>
+                        </Route>
+                        <Route path="/dialogs/:userId?">
+                            <Dialogs/>
+                        </Route>
+                        <Route path="/users">
+                            <UsersContainer/>
+                        </Route>
+                        <Route path="/login">
+                            <Login/>
+                        </Route>
+                        <Route path="*">
+                            <div>404 Not Found</div>
+                        </Route>
+                    </Switch>
+                </main>
             </div>
-            <GlobalError />
+            <GlobalError/>
         </div>
     );
 

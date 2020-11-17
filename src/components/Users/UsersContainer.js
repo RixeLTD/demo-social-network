@@ -13,7 +13,7 @@ import {
     getTotalUsersCount, getUsers
 } from "../../redux/users-selectors";
 
-const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, setUserStatus, totalUsersCount, ...props}) => {
+const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, setUserStatus, totalUsersCount, users, ...props}) => {
 
     useEffect(() => {
         requestUsers(currentPage, pageSize);
@@ -37,9 +37,8 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, se
                    currentPage={currentPage}
                    followingInProgress={props.followingInProgress}
                    followUnfollow={props.followUnfollow}
-                   users={props.users}
+                   users={users}
                    clearUserProfile={clearUserProfile}
-
             />
         </>
     );

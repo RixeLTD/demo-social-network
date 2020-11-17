@@ -2,21 +2,16 @@ import React from 'react';
 import s from './Header.module.scss';
 import {NavLink} from "react-router-dom";
 import logo from "./../../logo.png";
+import Burger from "./Burger";
 
-const Header = ({change, setChange, ...props}) => {
-
-    function myFunction() {
-        setChange(!change);
-    }
+const Header = ({mobileNav, setMobileNav, ...props}) => {
 
     return <>
-        <div className={`${s.hamburger} ${change ? s.change : null}`} onClick={myFunction}>
-            <div className={s.bar1}> </div>
-            <div className={s.bar2}> </div>
-            <div className={s.bar3}> </div>
-        </div>
-
-        <img className={s.logo} src={logo} style={{width: "30px"}} alt=''/>
+        <Burger mobileNav={mobileNav}
+                setMobileNav={setMobileNav}/>
+        <NavLink to={"/"} onClick={() => {window.scrollTo({top: 0});}}>
+            <img className={s.logo} src={logo} style={{width: "30px"}} alt=''/>
+        </NavLink>
         <div className={s.login}>
             {props.isAuth
                 ? <>

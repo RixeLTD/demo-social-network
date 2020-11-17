@@ -6,7 +6,6 @@ import ProfileBlockForm from "./ProfileBlock/ProfileBlockForm";
 import ProfileBlock from "./ProfileBlock/ProfileBlock";
 
 const Profile = (props) => {
-
     let [editMode, setEditMode] = useState(false);
     let [errorMessage, setErrorMessage] = useState(props.errorMessage);
 

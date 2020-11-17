@@ -1,5 +1,5 @@
 .mainContainer {
-    padding: 10px;
+    padding: 0 10px;
     max-width: 1000px;
     min-width: 300px;
     margin: 0 auto;
@@ -11,6 +11,9 @@
     background-color: #4a76a8;
     padding: 10px;
     margin-bottom: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .mainBlock {
@@ -19,17 +22,32 @@
 }
 
 .nav {
-    flex-basis: 150px;
-    min-width: 150px;
+    width: 140px;
+    position: fixed;
 }
 
 .content {
+    margin-left: 140px;
     flex-basis: 800px;
     flex-grow: 2;
 }
 
 @media (max-width: 768px) {
     .nav {
+        padding: 10px 0 10px 10px;
+        position: fixed;
+        top: 54px;
+        left: 0;
         display: none;
+        background-color: #edeef0;
+        z-index: 2;
+        border-bottom-right-radius: 5px;
     }
+    .content {
+        margin-left: 0;
+    }
+}
+
+.navVisible {
+    display: block;
 }

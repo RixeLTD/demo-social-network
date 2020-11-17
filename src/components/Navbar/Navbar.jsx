@@ -5,10 +5,10 @@ import {connect} from 'react-redux';
 import {getAuthUserId, getProfile} from '../../redux/profile-selectors';
 import {setUserProfile, setUserStatus} from "../../redux/profile-reducer";
 
-const Navbar = ({profile, authUserId, setUserProfile, setUserStatus, setChange}) => {
+const Navbar = ({profile, authUserId, setUserProfile, setUserStatus, setMobileNav}) => {
 
     const setChangeFalse = () => {
-        setChange(false);
+        setMobileNav(false);
     }
 
     return (
@@ -28,15 +28,15 @@ const Navbar = ({profile, authUserId, setUserProfile, setUserStatus, setChange})
             <NavLink to={'/users/'} className={s.navLink} activeClassName={s.active} onClick={setChangeFalse}>
                 <div className={s.navLinkText}>Пользователи</div>
             </NavLink>
-            <span className={s.navLink}>
-                <div className={s.navLinkTextDisabled}>Настройки</div>
-            </span>
-            <span className={s.navLink}>
-                <div className={s.navLinkTextDisabled}>Новости</div>
-            </span>
-            <span className={s.navLink}>
-                <div className={s.navLinkTextDisabled}>Музыка</div>
-            </span>
+            {/*<span className={s.navLink}>*/}
+            {/*    <div className={s.navLinkTextDisabled}>Настройки</div>*/}
+            {/*</span>*/}
+            {/*<span className={s.navLink}>*/}
+            {/*    <div className={s.navLinkTextDisabled}>Новости</div>*/}
+            {/*</span>*/}
+            {/*<span className={s.navLink}>*/}
+            {/*    <div className={s.navLinkTextDisabled}>Музыка</div>*/}
+            {/*</span>*/}
         </>
     );
 }
