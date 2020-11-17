@@ -9,7 +9,7 @@ const ProfileBlock = (props) => {
             <div className={s.profileInfoSection}>
                 <div className={s.item}>
                     <div className={s.itemKey}>Имя:</div>
-                    <span>{props.profile.fullName}</span>
+                    <span className={s.itemValue}>{props.profile.fullName}</span>
                 </div>
                 <ProfileStatus ownProfile={props.ownProfile} status={props.status}
                                updateUserStatus={props.updateUserStatus}/>
@@ -17,16 +17,16 @@ const ProfileBlock = (props) => {
             <div className={s.profileInfoSection}>
                 <div className={s.item}>
                     <div className={s.itemKey}>Обо мне:</div>
-                    <span>{props.profile.aboutMe}</span>
+                    <span className={s.itemValue}>{props.profile.aboutMe}</span>
                 </div>
                 <div className={s.item}>
                     <div className={s.itemKey}>В поисках работы:</div>
-                    <span>{props.profile.lookingForAJob ? 'YES' : 'NO'}</span>
+                    <span className={s.itemValue}>{props.profile.lookingForAJob ? 'YES' : 'NO'}</span>
                 </div>
                 {props.profile.lookingForAJob &&
                 <div className={s.item}>
                     <div className={s.itemKey}>Статус поиска работы:</div>
-                    {props.profile.lookingForAJobDescription}
+                    <span className={s.itemValue}>{props.profile.lookingForAJobDescription}</span>
                 </div>
                 }
             </div>

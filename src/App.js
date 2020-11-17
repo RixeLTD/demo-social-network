@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import s from './App.module.scss';
 import Navbar from './components/Navbar/Navbar';
 import ProfileContainer from './components/Profile/ProfileContainer';
@@ -14,6 +14,8 @@ import GlobalError from "./utils/GlobalError/GlobalError";
 
 const App = ({initializeApp, initialized}) => {
 
+    let [change, setChange] = useState(false);
+
     useEffect(() => {
         initializeApp();
     }, [initializeApp])
@@ -24,33 +26,44 @@ const App = ({initializeApp, initialized}) => {
 
     return (
         <div className={s.mainContainer}>
-            <HeaderContainer/>
+            <header className={s.header}>
+                <HeaderContainer setChange={setChange}
+                                 change={change}/>
+            </header>
             <div className={s.mainBlock}>
-                <nav className={s.nav}>
-                    <Navbar />
-                </nav>
-                <main className={s.content}>
-                    <Switch>
-                        <Route path="/" exact>
-                            <Redirect to="/profile" />
-                        </Route>
-                        <Route path="/profile/:userId?">
-                            <ProfileContainer/>
-                        </Route>
-                        <Route path="/dialogs/:userId?">
-                            <Dialogs/>
-                        </Route>
-                        <Route path="/users">
-                            <UsersContainer/>
-                        </Route>
-                        <Route path="/login">
-                            <Login/>
-                        </Route>
-                        <Route path="*">
-                            <div>404 Not Found</div>
-                        </Route>
-                    </Switch>
-                </main>
+                {
+                    change
+                        ? <nav className={s.nav} style={{display: "block"}}>
+                            <Navbar setChange={setChange}/>
+                        </nav>
+                        : <>
+                            <nav className={s.nav}>
+                                <Navbar />
+                            </nav>
+                            <main className={s.content}>
+                                <Switch>
+                                    <Route path="/" exact>
+                                        <Redirect to="/profile" />
+                                    </Route>
+                                    <Route path="/profile/:userId?">
+                                        <ProfileContainer/>
+                                    </Route>
+                                    <Route path="/dialogs/:userId?">
+                                        <Dialogs/>
+                                    </Route>
+                                    <Route path="/users">
+                                        <UsersContainer/>
+                                    </Route>
+                                    <Route path="/login">
+                                        <Login/>
+                                    </Route>
+                                    <Route path="*">
+                                        <div>404 Not Found</div>
+                                    </Route>
+                                </Switch>
+                            </main>
+                        </>
+                }
             </div>
             <GlobalError />
         </div>

@@ -1,7 +1,16 @@
 .mainContainer {
     padding: 10px;
     max-width: 1000px;
+    min-width: 300px;
     margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #4a76a8;
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
 .mainBlock {
@@ -16,6 +25,11 @@
 
 .content {
     flex-basis: 800px;
-    min-width: 350px;
     flex-grow: 2;
+}
+
+@media (max-width: 768px) {
+    .nav {
+        display: none;
+    }
 }

@@ -9,6 +9,8 @@ const HeaderContainer = (props) => {
             <Header isAuth={props.isAuth}
                     fullName={props.fullName}
                     logoutUser={props.logoutUser}
+                    setChange={props.setChange}
+                    change={props.change}
             />
         )
 }

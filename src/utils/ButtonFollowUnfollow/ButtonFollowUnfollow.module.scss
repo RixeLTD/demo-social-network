@@ -34,3 +34,9 @@
         background-color: #6c99cd;
     }
 }
+
+@media (max-width: 768px) {
+    .button {
+        font-size: 12px;
+    }
+}

@@ -5,11 +5,16 @@ import {connect} from 'react-redux';
 import {getAuthUserId, getProfile} from '../../redux/profile-selectors';
 import {setUserProfile, setUserStatus} from "../../redux/profile-reducer";
 
-const Navbar = ({profile, authUserId, setUserProfile, setUserStatus}) => {
+const Navbar = ({profile, authUserId, setUserProfile, setUserStatus, setChange}) => {
+
+    const setChangeFalse = () => {
+        setChange(false);
+    }
 
     return (
         <>
             <NavLink to={'/profile/'} className={s.navLink} activeClassName={s.active} onClick={() => {
+                setChangeFalse();
                 if (profile && profile.userId !== authUserId) {
                     setUserProfile(null);
                     setUserStatus(null);
@@ -17,10 +22,10 @@ const Navbar = ({profile, authUserId, setUserProfile, setUserStatus}) => {
             }}>
                 <div className={s.navLinkText}>Профиль</div>
             </NavLink>
-            <NavLink to={'/dialogs/'} className={s.navLink} activeClassName={s.active}>
+            <NavLink to={'/dialogs/'} className={s.navLink} activeClassName={s.active} onClick={setChangeFalse}>
                 <div className={s.navLinkText}>Сообщения</div>
             </NavLink>
-            <NavLink to={'/users/'} className={s.navLink} activeClassName={s.active}>
+            <NavLink to={'/users/'} className={s.navLink} activeClassName={s.active} onClick={setChangeFalse}>
                 <div className={s.navLinkText}>Пользователи</div>
             </NavLink>
             <span className={s.navLink}>

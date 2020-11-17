@@ -30,7 +30,7 @@ const Profile = (props) => {
                     <img className={s.userImage} src={props.profile.photos.large || noImage}
                          alt=""/>
                     {props.ownProfile
-                        ? <div>
+                        ? <>
                             <label className={s.uploadPhoto}>Загрузить фотографию
                                 <input id={'file'} type={'file'} onChange={props.onUpdateUserPhoto} accept="image/*"
                                        hidden/>
@@ -42,7 +42,7 @@ const Profile = (props) => {
                                     :
                                     <div className={s.editProfile} onClick={enableEditMode}>Редактировать профиль</div>
                             }
-                        </div> : null
+                        </> : null
                     }
 
                 </div>

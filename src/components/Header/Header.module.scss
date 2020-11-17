@@ -1,21 +1,41 @@
-.header {
-    display: flex;
-    align-items: center;
-    background-color: #4a76a8;
-    padding: 10px;
-    margin-bottom: 10px;
-    min-width: 730px;
-}
-
 .logo {
     flex-basis: 30px;
     min-width: 30px;
     margin-right: auto;
 }
 
+.hamburger {
+    display: none;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.bar1, .bar2, .bar3 {
+    width: 25px;
+    height: 4px;
+    background-color: #333;
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+.change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-5px, 6px) ;
+    transform: rotate(-45deg) translate(-5px, 6px) ;
+}
+
+.change .bar2 {
+    opacity: 0;
+}
+
+.change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-5px, -6px) ;
+    transform: rotate(45deg) translate(-5px, -6px) ;
+}
+
 .login {
     flex-basis: 290px;
     text-align: right;
+    flex-grow: 2;
 }
 
 .userName {
@@ -58,5 +78,11 @@
 @media (max-width: 1024px) {
     .header {
         min-width: 480px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
     }
 }
