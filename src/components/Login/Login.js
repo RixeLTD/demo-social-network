@@ -118,12 +118,17 @@ const Login = (props) => {
     }
 
     return (
-        <div className={s.loginBlock}>
-            <h1>Login</h1>
-            <LoginFormik isAuth={props.isAuth} isCaptcha={props.isCaptcha} onSubmit={onSubmit}
-                         errorMessage={props.errorMessage}/>
-            <div className={s.formError}>{props.errorMessage}</div>
-        </div>
+        <>
+            <div className={s.loginBlock}>
+                <h1>Login</h1>
+                <LoginFormik isAuth={props.isAuth} isCaptcha={props.isCaptcha} onSubmit={onSubmit}
+                             errorMessage={props.errorMessage}/>
+                <div className={s.formError}>{props.errorMessage}</div>
+                <span>Данные тестового аккаунта:</span>
+                <span>Email: free@samuraijs.com</span>
+                <span>Password: free</span>
+            </div>
+        </>
     )
 }
 

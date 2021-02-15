@@ -12,7 +12,7 @@ import {initializeApp} from "./redux/app-reduces";
 import Preloader from "./components/common/preloader/Preloader";
 import GlobalError from "./utils/GlobalError/GlobalError";
 
-const App = ({initializeApp, initialized}) => {
+const App = ({initializeApp, initialized, globalError}) => {
 
     let [mobileNav, setMobileNav] = useState(false);
 
@@ -21,6 +21,9 @@ const App = ({initializeApp, initialized}) => {
     }, [initializeApp])
 
     if (!initialized) {
+        if (globalError) {
+            return <GlobalError />
+        }
         return <Preloader/>
     }
 
@@ -66,6 +69,7 @@ const App = ({initializeApp, initialized}) => {
 const mapStateToProps = (state) => {
     return {
         initialized: state.app.initialized,
+        globalError: state.app.globalError,
     }
 }
 

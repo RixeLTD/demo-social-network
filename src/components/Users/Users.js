@@ -9,7 +9,9 @@ const Users = (props) => {
             {props.users.map(user => {
                 return <User user={user} followingInProgress={props.followingInProgress}
                              followUnfollow={props.followUnfollow} key={user.id}
-                             clearUserProfile={props.clearUserProfile}/>
+                             clearUserProfile={props.clearUserProfile}
+                             isAuth={props.isAuth}
+                />
             })}
             <button className={s.buttonMore} onClick={() => props.onPageChanged(props.currentPage - 1)}>
                 Показать еще

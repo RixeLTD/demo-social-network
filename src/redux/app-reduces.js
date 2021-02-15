@@ -48,11 +48,16 @@ const appReducer = (state = initialState, action) => {
 
 export const initializeApp = () => async (dispatch) => {
     await dispatch(getUserData());
-    let data = await usersAPI.getUsers(1, 10);
-    let newCurrentPage = data["totalCount"] % 10 === 0 ? data["totalCount"] / 10 : Math.floor(data["totalCount"] / 10) + 1;
-    dispatch(setCurrentPage(newCurrentPage));
-    dispatch(clearUsers());
-    dispatch(initializedSuccess());
+    try {
+        let data = await usersAPI.getUsers(1, 10);
+        let newCurrentPage = data["totalCount"] % 10 === 0 ? data["totalCount"] / 10 : Math.floor(data["totalCount"] / 10) + 1;
+        dispatch(setCurrentPage(newCurrentPage));
+        dispatch(clearUsers());
+        dispatch(initializedSuccess());
+    } catch (error) {
+        dispatch(setGlobalError(`initializeApp error: ${error.message}`));
+        dispatch(setIsVisibleGlobalError(true));
+    }
 }
 
 export default appReducer;

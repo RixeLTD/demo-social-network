@@ -12,8 +12,9 @@ import {
     getPageSize,
     getTotalUsersCount, getUsers
 } from "../../redux/users-selectors";
+import {getIsAuth} from "../../redux/auth-selectors";
 
-const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, setUserStatus, totalUsersCount, users, ...props}) => {
+const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, setUserStatus, totalUsersCount, users, isAuth, ...props}) => {
 
     useEffect(() => {
         requestUsers(currentPage, pageSize);
@@ -39,6 +40,7 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, se
                    followUnfollow={props.followUnfollow}
                    users={users}
                    clearUserProfile={clearUserProfile}
+                   isAuth={isAuth}
             />
         </>
     );
@@ -52,6 +54,7 @@ const mapStateToProps = (state) => {
         currentPage: getCurrentPage(state),
         isFetching: getIsFetching(state),
         followingInProgress: getFollowingInProgress(state),
+        isAuth: getIsAuth(state)
     }
 }
 

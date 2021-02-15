@@ -14,9 +14,14 @@ const User = (props) => {
                         <img src={props.user.photos.small || noImage} className={s.photo} alt=""/>
                     </NavLink>
                 </div>
-                <ButtonFollowUnfollow followingInProgress={props.followingInProgress}
-                                      user={props.user}
-                                      followUnfollow={props.followUnfollow}/>
+                {props.isAuth
+                    ? <ButtonFollowUnfollow followingInProgress={props.followingInProgress}
+                                            user={props.user}
+                                            followUnfollow={props.followUnfollow}/>
+                    : null
+                }
+
+
             </div>
             <div className={s.nameAndStatus}>
                 <div>
