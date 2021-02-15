@@ -1,5 +1,6 @@
 import React from 'react';
 import s from './Message.module.scss';
+import noImage from "../../../assets/images/noImage.png";
 
 const Message = ({setFindText, findText, message, removeMessage, activeDialog, id, userName, photo, ...props}) => {
 
@@ -13,7 +14,7 @@ const Message = ({setFindText, findText, message, removeMessage, activeDialog, i
         <div className={`${s.block} ${find ? s.find : null}`}>
             <div>
                 <div className={s.photoContainer}>
-                    <img className={s.photo} src={photo} alt=""/>
+                    <img className={s.photo || noImage} src={photo} alt=""/>
                 </div>
             </div>
             <div className={s.userNameAndMessage}>

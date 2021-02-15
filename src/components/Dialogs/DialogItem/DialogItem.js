@@ -1,6 +1,7 @@
 import React from 'react';
 import s from '../Dialogs.module.scss';
 import {NavLink} from "react-router-dom";
+import noImage from "../../../assets/images/noImage.png";
 
 const DialogItem = ({match, messages, findText, photo, userId, userName, myPhoto, ...props}) => {
 
@@ -32,7 +33,7 @@ const DialogItem = ({match, messages, findText, photo, userId, userName, myPhoto
                     <div className={s.userName}>{userName}</div>
                     <div className={s.messageContainer}>
                         {isMe ? <div className={s.myPhotoContainer}>
-                            <img src={myPhoto} className={s.myPhoto} alt=""/>
+                            <img src={myPhoto || noImage} className={s.myPhoto} alt=""/>
                         </div> : null}
                         <div className={s.message}>{message}</div>
                     </div>
