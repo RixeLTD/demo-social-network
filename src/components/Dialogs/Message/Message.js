@@ -14,7 +14,7 @@ const Message = ({setFindText, findText, message, removeMessage, activeDialog, i
         <div className={`${s.block} ${find ? s.find : null}`}>
             <div>
                 <div className={s.photoContainer}>
-                    <img className={s.photo || noImage} src={photo} alt=""/>
+                    <img className={s.photo} src={photo || noImage} alt=""/>
                 </div>
             </div>
             <div className={s.userNameAndMessage}>
