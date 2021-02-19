@@ -1,30 +1,43 @@
-import {getUserData} from "./auth-reduces";
-import {clearUsers, setCurrentPage} from "./users-reduces";
-import {usersAPI} from "../api/api";
+import {getUserData} from "./auth-reduces"
+import {clearUsers, setCurrentPage} from "./users-reduces"
+import {usersAPI} from "../api/api"
 
-const INITIALIZED_SUCCESS = 'APP_INITIALIZED_SUCCESS';
-const SET_GLOBAL_ERROR = 'APP_SET_GLOBAL_ERROR';
-const IS_GLOBAL_ERROR = 'APP_IS_GLOBAL_ERROR';
+const INITIALIZED_SUCCESS = 'APP_INITIALIZED_SUCCESS'
+const SET_GLOBAL_ERROR = 'APP_SET_GLOBAL_ERROR'
+const IS_GLOBAL_ERROR = 'APP_IS_GLOBAL_ERROR'
+
+export type initialStateType = typeof initialState
 
 let initialState = {
     initialized: false,
-    globalError: null,
-    isVisibleGlobalError: false,
-};
+    globalError: null as string | null,
+    isVisibleGlobalError: false
+}
 
-export const initializedSuccess = () => ({
+type initializedSuccessType = {
+    type: typeof INITIALIZED_SUCCESS
+}
+export const initializedSuccess = (): initializedSuccessType => ({
     type: INITIALIZED_SUCCESS,
 })
 
-export const setGlobalError = (error) => ({
+type setGlobalErrorType = {
+    type: typeof SET_GLOBAL_ERROR
+    error: string
+}
+export const setGlobalError = (error: string): setGlobalErrorType => ({
     type: SET_GLOBAL_ERROR, error
 })
 
-export const setIsVisibleGlobalError = (value) => ({
+type setIsVisibleGlobalErrorType = {
+    type: typeof IS_GLOBAL_ERROR
+    value: boolean
+}
+export const setIsVisibleGlobalError = (value: boolean): setIsVisibleGlobalErrorType => ({
     type: IS_GLOBAL_ERROR, value
 })
 
-const appReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action: any): initialStateType => {
     switch (action.type) {
         case INITIALIZED_SUCCESS:
             return {
@@ -46,7 +59,7 @@ const appReducer = (state = initialState, action) => {
     }
 }
 
-export const initializeApp = () => async (dispatch) => {
+export const initializeApp = () => async (dispatch: any) => {
     await dispatch(getUserData());
     try {
         let data = await usersAPI.getUsers(1, 10);

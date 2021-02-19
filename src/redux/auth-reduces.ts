@@ -1,42 +1,29 @@
-import {authAPI, profileAPI} from "../api/api";
-import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces";
+import {authAPI, profileAPI} from "../api/api"
+import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces"
 
-const SET_USER_DATA = 'AUTH_SET_USER_DATA';
-const SET_CAPTCHA = 'AUTH_SET_CAPTCHA';
-const SET_ERRORS = 'AUTH_SET_ERRORS';
+const SET_USER_DATA = 'AUTH_SET_USER_DATA'
+const SET_CAPTCHA = 'AUTH_SET_CAPTCHA'
+const SET_ERRORS = 'AUTH_SET_ERRORS'
 
 let initialState = {
-    userId: null,
-    email: null,
-    login: null,
-    fullName: null,
-    photo: null,
+    userId: null as number | null,
+    email: null as string | null,
+    login: null as string | null,
+    fullName: null as string | null,
+    photo: null as string | null,
     isAuth: false,
-    isCaptcha: null,
-    errorMessage: null,
-};
+    isCaptcha: null as string | null,
+    errorMessage: null as string | null,
+}
 
-const setUserData = (userId, email, login, fullName, photo, isAuth) => ({
-    type: SET_USER_DATA,
-    data: {userId, email, login, fullName, photo, isAuth}
-})
+export type initialStateType = typeof initialState
 
-const setCaptcha = (url) => ({
-    type: SET_CAPTCHA,
-    isCaptcha: url
-})
-
-const setLoginFormErrors = (message) => ({
-    type: SET_ERRORS,
-    message
-})
-
-const authReducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action: any): initialStateType => {
     switch (action.type) {
         case SET_USER_DATA:
             return {
                 ...state,
-                ...action.data,
+                ...action.payload,
             }
         case SET_CAPTCHA:
             return {
@@ -53,7 +40,42 @@ const authReducer = (state = initialState, action) => {
     }
 }
 
-export const getUserData = () => async (dispatch) => {
+type setUserDataPayloadType = {
+    userId: number | null
+    email: string | null
+    login: string | null
+    fullName: string | null
+    photo: string | null
+    isAuth: boolean | null
+}
+type setUserDataType = {
+    type: typeof SET_USER_DATA
+    payload: setUserDataPayloadType
+}
+const setUserData = (userId: number | null, email: string | null, login: string | null, fullName: string | null, photo: string | null, isAuth: boolean): setUserDataType => ({
+    type: SET_USER_DATA,
+    payload: {userId, email, login, fullName, photo, isAuth}
+})
+
+type setCaptchaType = {
+    type: typeof SET_CAPTCHA
+    isCaptcha: string | null
+}
+const setCaptcha = (url: string | null):setCaptchaType => ({
+    type: SET_CAPTCHA,
+    isCaptcha: url
+})
+
+type setLoginFormErrorsType = {
+    type: typeof SET_ERRORS
+    message: string | null
+}
+const setLoginFormErrors = (message: string | null): setLoginFormErrorsType => ({
+    type: SET_ERRORS,
+    message
+})
+
+export const getUserData = () => async (dispatch: any) => {
     try {
         let data = await authAPI.auth();
         if (data.resultCode === 0) {
@@ -69,7 +91,7 @@ export const getUserData = () => async (dispatch) => {
     }
 }
 
-export const getCaptcha = () => async (dispatch) => {
+export const getCaptcha = () => async (dispatch: any) => {
     try {
         let url = await authAPI.getCaptcha();
         dispatch(setCaptcha(url));
@@ -80,7 +102,7 @@ export const getCaptcha = () => async (dispatch) => {
 
 }
 
-export const loginUser = (formData) => async (dispatch) => {
+export const loginUser = (formData: any) => async (dispatch: any) => {
     try {
         let response = await authAPI.login(formData.email, formData.password, formData.rememberMe, formData.captcha);
         dispatch(setLoginFormErrors(null));
@@ -99,11 +121,11 @@ export const loginUser = (formData) => async (dispatch) => {
     }
 }
 
-export const logoutUser = () => async (dispatch) => {
+export const logoutUser = () => async (dispatch: any) => {
     try {
         let data = await authAPI.logout();
         if (data.resultCode === 0) {
-            dispatch(setUserData(null, null, null, false));
+            dispatch(setUserData(null, null, null, null, null, false));
             dispatch(setLoginFormErrors(null));
         }
         if (data.resultCode === 1) {
