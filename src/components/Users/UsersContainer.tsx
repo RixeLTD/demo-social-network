@@ -13,14 +13,43 @@ import {
     getTotalUsersCount, getUsers
 } from "../../redux/users-selectors";
 import {getIsAuth} from "../../redux/auth-selectors";
+import {profileType, userType} from "../../types/types";
+import {appStateType} from "../../redux/redux-store";
 
-const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, setUserStatus, totalUsersCount, users, isAuth, ...props}) => {
+type usersContainerType = {
+    currentPage: number
+    pageSize: number
+    users: Array<userType>
+    isAuth: boolean
+    totalUsersCount: number
+    followingInProgress: boolean
+    isFetching: boolean
+
+    requestUsers: (currentPage: number, pageSize: number) => void
+    followUnfollow: (userId: number, action: string) => void
+    setUserProfile: (profile: profileType | null) => void
+    setUserStatus: (status: string | null) => void
+}
+
+const UsersContainer: React.FC<usersContainerType> = ({
+                            requestUsers,
+                            currentPage,
+                            pageSize,
+                            setUserProfile,
+                            setUserStatus,
+                            totalUsersCount,
+                            users,
+                            isAuth,
+                            followingInProgress,
+                            followUnfollow,
+                            isFetching
+                        }) => {
 
     useEffect(() => {
         requestUsers(currentPage, pageSize);
     }, [currentPage, requestUsers, pageSize])
 
-    const onPageChanged = (pageNumber) => {
+    const onPageChanged = (pageNumber: number) => {
         requestUsers(pageNumber, pageSize);
     }
 
@@ -31,13 +60,13 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, se
 
     return (
         <>
-            {props.isFetching ? <Preloader/> : null}
-            <Users totalUsersCount={props.totalUsersCount}
+            {isFetching ? <Preloader/> : null}
+            <Users 
                    pageSize={pageSize}
                    onPageChanged={onPageChanged}
                    currentPage={currentPage}
-                   followingInProgress={props.followingInProgress}
-                   followUnfollow={props.followUnfollow}
+                   followingInProgress={followingInProgress}
+                   followUnfollow={followUnfollow}
                    users={users}
                    clearUserProfile={clearUserProfile}
                    isAuth={isAuth}
@@ -46,7 +75,7 @@ const UsersContainer = ({requestUsers, currentPage, pageSize, setUserProfile, se
     );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: appStateType) => {
     return {
         totalUsersCount: getTotalUsersCount(state),
         pageSize: getPageSize(state),

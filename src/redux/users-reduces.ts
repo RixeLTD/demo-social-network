@@ -99,7 +99,7 @@ export const requestUsers = (page: number, pageSize: number) => async (dispatch:
     }
 }
 
-export const followUnfollow = (userId: number, action: any) => async (dispatch: any) => {
+export const followUnfollow = (userId: number, action: string) => async (dispatch: any) => {
     try {
         dispatch(toggleFollowing(true, userId));
         const data = (action === 'following') ? await followAPI.followUser(userId) : (action === 'unfollowing') ? await followAPI.unfollowUser(userId) : null;
