@@ -1,34 +1,33 @@
-import {connect} from 'react-redux';
-import {requestUsers, followUnfollow} from '../../redux/users-reduces';
-import {setUserProfile, setUserStatus} from "../../redux/profile-reducer";
-import Users from './Users';
-import React, {useEffect} from 'react';
-import Preloader from "../common/preloader/Preloader";
-import {compose} from "redux";
+import {connect} from 'react-redux'
+import {requestUsers, followUnfollow} from '../../redux/users-reduces'
+import {setUserProfile, setUserStatus} from "../../redux/profile-reducer"
+import Users from './Users'
+import React, {useEffect} from 'react'
+import Preloader from "../common/preloader/Preloader"
+import {compose} from "redux"
 import {
     getCurrentPage,
     getFollowingInProgress,
     getIsFetching,
     getPageSize,
-    getTotalUsersCount, getUsers
-} from "../../redux/users-selectors";
-import {getIsAuth} from "../../redux/auth-selectors";
-import {profileType, userType} from "../../types/types";
-import {appStateType} from "../../redux/redux-store";
+    getUsers
+} from "../../redux/users-selectors"
+import {getIsAuth} from "../../redux/auth-selectors"
+import {profileType, userType} from "../../types/types"
+import {appStateType} from "../../redux/redux-store"
 
 type usersContainerType = {
     currentPage: number
     pageSize: number
     users: Array<userType>
     isAuth: boolean
-    totalUsersCount: number
-    followingInProgress: boolean
+    followingInProgress: Array<number>
     isFetching: boolean
 
     requestUsers: (currentPage: number, pageSize: number) => void
     followUnfollow: (userId: number, action: string) => void
     setUserProfile: (profile: profileType | null) => void
-    setUserStatus: (status: string | null) => void
+    setUserStatus: (status: string) => void
 }
 
 const UsersContainer: React.FC<usersContainerType> = ({
@@ -37,7 +36,6 @@ const UsersContainer: React.FC<usersContainerType> = ({
                             pageSize,
                             setUserProfile,
                             setUserStatus,
-                            totalUsersCount,
                             users,
                             isAuth,
                             followingInProgress,
@@ -46,23 +44,22 @@ const UsersContainer: React.FC<usersContainerType> = ({
                         }) => {
 
     useEffect(() => {
-        requestUsers(currentPage, pageSize);
+        requestUsers(currentPage, pageSize)
     }, [currentPage, requestUsers, pageSize])
 
     const onPageChanged = (pageNumber: number) => {
-        requestUsers(pageNumber, pageSize);
+        requestUsers(pageNumber, pageSize)
     }
 
     const clearUserProfile = () => {
-        setUserProfile(null);
-        setUserStatus(null);
+        setUserProfile(null)
+        setUserStatus("")
     }
 
     return (
         <>
             {isFetching ? <Preloader/> : null}
             <Users 
-                   pageSize={pageSize}
                    onPageChanged={onPageChanged}
                    currentPage={currentPage}
                    followingInProgress={followingInProgress}
@@ -72,12 +69,11 @@ const UsersContainer: React.FC<usersContainerType> = ({
                    isAuth={isAuth}
             />
         </>
-    );
+    )
 }
 
 const mapStateToProps = (state: appStateType) => {
     return {
-        totalUsersCount: getTotalUsersCount(state),
         pageSize: getPageSize(state),
         users: getUsers(state),
         currentPage: getCurrentPage(state),
@@ -96,4 +92,4 @@ const mapDispatchToProps = {
 
 export default compose(
     connect(mapStateToProps, mapDispatchToProps),
-)(UsersContainer);
+)(UsersContainer)

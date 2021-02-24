@@ -30,8 +30,8 @@ export const addPost = (postText: string):addPostType => ({type: ADD_POST, postT
 type removePostType = {type: typeof REMOVE_POST, id: number}
 export const removePost = (id: number):removePostType => ({type: REMOVE_POST, id})
 
-type setUserProfileType = {type: typeof SET_USER_PROFILE, profile: profileType}
-export const setUserProfile = (profile: profileType):setUserProfileType => ({type: SET_USER_PROFILE, profile})
+type setUserProfileType = {type: typeof SET_USER_PROFILE, profile: profileType | null}
+export const setUserProfile = (profile: profileType | null):setUserProfileType => ({type: SET_USER_PROFILE, profile})
 
 type setUserStatusType = {type: typeof SET_STATUS, status: string}
 export const setUserStatus = (status: string):setUserStatusType => ({type: SET_STATUS, status})

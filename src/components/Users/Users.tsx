@@ -1,11 +1,11 @@
-import React from 'react';
-import s from './users.module.scss';
-import User from "./User";
-import {userType} from "../../types/types";
+import React from 'react'
+import s from './users.module.scss'
+import User from "./User"
+import {userType} from "../../types/types"
 
 type usersType = {
     users: Array<userType>
-    followingInProgress: boolean
+    followingInProgress: Array<number>
     isAuth: boolean
     currentPage: number
 
@@ -42,4 +42,4 @@ const Users: React.FC<usersType> = ({
     )
 }
 
-export default Users;
+export default Users
