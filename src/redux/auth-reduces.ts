@@ -1,5 +1,6 @@
-import {authAPI, profileAPI} from "../api/api"
-import {setGlobalError, setIsVisibleGlobalError} from "./app-reduces"
+import {authAPI, profileAPI, ResultCodes} from "../api/api"
+import {setGlobalError, setGlobalErrorType, setIsVisibleGlobalError, setIsVisibleGlobalErrorType} from "./app-reduces"
+import {ThunkType} from "../types/types";
 
 const SET_USER_DATA = 'AUTH_SET_USER_DATA'
 const SET_CAPTCHA = 'AUTH_SET_CAPTCHA'
@@ -18,7 +19,7 @@ let initialState = {
 
 export type initialStateType = typeof initialState
 
-const authReducer = (state = initialState, action: any): initialStateType => {
+const authReducer = (state = initialState, action: ActionsTypes): initialStateType => {
     switch (action.type) {
         case SET_USER_DATA:
             return {
@@ -40,17 +41,19 @@ const authReducer = (state = initialState, action: any): initialStateType => {
     }
 }
 
+type ActionsTypes = setUserDataType | setCaptchaType | setLoginFormErrorsType | setGlobalErrorType | setIsVisibleGlobalErrorType
+
+type setUserDataType = {
+    type: typeof SET_USER_DATA
+    payload: setUserDataPayloadType
+}
 type setUserDataPayloadType = {
     userId: number | null
     email: string | null
     login: string | null
     fullName: string | null
     photo: string | null
-    isAuth: boolean | null
-}
-type setUserDataType = {
-    type: typeof SET_USER_DATA
-    payload: setUserDataPayloadType
+    isAuth: boolean
 }
 const setUserData = (userId: number | null, email: string | null, login: string | null, fullName: string | null, photo: string | null, isAuth: boolean): setUserDataType => ({
     type: SET_USER_DATA,
@@ -75,10 +78,10 @@ const setLoginFormErrors = (message: string | null): setLoginFormErrorsType => (
     message
 })
 
-export const getUserData = () => async (dispatch: any) => {
+export const getUserData = (): ThunkType<ActionsTypes> => async (dispatch) => {
     try {
-        let data = await authAPI.auth();
-        if (data.resultCode === 0) {
+        let data = await authAPI.me();
+        if (data.resultCode === ResultCodes.Success) {
             let {id, email, login} = data.data;
             let profile = await profileAPI.getProfile(id);
             let fullName = profile.fullName;
@@ -91,7 +94,7 @@ export const getUserData = () => async (dispatch: any) => {
     }
 }
 
-export const getCaptcha = () => async (dispatch: any) => {
+export const getCaptcha = (): ThunkType<ActionsTypes> => async (dispatch) => {
     try {
         let url = await authAPI.getCaptcha();
         dispatch(setCaptcha(url));
@@ -102,18 +105,24 @@ export const getCaptcha = () => async (dispatch: any) => {
 
 }
 
-export const loginUser = (formData: any) => async (dispatch: any) => {
+export type LoginFormDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+    captcha: string
+}
+export const loginUser = (formData: LoginFormDataType): ThunkType<ActionsTypes> => async (dispatch) => {
     try {
         let response = await authAPI.login(formData.email, formData.password, formData.rememberMe, formData.captcha);
         dispatch(setLoginFormErrors(null));
-        if (response.data.resultCode === 0) {
-            dispatch(getUserData());
+        if (response.resultCode === ResultCodes.Success) {
+            await dispatch(getUserData());
             dispatch(setCaptcha(null));
         } else {
-            if (response.data.resultCode === 10) {
+            if (response.resultCode === ResultCodes.CaptchaIsRequired) {
                 dispatch(getCaptcha());
             }
-            dispatch(setLoginFormErrors(response.data.messages[0]));
+            dispatch(setLoginFormErrors(response.messages[0]));
         }
     } catch (error) {
         dispatch(setGlobalError(`Login user error: ${error.message}`));
@@ -121,14 +130,14 @@ export const loginUser = (formData: any) => async (dispatch: any) => {
     }
 }
 
-export const logoutUser = () => async (dispatch: any) => {
+export const logoutUser = (): ThunkType<ActionsTypes> => async (dispatch) => {
     try {
         let data = await authAPI.logout();
-        if (data.resultCode === 0) {
+        if (data.resultCode === ResultCodes.Success) {
             dispatch(setUserData(null, null, null, null, null, false));
             dispatch(setLoginFormErrors(null));
         }
-        if (data.resultCode === 1) {
+        if (data.resultCode === ResultCodes.Error) {
             dispatch(setLoginFormErrors(data.messages[0]));
         }
     } catch (error) {

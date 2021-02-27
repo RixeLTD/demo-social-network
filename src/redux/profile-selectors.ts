@@ -1,25 +1,25 @@
-import {appStateType} from "./redux-store";
+import {AppStateType} from "./redux-store";
 
-export const getProfile = (state: appStateType) => {
+export const getProfile = (state: AppStateType) => {
     return state.profilePage.profile;
 }
 
-export const getStatus = (state: appStateType) => {
+export const getStatus = (state: AppStateType) => {
     return state.profilePage.status;
 }
 
-export const getAuthUserId = (state: appStateType) => {
-    return state.auth.userId;
+export const getAuthUserId = (state: AppStateType) => {
+    return state.me.userId;
 }
 
-export const getProfileFormErrors = (state: appStateType) => {
+export const getProfileFormErrors = (state: AppStateType) => {
     return state.profilePage.errorMessage;
 }
 
-export const getIsSubmittingSuccess = (state: appStateType) => {
+export const getIsSubmittingSuccess = (state: AppStateType) => {
     return state.profilePage.isSubmittingSuccess;
 }
 
-export const getPosts = (state: appStateType) => {
+export const getPosts = (state: AppStateType) => {
     return state.profilePage.posts;
 }

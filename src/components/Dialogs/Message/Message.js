@@ -2,16 +2,10 @@ import React from 'react';
 import s from './Message.module.scss';
 import noImage from "../../../assets/images/noImage.png";
 
-const Message = ({setFindText, findText, message, removeMessage, activeDialog, id, userName, photo, ...props}) => {
-
-    let find;
-
-    if (findText) {
-        find = message.toLowerCase().includes(findText.toLowerCase());
-    }
+const Message = ({message, removeMessage, activeDialog, messageId, userName, photo}) => {
 
     return (
-        <div className={`${s.block} ${find ? s.find : null}`}>
+        <div className={s.block}>
             <div>
                 <div className={s.photoContainer}>
                     <img className={s.photo} src={photo || noImage} alt=""/>
@@ -22,7 +16,7 @@ const Message = ({setFindText, findText, message, removeMessage, activeDialog, i
                 <div className={s.message}>{message}</div>
             </div>
             <div className={s.remove} onClick={() => {
-                removeMessage(activeDialog, id);
+                removeMessage(activeDialog, messageId);
             }}>X</div>
         </div>
     );

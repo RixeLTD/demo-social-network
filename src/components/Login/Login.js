@@ -1,6 +1,6 @@
 import React from 'react';
 import {Formik, useFormikContext} from 'formik';
-import {loginUser} from "../../redux/auth-reduces";
+import {LoginFormDataType, loginUser} from "../../redux/auth-reduces";
 import {connect} from "react-redux";
 import {Redirect} from "react-router-dom";
 import s from "./Login.module.scss";
@@ -16,6 +16,7 @@ const StopSubmitting = ({errorMessage}) => {
     return null;
 };
 
+// type Values = LoginFormDataType
 const LoginFormik = (props) => {
     return (
         <Formik

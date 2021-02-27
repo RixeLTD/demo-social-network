@@ -18,8 +18,8 @@ const HeaderContainer = (props) => {
 let mapStateToProps = (state) => {
 
     return {
-        isAuth: state.auth.isAuth,
-        fullName: state.auth.fullName,
+        isAuth: state.me.isAuth,
+        fullName: state.me.fullName,
     }
 };
 

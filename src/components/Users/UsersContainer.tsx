@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 import {requestUsers, followUnfollow} from '../../redux/users-reduces'
 import {setUserProfile, setUserStatus} from "../../redux/profile-reducer"
 import Users from './Users'
-import React, {useEffect} from 'react'
+import React from 'react'
 import Preloader from "../common/preloader/Preloader"
 import {compose} from "redux"
 import {
@@ -13,24 +13,24 @@ import {
     getUsers
 } from "../../redux/users-selectors"
 import {getIsAuth} from "../../redux/auth-selectors"
-import {profileType, userType} from "../../types/types"
-import {appStateType} from "../../redux/redux-store"
+import {ProfileType, UserType} from "../../types/types"
+import {AppStateType} from "../../redux/redux-store"
 
-type usersContainerType = {
+type UsersContainerType = {
     currentPage: number
     pageSize: number
-    users: Array<userType>
+    users: Array<UserType>
     isAuth: boolean
     followingInProgress: Array<number>
     isFetching: boolean
 
     requestUsers: (currentPage: number, pageSize: number) => void
-    followUnfollow: (userId: number, action: string) => void
-    setUserProfile: (profile: profileType | null) => void
+    followUnfollow: (userId: number, action: "following" | "unfollowing") => void
+    setUserProfile: (profile: ProfileType | null) => void
     setUserStatus: (status: string) => void
 }
 
-const UsersContainer: React.FC<usersContainerType> = ({
+const UsersContainer: React.FC<UsersContainerType> = ({
                             requestUsers,
                             currentPage,
                             pageSize,
@@ -42,10 +42,6 @@ const UsersContainer: React.FC<usersContainerType> = ({
                             followUnfollow,
                             isFetching
                         }) => {
-
-    useEffect(() => {
-        requestUsers(currentPage, pageSize)
-    }, [currentPage, requestUsers, pageSize])
 
     const onPageChanged = (pageNumber: number) => {
         requestUsers(pageNumber, pageSize)
@@ -72,7 +68,7 @@ const UsersContainer: React.FC<usersContainerType> = ({
     )
 }
 
-const mapStateToProps = (state: appStateType) => {
+const mapStateToProps = (state: AppStateType) => {
     return {
         pageSize: getPageSize(state),
         users: getUsers(state),

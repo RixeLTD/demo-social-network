@@ -1,17 +1,15 @@
 import React from 'react';
 import DialogItem from "./DialogItem";
 
-const DialogItemContainer = ({match, messages, findText, myPhoto, filteredUsers, myName, ...props}) => {
+const DialogItemContainer = ({myPhoto, dialogs}) => {
 
-    let dialogsElements = filteredUsers.map(d => <DialogItem userId={d.userId}
-                                                             userName={d.userName}
-                                                             photo={d.photo}
-                                                             myPhoto={myPhoto}
-                                                             messages={d.messages}
-                                                             key={d.userId}
-                                                             match={match}
-                                                             findText={findText}
-    />);
+    let dialogsElements = dialogs.map(u => <DialogItem userId={u.data.userId}
+                                                       userName={u.data.userName}
+                                                       photo={u.data.photo}
+                                                       myPhoto={myPhoto}
+                                                       messages={u.messages}
+                                                       key={u.data.userId}
+    />)
 
     return (
         <>

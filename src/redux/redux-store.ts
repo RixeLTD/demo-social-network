@@ -10,12 +10,12 @@ let rootReducer = combineReducers({
     profilePage: profileReducer,
     messagesPage: dialogsReducer,
     usersPage: usersReducer,
-    auth: authReducer,
+    me: authReducer,
     app: appReducer,
 });
 
 type rootReducerType = typeof rootReducer
-export type appStateType = ReturnType<rootReducerType>
+export type AppStateType = ReturnType<rootReducerType>
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

@@ -103,20 +103,3 @@
         color: #000000;
     }
 }
-
-.find {
-    animation: find;
-    animation-duration: 4s;
-}
-
-@keyframes find {
-    from {
-        background-color: #dbdbde;
-    }
-    50% {
-        background-color: #dbdbde;
-    }
-    to {
-        background-color: #ffffff;
-    }
-}

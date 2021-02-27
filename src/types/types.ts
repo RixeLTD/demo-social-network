@@ -1,13 +1,19 @@
-export type profileType = {
+import {ThunkAction} from "redux-thunk";
+import {AppStateType} from "../redux/redux-store";
+import {Action} from "redux";
+import React from "react";
+
+export type ProfileType = {
     userId: number
     lookingForAJob: boolean
     lookingForAJobDescription: string
     fullName: string
-    contacts: contactsType
-    photos: photosType
+    contacts: ContactsType
+    photos: PhotosType
+    aboutMe: string | null
 }
 
-export type contactsType = {
+export type ContactsType = {
     github: string
     vk: string
     facebook: string
@@ -18,21 +24,25 @@ export type contactsType = {
     mainLink: string
 }
 
-export type photosType = {
+export type PhotosType = {
     small: string | null
     large: string | null
 }
 
-export type postsType = {
+export type PostsType = {
     id: number
     message: string
     likesCount: number
 }
 
-export type userType = {
+export type UserType = {
     name: string
     id: number
-    photos: photosType
+    photos: PhotosType
     status: string | null
     followed: boolean
 }
+
+export type ThunkType<AC extends Action, returnType = void> = ThunkAction<Promise<returnType>, AppStateType, unknown, AC>
+
+export type UpdateUserPhotoType = React.ChangeEvent<HTMLInputElement>

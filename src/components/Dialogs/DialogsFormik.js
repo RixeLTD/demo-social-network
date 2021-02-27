@@ -3,7 +3,10 @@ import s from './Message/Message.module.scss';
 import {Formik} from "formik";
 import AutoHeightTextarea from "../../utils/AutoHeightTextarea";
 
-let DialogsFormik = (props) => {
+let DialogsFormik = ({
+                         activeDialog,
+                         addMessage
+                     }) => {
     return (
         <Formik
             initialValues={{message: ''}}
@@ -16,7 +19,7 @@ let DialogsFormik = (props) => {
             }}
             onSubmit={(values, {setSubmitting}) => {
                 setTimeout(() => {
-                    props.addMessage(values.message, props.activeDialog);
+                    addMessage(values.message, activeDialog);
                     values.message = '';
                     setSubmitting(false);
                 }, 400);

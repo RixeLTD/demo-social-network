@@ -1,54 +1,68 @@
 import React from "react";
-import {Field, Formik, useFormikContext} from "formik";
+import {Field, Formik, FormikErrors, useFormikContext} from "formik";
 import s from "../Profile.module.scss";
+import {ContactsType, ProfileType} from "../../../types/types";
 
-const StopSubmitting = ({errorMessage, disableEditMode, isSubmittingSuccess}) => {
+type StopSubmittingType = {
+    localErrorMessage: string | null
+    isSubmittingSuccess: boolean
+
+    disableEditMode: () => void
+}
+
+const StopSubmitting: React.FC<StopSubmittingType> = ({
+                                                          localErrorMessage,
+                                                          disableEditMode,
+                                                          isSubmittingSuccess
+                                                      }) => {
     const {setSubmitting} = useFormikContext();
     React.useEffect(() => {
-        if (errorMessage) {
+        if (localErrorMessage) {
             setSubmitting(false);
         }
         if (isSubmittingSuccess) {
             disableEditMode();
         }
-    }, [disableEditMode, errorMessage, setSubmitting, isSubmittingSuccess]);
+    }, [disableEditMode, localErrorMessage, setSubmitting, isSubmittingSuccess]);
     return null;
 };
 
-const ProfileBlockForm = ({profile, disableEditMode, submitUpdateProfile, errorMessage, isSubmittingSuccess}) => {
+type ProfileBlockFormType = {
+    profile: ProfileType
+    updateProfile: (value: ProfileType) => void
+    localErrorMessage: string | null
+    isSubmittingSuccess: boolean
 
+    disableEditMode: () => void
+}
+
+const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
+                                                              profile,
+                                                              disableEditMode,
+                                                              updateProfile,
+                                                              localErrorMessage,
+                                                              isSubmittingSuccess
+                                                          }) => {
+type Values = {
+    aboutMe: string | null,
+    lookingForAJobDescription: string | null
+}
     return (
         <Formik
-            initialValues={{
-                userId: profile.userId,
-                fullName: profile.fullName,
-                aboutMe: profile.aboutMe || "it's me",
-                lookingForAJob: profile.lookingForAJob,
-                lookingForAJobDescription: profile.lookingForAJobDescription || "Looking for a job description",
-                contacts: {
-                    github: profile.contacts.github,
-                    vk: profile.contacts.vk,
-                    facebook: profile.contacts.facebook,
-                    instagram: profile.contacts.instagram,
-                    twitter: profile.contacts.twitter,
-                    website: profile.contacts.website,
-                    youtube: profile.contacts.youtube,
-                    mainLink: profile.contacts.mainLink,
-                },
-            }}
+            initialValues={profile}
             validate={values => {
-                const errors = {};
+                const errors: FormikErrors<Values> = {}
                 if (!values.aboutMe) {
                     errors.aboutMe = 'Required';
                 }
                 if (!values.lookingForAJobDescription) {
                     errors.lookingForAJobDescription = 'Required';
                 }
-                return errors;
+                return errors
             }}
 
             onSubmit={(values) => {
-                submitUpdateProfile(values);
+                updateProfile(values);
             }}
         >
             {({
@@ -90,7 +104,7 @@ const ProfileBlockForm = ({profile, disableEditMode, submitUpdateProfile, errorM
                                 name="aboutMe"
                                 onBlur={handleBlur}
                                 onChange={handleChange}
-                                value={values.aboutMe}
+                                value={values.aboutMe as string}
                                 required
                                 autoComplete="off"
                             />
@@ -123,20 +137,19 @@ const ProfileBlockForm = ({profile, disableEditMode, submitUpdateProfile, errorM
                     </div>
                     <div className={s.profileInfoSection}>
                         <div className={s.itemKey}>Контакты:</div>
-                        <div className={s.contactContainer}>{Object.keys(profile.contacts).map(key => {
+                        <div className={s.contactContainer}>{Object.keys(profile.contacts).map(contact => {
                             return (
-                                <div key={key} className={s.contactItem}>
-                                    <label htmlFor={key} className={s.contactKey}>{key}:</label>
+                                <div key={contact} className={s.contactItem}>
+                                    <label htmlFor={contact} className={s.contactKey}>{contact}:</label>
                                     <input
                                         className={s.clearInputStyle}
-                                        id={key}
+                                        id={contact}
                                         type="url"
-                                        name={"contacts." + key}
+                                        name={"contacts." + contact}
                                         onChange={handleChange}
-                                        value={values.contacts[key]}
+                                        value={profile.contacts[contact as keyof ContactsType]}
                                         autoComplete="off"
                                     />
-                                    {errors.key}
                                 </div>
                             )
                         })}</div>
@@ -146,12 +159,13 @@ const ProfileBlockForm = ({profile, disableEditMode, submitUpdateProfile, errorM
                             Отменить
                         </button>
                         <button className={s.buttonSave} type="submit"
-                                disabled={isSubmitting || errors.aboutMe || errors.lookingForAJobDescription}>
+                                disabled={isSubmitting || Boolean(errors.aboutMe) || Boolean(errors.lookingForAJobDescription)}>
                             Сохранить
                         </button>
                     </div>
-                    <div className={s.formError}>{errorMessage}</div>
-                    <StopSubmitting errorMessage={errorMessage} disableEditMode={disableEditMode}
+                    <div className={s.formError}>{localErrorMessage}</div>
+                    <StopSubmitting localErrorMessage={localErrorMessage}
+                                    disableEditMode={disableEditMode}
                                     isSubmittingSuccess={isSubmittingSuccess}/>
                 </form>
             )}

@@ -1,11 +1,13 @@
-export const getLoginFormErrors = (state: any) => {
-    return state.auth.errorMessage;
+import {AppStateType} from "./redux-store";
+
+export const getLoginFormErrors = (state: AppStateType) => {
+    return state.me.errorMessage;
 }
 
-export const getIsAuth = (state: any) => {
-    return state.auth.isAuth;
+export const getIsAuth = (state: AppStateType) => {
+    return state.me.isAuth;
 }
 
-export const getIsCaptcha = (state: any) => {
-    return state.auth.isCaptcha;
+export const getIsCaptcha = (state: AppStateType) => {
+    return state.me.isCaptcha;
 }

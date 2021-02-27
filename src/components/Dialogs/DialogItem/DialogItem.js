@@ -3,22 +3,14 @@ import s from '../Dialogs.module.scss';
 import {NavLink} from "react-router-dom";
 import noImage from "../../../assets/images/noImage.png";
 
-const DialogItem = ({match, messages, findText, photo, userId, userName, myPhoto, ...props}) => {
+const DialogItem = ({messages, photo, userId, userName, myPhoto}) => {
 
     let isMe;
     let message;
 
-    if (findText) {
-        let findUser = messages.find(m => m.message.toLowerCase().includes(findText.toLowerCase()));
-        if (findUser) {
-            isMe = findUser.isMe;
-            message = findUser.message;
-        }
-    } else {
-        if (messages && messages.length !== 0) {
-            isMe = messages[messages.length - 1]["isMe"];
-            message = messages[messages.length - 1]["message"];
-        }
+    if (messages && messages.length !== 0) {
+        isMe = messages[messages.length - 1]["isMe"];
+        message = messages[messages.length - 1]["message"];
     }
 
     return (

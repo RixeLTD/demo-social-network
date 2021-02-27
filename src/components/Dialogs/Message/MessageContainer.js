@@ -1,24 +1,17 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import DialogsFormik from "../DialogsFormik";
 import Message from "./Message";
 
-const MessageContainer = ({setFindText, findText, messages, removeMessage, addMessage, activeDialog, myName, myPhoto, ...props}) => {
+const MessageContainer = ({currentUser, removeMessage, addMessage, activeDialog, myName, myPhoto}) => {
 
-    useEffect(() => {
-        return () => {
-            setFindText(null);
-        }
-    })
-
-    let messagesElements = messages.messages.map(m => <Message key={m.id}
-                                                               id={m.id}
-                                                               activeDialog={activeDialog}
-                                                               message={m.message}
-                                                               userName={m.isMe ? myName : messages.userName}
-                                                               photo={m.isMe ? myPhoto : messages.photo}
-                                                               removeMessage={removeMessage}
-                                                               findText={findText}
-                                                               setFindText={setFindText}/>);
+    let messagesElements = currentUser.messages.map(m => <Message key={m.id}
+                                                                  messageId={m.id}
+                                                                  activeDialog={activeDialog}
+                                                                  message={m.message}
+                                                                  userName={m.isMe ? myName : currentUser.data.userName}
+                                                                  photo={m.isMe ? myPhoto : currentUser.data.photo}
+                                                                  removeMessage={removeMessage}
+    />)
 
     return (
         <>

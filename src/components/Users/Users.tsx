@@ -1,20 +1,20 @@
 import React from 'react'
 import s from './users.module.scss'
 import User from "./User"
-import {userType} from "../../types/types"
+import {UserType} from "../../types/types"
 
-type usersType = {
-    users: Array<userType>
+type UsersType = {
+    users: Array<UserType>
     followingInProgress: Array<number>
     isAuth: boolean
     currentPage: number
 
     onPageChanged: (currentPage: number) => void
-    followUnfollow: (userId: number, action: string) => void
+    followUnfollow: (userId: number, action: "following" | "unfollowing") => void
     clearUserProfile: () => void
 }
 
-const Users: React.FC<usersType> = ({
+const Users: React.FC<UsersType> = ({
                                         users,
                                         followingInProgress,
                                         followUnfollow,
@@ -23,7 +23,6 @@ const Users: React.FC<usersType> = ({
                                         onPageChanged,
                                         currentPage
                                     }) => {
-
     return (
         <div className={s.container}>
             {users.map(user => {

@@ -14,6 +14,7 @@ const Navbar = ({profile, authUserId, setUserProfile, setUserStatus, setMobileNa
     return (
         <>
             <NavLink to={'/profile/'} className={s.navLink} activeClassName={s.active} onClick={() => {
+                window.scrollTo({top: 0})
                 setChangeFalse();
                 if (profile && profile.userId !== authUserId) {
                     setUserProfile(null);
@@ -28,15 +29,6 @@ const Navbar = ({profile, authUserId, setUserProfile, setUserStatus, setMobileNa
             <NavLink to={'/users/'} className={s.navLink} activeClassName={s.active} onClick={setChangeFalse}>
                 <div className={s.navLinkText}>Пользователи</div>
             </NavLink>
-            {/*<span className={s.navLink}>*/}
-            {/*    <div className={s.navLinkTextDisabled}>Настройки</div>*/}
-            {/*</span>*/}
-            {/*<span className={s.navLink}>*/}
-            {/*    <div className={s.navLinkTextDisabled}>Новости</div>*/}
-            {/*</span>*/}
-            {/*<span className={s.navLink}>*/}
-            {/*    <div className={s.navLinkTextDisabled}>Музыка</div>*/}
-            {/*</span>*/}
         </>
     );
 }

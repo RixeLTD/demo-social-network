@@ -9,7 +9,7 @@ const Header = ({mobileNav, setMobileNav, ...props}) => {
     return <>
         <Burger mobileNav={mobileNav}
                 setMobileNav={setMobileNav}/>
-        <NavLink to={"/"} onClick={() => {window.scrollTo({top: 0});}}>
+        <NavLink to={"/"} onClick={() => {window.scrollTo({top: 0})}}>
             <img className={s.logo} src={logo} style={{width: "30px"}} alt=''/>
         </NavLink>
         <div className={s.login}>
