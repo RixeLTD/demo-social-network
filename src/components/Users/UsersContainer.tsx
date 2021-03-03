@@ -1,10 +1,9 @@
-import {connect} from 'react-redux'
+import {connect, ConnectedProps} from 'react-redux'
 import {requestUsers, followUnfollow} from '../../redux/users-reduces'
-import {setUserProfile, setUserStatus} from "../../redux/profile-reducer"
+import {profileActions} from "../../redux/profile-reducer"
 import Users from './Users'
 import React from 'react'
 import Preloader from "../common/preloader/Preloader"
-import {compose} from "redux"
 import {
     getCurrentPage,
     getFollowingInProgress,
@@ -13,29 +12,12 @@ import {
     getUsers
 } from "../../redux/users-selectors"
 import {getIsAuth} from "../../redux/auth-selectors"
-import {ProfileType, UserType} from "../../types/types"
 import {AppStateType} from "../../redux/redux-store"
 
-type UsersContainerType = {
-    currentPage: number
-    pageSize: number
-    users: Array<UserType>
-    isAuth: boolean
-    followingInProgress: Array<number>
-    isFetching: boolean
-
-    requestUsers: (currentPage: number, pageSize: number) => void
-    followUnfollow: (userId: number, action: "following" | "unfollowing") => void
-    setUserProfile: (profile: ProfileType | null) => void
-    setUserStatus: (status: string) => void
-}
-
-const UsersContainer: React.FC<UsersContainerType> = ({
+const UsersContainer: React.FC<PropsFromRedux> = ({
                             requestUsers,
                             currentPage,
                             pageSize,
-                            setUserProfile,
-                            setUserStatus,
                             users,
                             isAuth,
                             followingInProgress,
@@ -47,11 +29,6 @@ const UsersContainer: React.FC<UsersContainerType> = ({
         requestUsers(pageNumber, pageSize)
     }
 
-    const clearUserProfile = () => {
-        setUserProfile(null)
-        setUserStatus("")
-    }
-
     return (
         <>
             {isFetching ? <Preloader/> : null}
@@ -61,7 +38,6 @@ const UsersContainer: React.FC<UsersContainerType> = ({
                    followingInProgress={followingInProgress}
                    followUnfollow={followUnfollow}
                    users={users}
-                   clearUserProfile={clearUserProfile}
                    isAuth={isAuth}
             />
         </>
@@ -81,11 +57,9 @@ const mapStateToProps = (state: AppStateType) => {
 
 const mapDispatchToProps = {
     requestUsers,
-    followUnfollow,
-    setUserProfile,
-    setUserStatus,
+    followUnfollow
 }
 
-export default compose(
-    connect(mapStateToProps, mapDispatchToProps),
-)(UsersContainer)
+const connector = connect(mapStateToProps, mapDispatchToProps)
+type PropsFromRedux = ConnectedProps<typeof connector>
+export default connector(UsersContainer)

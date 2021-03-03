@@ -11,14 +11,12 @@ type UsersType = {
 
     onPageChanged: (currentPage: number) => void
     followUnfollow: (userId: number, action: "following" | "unfollowing") => void
-    clearUserProfile: () => void
 }
 
 const Users: React.FC<UsersType> = ({
                                         users,
                                         followingInProgress,
                                         followUnfollow,
-                                        clearUserProfile,
                                         isAuth,
                                         onPageChanged,
                                         currentPage
@@ -30,7 +28,6 @@ const Users: React.FC<UsersType> = ({
                              followingInProgress={followingInProgress}
                              followUnfollow={followUnfollow}
                              key={user.id}
-                             clearUserProfile={clearUserProfile}
                              isAuth={isAuth}
                 />
             })}

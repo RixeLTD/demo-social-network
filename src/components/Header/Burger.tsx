@@ -1,7 +1,14 @@
 import React from 'react';
 import s from './Header.module.scss';
 
-const Burger = ({mobileNav, setMobileNav, ...props}) => {
+type PropsType = {
+    mobileNav: boolean
+    setMobileNav: (value: boolean) => void
+}
+const Burger: React.FC<PropsType> = ({
+                                         mobileNav,
+                                         setMobileNav
+                                     }) => {
 
     function myFunction() {
         setMobileNav(!mobileNav);

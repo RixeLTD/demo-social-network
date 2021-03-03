@@ -1,58 +1,45 @@
 import {getUserData} from "./auth-reduces"
-import {setCurrentPage, setCurrentPageType, setUsers, setUsersType, toggleIsFetching, toggleIsFetchingType} from "./users-reduces"
+
 import {usersAPI} from "../api/api"
 import {ThunkType} from "../types/types";
+import {InferActionTypes} from "./redux-store";
+import {UsersActions, UsersActionsTypes} from "./users-reduces";
 
-const INITIALIZED_SUCCESS = 'APP_INITIALIZED_SUCCESS'
-const SET_GLOBAL_ERROR = 'APP_SET_GLOBAL_ERROR'
-const IS_GLOBAL_ERROR = 'APP_IS_GLOBAL_ERROR'
-
-export type initialStateType = typeof initialState
+export type InitialStateType = typeof initialState
 
 let initialState = {
     initialized: false,
     globalError: null as string | null,
     isVisibleGlobalError: false
 }
-type ActionsTypes = initializedSuccessType | setGlobalErrorType | setIsVisibleGlobalErrorType |
-    setCurrentPageType | setUsersType | toggleIsFetchingType
 
-type initializedSuccessType = {
-    type: typeof INITIALIZED_SUCCESS
+export type AppActionsTypes = InferActionTypes<typeof appActions>
+
+export const appActions = {
+    initializedSuccess: () => ({
+        type: "APP_INITIALIZED_SUCCESS",
+    } as const),
+    setGlobalError: (error: string | null) => ({
+        type: "APP_SET_GLOBAL_ERROR", error
+    } as const),
+    setIsVisibleGlobalError: (value: boolean) => ({
+        type: "APP_IS_GLOBAL_ERROR", value
+    } as const)
 }
-export const initializedSuccess = (): initializedSuccessType => ({
-    type: INITIALIZED_SUCCESS,
-})
 
-export type setGlobalErrorType = {
-    type: typeof SET_GLOBAL_ERROR
-    error: string
-}
-export const setGlobalError = (error: string): setGlobalErrorType => ({
-    type: SET_GLOBAL_ERROR, error
-})
-
-export type setIsVisibleGlobalErrorType = {
-    type: typeof IS_GLOBAL_ERROR
-    value: boolean
-}
-export const setIsVisibleGlobalError = (value: boolean): setIsVisibleGlobalErrorType => ({
-    type: IS_GLOBAL_ERROR, value
-})
-
-const appReducer = (state = initialState, action: ActionsTypes): initialStateType => {
+const appReducer = (state = initialState, action: AppActionsTypes): InitialStateType => {
     switch (action.type) {
-        case INITIALIZED_SUCCESS:
+        case "APP_INITIALIZED_SUCCESS":
             return {
                 ...state,
                 initialized: true,
             }
-        case SET_GLOBAL_ERROR:
+        case "APP_SET_GLOBAL_ERROR":
             return {
                 ...state,
                 globalError: action.error,
             }
-        case IS_GLOBAL_ERROR:
+        case "APP_IS_GLOBAL_ERROR":
             return {
                 ...state,
                 isVisibleGlobalError: action.value,
@@ -62,22 +49,22 @@ const appReducer = (state = initialState, action: ActionsTypes): initialStateTyp
     }
 }
 
-export const initializeApp = (): ThunkType<ActionsTypes> => async (dispatch) => {
+export const initializeApp = (): ThunkType<AppActionsTypes | UsersActionsTypes> => async (dispatch) => {
     await dispatch(getUserData());
     try {
-        dispatch(toggleIsFetching(true));
+        dispatch(UsersActions.toggleIsFetching(true));
         let data = await usersAPI.getUsers();
         const newCurrentPage = data["totalCount"] % 10 === 0 ? data["totalCount"] / 10 : Math.floor(data["totalCount"] / 10) + 1;
         data = await usersAPI.getUsers(newCurrentPage)
-        dispatch(setUsers(data.items))
-        dispatch(setCurrentPage(newCurrentPage - 1));
+        dispatch(UsersActions.setUsers(data.items))
+        dispatch(UsersActions.setCurrentPage(newCurrentPage - 1));
         data = await usersAPI.getUsers(newCurrentPage - 1)
-        dispatch(toggleIsFetching(false));
-        dispatch(setUsers(data.items))
-        dispatch(initializedSuccess());
+        dispatch(UsersActions.toggleIsFetching(false));
+        dispatch(UsersActions.setUsers(data.items))
+        dispatch(appActions.initializedSuccess());
     } catch (error) {
-        dispatch(setGlobalError(`initializeApp error: ${error.message}`));
-        dispatch(setIsVisibleGlobalError(true));
+        dispatch(appActions.setGlobalError(`initializeApp error: ${error.message}`));
+        dispatch(appActions.setIsVisibleGlobalError(true));
     }
 }
 

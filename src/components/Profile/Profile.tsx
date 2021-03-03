@@ -49,7 +49,6 @@ const Profile: React.FC<ProfileComponentType> = ({
     const disableEditMode = () => {
         setEditMode(false)
     }
-
     return (
         <div className={s.profileBlock}>
             <div className={s.profileImageContainer}>

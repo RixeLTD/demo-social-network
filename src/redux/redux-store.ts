@@ -3,8 +3,8 @@ import profileReducer from "./profile-reducer";
 import dialogsReducer from "./dialogs-reducer";
 import usersReducer from "./users-reduces";
 import authReducer from "./auth-reduces";
-import thunkMiddleware from "redux-thunk";
 import appReducer from "./app-reduces";
+import thunk from "redux-thunk";
 
 let rootReducer = combineReducers({
     profilePage: profileReducer,
@@ -12,14 +12,15 @@ let rootReducer = combineReducers({
     usersPage: usersReducer,
     me: authReducer,
     app: appReducer,
-});
+})
 
-type rootReducerType = typeof rootReducer
-export type AppStateType = ReturnType<rootReducerType>
+export type InferActionTypes<T> = T extends {[key: string]: (...args: any[]) => infer U} ? U : never
+
+export type AppStateType = ReturnType<typeof rootReducer>
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunkMiddleware)));
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 
 export default store;

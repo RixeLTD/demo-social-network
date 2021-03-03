@@ -1,28 +1,18 @@
-import React, {useEffect, useState} from 'react';
-import {addMessage, DialogElementType, removeMessage} from "../../redux/dialogs-reducer";
-import {connect} from "react-redux";
-import {withAuthRedirect} from "../../hoc/withAuthRedirect";
-import {compose} from "redux";
-import {RouteComponentProps, withRouter} from "react-router-dom";
-import s from "./Dialogs.module.scss";
-import MessageContainer from "./Message/MessageContainer";
-import DialogItemContainer from "./DialogItem/DialogItemContainer";
-import {AppStateType} from "../../redux/redux-store";
+import React, {useEffect, useState} from 'react'
+import {dialogsActions, DialogElementType} from "../../redux/dialogs-reducer"
+import {connect, ConnectedProps} from "react-redux"
+import {withAuthRedirect} from "../../hoc/withAuthRedirect"
+import {RouteComponentProps, withRouter} from "react-router-dom"
+import s from "./Dialogs.module.scss"
+import MessageContainer from "./Message/MessageContainer"
+import DialogItemContainer from "./DialogItem/DialogItemContainer"
+import {AppStateType} from "../../redux/redux-store"
 
 type RouterProps = { // type for `match.params`
     userId: string // must be type `string` since value comes from the URL
 }
-type MapStateType = {
-    dialogs: Array<DialogElementType>
-    myPhoto: string | null
-    myName: string | null
-}
-type MapDispatchType = {
-    addMessage: (message: string, activeDialog: number) => void
-    removeMessage: (activeDialog: number, messageId: number) => void
-}
 type OwnPropsType = RouteComponentProps<RouterProps>
-type PropsType = MapStateType & MapDispatchType & OwnPropsType
+type PropsType = PropsFromRedux & OwnPropsType
 const Dialogs: React.FC<PropsType> = ({
                      match,
                      dialogs,
@@ -39,7 +29,10 @@ const Dialogs: React.FC<PropsType> = ({
         let userId: number = +match.params.userId
         if (userId) {
             setActiveDialog(userId);
-            setCurrentUser(dialogs.find(u => u.data.userId === userId) as DialogElementType)
+            const user = dialogs.find((u: DialogElementType) => u.data.userId === userId)
+            if (user) {
+                setCurrentUser(user)
+            }
         } else {
             setActiveDialog(null);
             setCurrentUser(null);
@@ -71,7 +64,7 @@ const Dialogs: React.FC<PropsType> = ({
     )
 }
 
-const mapStateToProps = (state: AppStateType): MapStateType => {
+const mapStateToProps = (state: AppStateType) => {
     return {
         dialogs: state.messagesPage.dialogs,
         myPhoto: state.me.photo,
@@ -80,12 +73,10 @@ const mapStateToProps = (state: AppStateType): MapStateType => {
 }
 
 const mapDispatchToProps = {
-    addMessage,
-    removeMessage
+    addMessage: dialogsActions.addMessage,
+    removeMessage: dialogsActions.removeMessage
 }
 
-export default compose(
-    connect<MapStateType, MapDispatchType, OwnPropsType, AppStateType>(mapStateToProps, mapDispatchToProps),
-    withAuthRedirect,
-    withRouter
-)(Dialogs)
+const connector = connect(mapStateToProps, mapDispatchToProps)
+type PropsFromRedux = ConnectedProps<typeof connector>
+export default withRouter(withAuthRedirect(connector(Dialogs)))

@@ -1,7 +1,12 @@
 import React from 'react';
 import DialogItem from "./DialogItem";
+import {DialogElementType} from "../../../redux/dialogs-reducer";
 
-const DialogItemContainer = ({myPhoto, dialogs}) => {
+type PropsType = {
+    dialogs: Array<DialogElementType>
+    myPhoto: string | null
+}
+const DialogItemContainer: React.FC<PropsType> = ({myPhoto, dialogs}) => {
 
     let dialogsElements = dialogs.map(u => <DialogItem userId={u.data.userId}
                                                        userName={u.data.userName}
@@ -10,7 +15,6 @@ const DialogItemContainer = ({myPhoto, dialogs}) => {
                                                        messages={u.messages}
                                                        key={u.data.userId}
     />)
-
     return (
         <>
             {dialogsElements.reverse()}
@@ -18,4 +22,4 @@ const DialogItemContainer = ({myPhoto, dialogs}) => {
     );
 }
 
-export default DialogItemContainer;
+export default DialogItemContainer

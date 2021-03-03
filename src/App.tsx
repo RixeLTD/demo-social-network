@@ -7,12 +7,18 @@ import {Route, Redirect, Switch} from "react-router-dom";
 import Dialogs from "./components/Dialogs/Dialogs";
 import HeaderContainer from "./components/Header/HeaderContainer";
 import Login from "./components/Login/Login";
-import {connect} from "react-redux";
+import {connect, ConnectedProps} from "react-redux";
 import {initializeApp} from "./redux/app-reduces";
 import Preloader from "./components/common/preloader/Preloader";
 import GlobalError from "./utils/GlobalError/GlobalError";
+import {getProfile} from "./redux/profile-selectors";
+import {AppStateType} from "./redux/redux-store";
 
-const App = ({initializeApp, initialized, globalError}) => {
+const App: React.FC<PropsFromRedux> = ({
+                                           initializeApp,
+                                           initialized,
+                                           globalError
+}) => {
 
     let [mobileNav, setMobileNav] = useState(false);
 
@@ -66,15 +72,17 @@ const App = ({initializeApp, initialized, globalError}) => {
 
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppStateType) => {
     return {
         initialized: state.app.initialized,
         globalError: state.app.globalError,
+        profile: getProfile(state)
     }
 }
 
 const mapDispatchToProps = {
     initializeApp,
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+const connector = connect(mapStateToProps, mapDispatchToProps)
+type PropsFromRedux = ConnectedProps<typeof connector>
+export default connector(App);

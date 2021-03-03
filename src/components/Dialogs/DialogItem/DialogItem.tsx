@@ -2,11 +2,19 @@ import React from 'react';
 import s from '../Dialogs.module.scss';
 import {NavLink} from "react-router-dom";
 import noImage from "../../../assets/images/noImage.png";
+import { UserMessagesType } from '../../../redux/dialogs-reducer';
 
-const DialogItem = ({messages, photo, userId, userName, myPhoto}) => {
+type PropsType = {
+    userId: number
+    userName: string
+    photo: string
+    myPhoto: string | null
+    messages: Array<UserMessagesType>
+}
+const DialogItem: React.FC<PropsType> = ({messages, photo, userId, userName, myPhoto}) => {
 
-    let isMe;
-    let message;
+    let isMe: boolean = false;
+    let message: string = "";
 
     if (messages && messages.length !== 0) {
         isMe = messages[messages.length - 1]["isMe"];
@@ -35,4 +43,4 @@ const DialogItem = ({messages, photo, userId, userName, myPhoto}) => {
     );
 }
 
-export default DialogItem;
+export default DialogItem

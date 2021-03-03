@@ -11,14 +11,12 @@ type UserComponentType = {
     followingInProgress: Array<number>
     
     followUnfollow: (userId: number, action: "following" | "unfollowing") => void
-    clearUserProfile: () => void
 }
 
 const User: React.FC<UserComponentType> = ({
                             user,
                             followingInProgress,
                             followUnfollow,
-                            clearUserProfile,
                             isAuth
                         }) => {
 
@@ -26,7 +24,7 @@ const User: React.FC<UserComponentType> = ({
         <div className={s.userBlock}>
             <div className={s.photoAndButton}>
                 <div className={s.photoContainer}>
-                    <NavLink to={"/profile/" + user.id} onClick={clearUserProfile}>
+                    <NavLink to={"/profile/" + user.id}>
                         <img src={user.photos.small || noImage} className={s.photo} alt=""/>
                     </NavLink>
                 </div>
@@ -41,7 +39,7 @@ const User: React.FC<UserComponentType> = ({
             </div>
             <div className={s.nameAndStatus}>
                 <div>
-                    <NavLink to={"/profile/" + user.id} onClick={clearUserProfile} className={s.name}>
+                    <NavLink to={"/profile/" + user.id} className={s.name}>
                         {user.name}
                     </NavLink>
                 </div>

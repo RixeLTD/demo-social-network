@@ -1,11 +1,11 @@
 import React from 'react';
-import classes from "./Preloader.module.scss";
+import s from "./Preloader.module.scss";
 
-const Preloader = () => {
+const Preloader: React.FC = () => {
     
     return (
-        <div className={classes.ldsBlock}>
-            <div className={classes.ldsDefault}>
+        <div className={s.ldsBlock}>
+            <div className={s.ldsDefault}>
                 <div></div>
                 <div></div>
                 <div></div>
@@ -20,7 +20,6 @@ const Preloader = () => {
                 <div></div>
             </div>
         </div>
-        
     )
 }
 

@@ -1,16 +1,15 @@
 import React, {useEffect} from 'react'
 import Profile from "./Profile"
-import {connect} from "react-redux"
+import {connect, ConnectedProps} from "react-redux"
 import {
-    addPost,
+    profileActions,
     getUserProfile,
-    getUserStatus, removePost,
+    getUserStatus,
     updateProfile,
     updateUserPhoto,
     updateUserStatus
 } from "../../redux/profile-reducer"
 import {withRouter, RouteComponentProps} from "react-router-dom"
-import {compose} from "redux"
 import {
     getAuthUserId,
     getIsSubmittingSuccess, getPosts,
@@ -19,32 +18,14 @@ import {
     getStatus
 } from "../../redux/profile-selectors"
 import Preloader from "../common/preloader/Preloader"
-import {PostsType, ProfileType, UpdateUserPhotoType} from "../../types/types"
+import {UpdateUserPhotoType} from "../../types/types"
 import {AppStateType} from "../../redux/redux-store"
 
 type RouterProps = { // type for `match.params`
     userId: string // must be type `string` since value comes from the URL
 }
-type MapStateType = {
-    authUserId: number | null
-    profile: ProfileType | null
-    errorMessage: string | null
-    isSubmittingSuccess: boolean
-    status: string
-    posts: Array<PostsType>
-}
-type MapDispatchType = {
-    getUserProfile: (userId: number) => void
-    getUserStatus: (userId: number) => void
-    updateUserPhoto: (file: string | Blob) => void
-    updateProfile: (values: ProfileType) => void
-    updateUserStatus: (value: string) => void
-    addPost: (postText: string) => void
-    removePost: (id: number) => void
-}
 type OwnPropsType = RouteComponentProps<RouterProps>
-type PropsType = MapStateType & MapDispatchType & OwnPropsType
-
+type PropsType = PropsFromRedux & OwnPropsType
 const ProfileContainer: React.FC<PropsType> = ({
                                                    match,
                                                    authUserId,
@@ -66,19 +47,18 @@ const ProfileContainer: React.FC<PropsType> = ({
     useEffect(() => {
         let userId: number | null = +match.params.userId
         if (!userId) {
-            userId = authUserId;
+            userId = authUserId
             if (!userId) {
                 history.push("/login/")
             }
         }
-        if (userId) {
+        if (userId && userId !== profile?.userId) {
             getUserProfile(userId)
             getUserStatus(userId)
         }
-    }, [authUserId, match.params.userId, getUserProfile, getUserStatus, history])
+    }, [authUserId, match.params.userId, getUserProfile, getUserStatus, history, profile?.userId])
 
     const onUpdateUserPhoto = (event: UpdateUserPhotoType) => {
-        console.log(event)
         if (event.target.files) {
             updateUserPhoto(event.target.files[0])
         }
@@ -108,7 +88,7 @@ const ProfileContainer: React.FC<PropsType> = ({
     )
 }
 
-let mapState = (state: AppStateType): MapStateType => {
+let mapState = (state: AppStateType) => {
     return {
         profile: getProfile(state),
         status: getStatus(state),
@@ -125,11 +105,10 @@ let mapDispatch = {
     updateUserStatus,
     updateUserPhoto,
     updateProfile,
-    addPost,
-    removePost
+    addPost: profileActions.addPost,
+    removePost: profileActions.removePost
 }
 
-export default compose(
-    connect<MapStateType, MapDispatchType, OwnPropsType, AppStateType>(mapState, mapDispatch),
-    withRouter,
-)(ProfileContainer)
+const connector = connect(mapState, mapDispatch)
+type PropsFromRedux = ConnectedProps<typeof connector>
+export default withRouter(connector(ProfileContainer))
