@@ -1,5 +1,5 @@
 import React from 'react';
-import DialogsFormik from "../DialogsFormik";
+import DialogsFormik from "./DialogsFormik";
 import Message from "./Message";
 
 const MessageContainer = ({currentUser, removeMessage, addMessage, activeDialog, myName, myPhoto}) => {

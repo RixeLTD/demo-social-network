@@ -9,7 +9,6 @@ type UserComponentType = {
     user: UserType
     isAuth: boolean
     followingInProgress: Array<number>
-    
     followUnfollow: (userId: number, action: "following" | "unfollowing") => void
 }
 

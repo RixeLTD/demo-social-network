@@ -1,37 +1,79 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import s from './users.module.scss'
 import User from "./User"
 import {UserType} from "../../types/types"
+import SearchUsers from './SearchUsers'
 
 type UsersType = {
     users: Array<UserType>
+    searchUsers: Array<UserType>
     followingInProgress: Array<number>
     isAuth: boolean
     currentPage: number
-
-    onPageChanged: (currentPage: number) => void
+    currentSearchPage: number
+    requestUsers: (page: number, pageSize: number) => void
     followUnfollow: (userId: number, action: "following" | "unfollowing") => void
+    requestSearchUsers: (currentSearchPage: number, pageSize: number, term: string, friend: boolean | null) => void
+    totalUsersCount: number
+    totalSearchUsersCount: number
 }
 
 const Users: React.FC<UsersType> = ({
                                         users,
+                                        searchUsers,
                                         followingInProgress,
                                         followUnfollow,
                                         isAuth,
-                                        onPageChanged,
-                                        currentPage
+                                        requestUsers,
+                                        currentPage,
+                                        currentSearchPage,
+                                        requestSearchUsers,
+                                        totalUsersCount,
+                                        totalSearchUsersCount
                                     }) => {
+
+    let [term, setTerm] = useState<string>("")
+    let [friend, setFriend] = useState<boolean | null>(null)
+    
+    let mapSearchUsers = searchUsers.map(user => {
+            return <User user={user}
+                         followingInProgress={followingInProgress}
+                         followUnfollow={followUnfollow}
+                         key={user.id}
+                         isAuth={isAuth}
+            />
+        })
+
+    let mapUsers = users.map(user => {
+        return <User user={user}
+                     followingInProgress={followingInProgress}
+                     followUnfollow={followUnfollow}
+                     key={user.id}
+                     isAuth={isAuth}
+        />
+    })
+
+    const changePage = () => {
+        if (mapSearchUsers.length > 0) {
+            requestSearchUsers(currentSearchPage + 1, 10, term, friend)
+        } else {
+            requestUsers(currentPage - 1, 10)
+        }
+    }
+
     return (
         <div className={s.container}>
-            {users.map(user => {
-                return <User user={user}
-                             followingInProgress={followingInProgress}
-                             followUnfollow={followUnfollow}
-                             key={user.id}
-                             isAuth={isAuth}
+
+                <SearchUsers requestSearchUsers={requestSearchUsers}
+                             currentSearchPage={currentSearchPage}
+                             searchUsers={searchUsers}
+                             setTerm={setTerm}
+                             setFriend={setFriend}
+                             friend={friend}
                 />
-            })}
-            <button className={s.buttonMore} onClick={() => onPageChanged(currentPage - 1)}>
+
+            {mapSearchUsers.length > 0 ? mapSearchUsers : mapUsers}
+            <button className={s.buttonMore} onClick={() => changePage()}>
                 Показать еще
             </button>
         </div>

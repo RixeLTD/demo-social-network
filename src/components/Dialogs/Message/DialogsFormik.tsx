@@ -1,7 +1,7 @@
 import React from 'react';
-import s from './Message/Message.module.scss';
+import s from './Message.module.scss';
 import {Formik} from "formik";
-import AutoHeightTextarea from "../../utils/AutoHeightTextarea";
+import AutoHeightTextarea from "../../../utils/AutoHeightTextarea";
 
 type PropsType = {
     activeDialog: number

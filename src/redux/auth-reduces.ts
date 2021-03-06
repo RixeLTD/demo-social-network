@@ -16,7 +16,7 @@ let initialState = {
 }
 
 export type AuthActionsTypes = InferActionTypes<typeof authActions>
-const authActions = {
+export const authActions = {
     setUserData: (userId: number | null, email: string | null, login: string | null, fullName: string | null, photo: string | null, isAuth: boolean) => ({
         type: "AUTH_SET_USER_DATA",
         payload: {userId, email, login, fullName, photo, isAuth}
@@ -54,7 +54,7 @@ const authReducer = (state = initialState, action: AuthActionsTypes): InitialSta
 
 export const getUserData = (): ThunkType<AuthActionsTypes | AppActionsTypes> => async (dispatch) => {
     try {
-        let data = await authAPI.me();
+        const data = await authAPI.me();
         if (data.resultCode === ResultCodes.Success) {
             let {id, email, login} = data.data;
             let profile = await profileAPI.getProfile(id);

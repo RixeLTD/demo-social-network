@@ -12,6 +12,29 @@
     flex-direction: column;
 }
 
+.searchBlock {
+    background-color: #ffffff;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.searchContainer {
+    display: flex;
+    background-color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.search {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    outline: none;
+    -moz-appearance: none;
+    resize: none;
+    overflow: hidden;
+    font-size: 14px;
+}
+
 .userBlock {
     background-color: #ffffff;
     border-radius: 5px;

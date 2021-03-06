@@ -1,9 +1,8 @@
 import {getUserData} from "./auth-reduces"
-
 import {usersAPI} from "../api/api"
 import {ThunkType} from "../types/types";
 import {InferActionTypes} from "./redux-store";
-import {UsersActions, UsersActionsTypes} from "./users-reduces";
+import {usersActions, UsersActionsTypes} from "./users-reduces";
 
 export type InitialStateType = typeof initialState
 
@@ -50,17 +49,18 @@ const appReducer = (state = initialState, action: AppActionsTypes): InitialState
 }
 
 export const initializeApp = (): ThunkType<AppActionsTypes | UsersActionsTypes> => async (dispatch) => {
+
     await dispatch(getUserData());
     try {
-        dispatch(UsersActions.toggleIsFetching(true));
+        dispatch(usersActions.toggleIsFetching(true));
         let data = await usersAPI.getUsers();
         const newCurrentPage = data["totalCount"] % 10 === 0 ? data["totalCount"] / 10 : Math.floor(data["totalCount"] / 10) + 1;
         data = await usersAPI.getUsers(newCurrentPage)
-        dispatch(UsersActions.setUsers(data.items))
-        dispatch(UsersActions.setCurrentPage(newCurrentPage - 1));
+        dispatch(usersActions.setUsers(data.items))
+        dispatch(usersActions.setCurrentPage(newCurrentPage - 1));
         data = await usersAPI.getUsers(newCurrentPage - 1)
-        dispatch(UsersActions.toggleIsFetching(false));
-        dispatch(UsersActions.setUsers(data.items))
+        dispatch(usersActions.toggleIsFetching(false));
+        dispatch(usersActions.setUsers(data.items))
         dispatch(appActions.initializedSuccess());
     } catch (error) {
         dispatch(appActions.setGlobalError(`initializeApp error: ${error.message}`));

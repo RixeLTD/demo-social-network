@@ -1,105 +1,105 @@
-import {profileAPI, ResultCodes} from "../api/api"
-import {AppActionsTypes, appActions} from "./app-reduces"
-import {PhotosType, PostsType, ProfileType, ThunkType} from "../types/types"
-import {InferActionTypes} from "./redux-store";
+import {profileAPI, ResultCodes} from '../api/api'
+import {AppActionsTypes, appActions} from './app-reduces'
+import {PhotosType, PostsType, ProfileType, ThunkType} from '../types/types'
+import {InferActionTypes} from './redux-store'
 
 export type InitialStateType = typeof initialState
 const initialState = {
     posts: [
         {
             id: 1,
-            message: "Вопросы, связанные с использованием lorem. Иные буквы встречаются с использованием lorem основе оригинального трактата благодаря",
+            message: 'Вопросы, связанные с использованием lorem. Иные буквы встречаются с использованием lorem основе оригинального трактата благодаря',
             likesCount: 0
         },
         {
             id: 2,
-            message: "Веб-дизайнерами для вставки на сайтах и смысловую нагрузку ему нести совсем необязательно",
+            message: 'Веб-дизайнерами для вставки на сайтах и смысловую нагрузку ему нести совсем необязательно',
             likesCount: 26
         },
         {
             id: 3,
-            message: "Исключительно демонстрационная, то и демонстрации внешнего вида контента, просмотра шрифтов абзацев",
+            message: 'Исключительно демонстрационная, то и демонстрации внешнего вида контента, просмотра шрифтов абзацев',
             likesCount: 20
         },
         {
             id: 4,
-            message: "Он веб-дизайнерами для вставки на название. Трактата, благодаря чему появляется возможность получить более длинный неповторяющийся набор слов..",
+            message: 'Он веб-дизайнерами для вставки на название. Трактата, благодаря чему появляется возможность получить более длинный неповторяющийся набор слов..',
             likesCount: 13
         },
 
     ] as Array<PostsType>,
     counter: 4,
     profile: null as ProfileType | null,
-    status: "",
+    status: '',
     errorMessage: null as string | null,
     isSubmittingSuccess: false,
 }
 
 export type ProfileActionsTypes = InferActionTypes<typeof profileActions>
 export const profileActions = {
-    addPost: (postText: string) => ({type: "PROFILE_ADD_POST", postText} as const),
-    removePost: (id: number) => ({type: "PROFILE_REMOVE_POST", id} as const),
-    setUserProfile: (profile: ProfileType | null) => ({type: "PROFILE_SET_USER_PROFILE", profile} as const),
-    setUserStatus: (status: string) => ({type: "PROFILE_SET_STATUS", status} as const),
-    setUserPhoto: (photos: PhotosType) => ({type: "PROFILE_SET_USER_PHOTO", photos} as const),
+    addPost: (postText: string) => ({type: 'PROFILE_ADD_POST', postText} as const),
+    removePost: (id: number) => ({type: 'PROFILE_REMOVE_POST', id} as const),
+    setUserProfile: (profile: ProfileType | null) => ({type: 'PROFILE_SET_USER_PROFILE', profile} as const),
+    setUserStatus: (status: string) => ({type: 'PROFILE_SET_STATUS', status} as const),
+    setUserPhoto: (photos: PhotosType) => ({type: 'PROFILE_SET_USER_PHOTO', photos} as const),
     setProfileFormErrors: (message: string | null) => ({
-        type: "PROFILE_SET_PROFILE_FORM_ERRORS",
+        type: 'PROFILE_SET_PROFILE_FORM_ERRORS',
         message
     } as const),
-    setSubmittingSuccess: (value: boolean) => ({type: "PROFILE_SET_SUBMITTING_SUCCESS", value} as const),
+    setSubmittingSuccess: (value: boolean) => ({type: 'PROFILE_SET_SUBMITTING_SUCCESS', value} as const),
 }
 
 const profileReducer = (state = initialState, action: ProfileActionsTypes): InitialStateType => {
     switch (action.type) {
-        case "PROFILE_ADD_POST":
+        case 'PROFILE_ADD_POST':
             return {
                 ...state,
                 posts: [...state.posts, {id: state.counter + 1, message: action.postText, likesCount: 0}],
                 counter: state.counter + 1,
             }
-        case "PROFILE_REMOVE_POST":
+        case 'PROFILE_REMOVE_POST':
             return {
                 ...state,
                 posts: [...state.posts.filter(u => u.id !== action.id)],
             }
-        case "PROFILE_SET_USER_PROFILE":
+        case 'PROFILE_SET_USER_PROFILE':
             return {
                 ...state,
                 profile: action.profile,
             }
-        case "PROFILE_SET_STATUS":
+        case 'PROFILE_SET_STATUS':
             return {
                 ...state,
                 status: action.status,
             }
-        case "PROFILE_SET_USER_PHOTO":
+        case 'PROFILE_SET_USER_PHOTO':
             return {
                 ...state,
                 profile: {...state.profile, photos: action.photos} as ProfileType,
             }
-        case "PROFILE_SET_PROFILE_FORM_ERRORS":
+        case 'PROFILE_SET_PROFILE_FORM_ERRORS':
             return {
                 ...state,
                 errorMessage: action.message,
             }
-        case "PROFILE_SET_SUBMITTING_SUCCESS":
+        case 'PROFILE_SET_SUBMITTING_SUCCESS':
             return {
                 ...state,
                 isSubmittingSuccess: action.value,
             }
         default:
-            return state;
+            return state
     }
 }
 
 export const getUserProfile = (userId: number): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     if (userId) {
         try {
-            let data = await profileAPI.getProfile(userId);
-            dispatch(profileActions.setUserProfile(data));
+            let data = await profileAPI.getProfile(userId)
+            dispatch(profileActions.setUserProfile(data))
         } catch (error) {
-            dispatch(appActions.setGlobalError(`Get user profile error: ${error.message}`));
-            dispatch(appActions.setIsVisibleGlobalError(true));
+            dispatch(appActions.setGlobalError(`Get user profile error: ${error.message}`))
+            dispatch(appActions.setIsVisibleGlobalError(true))
         }
     }
 }
@@ -107,24 +107,24 @@ export const getUserProfile = (userId: number): ThunkType<ProfileActionsTypes | 
 export const getUserStatus = (userId: number): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     if (userId) {
         try {
-            let status = await profileAPI.getStatus(userId);
-            dispatch(profileActions.setUserStatus(status));
+            let status = await profileAPI.getStatus(userId)
+            dispatch(profileActions.setUserStatus(status))
         } catch (error) {
-            dispatch(appActions.setGlobalError(`Get user status error: ${error.message}`));
-            dispatch(appActions.setIsVisibleGlobalError(true));
+            dispatch(appActions.setGlobalError(`Get user status error: ${error.message}`))
+            dispatch(appActions.setIsVisibleGlobalError(true))
         }
     }
 }
 
 export const updateUserStatus = (status: string): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     try {
-        let response = await profileAPI.updateStatus(status);
+        let response = await profileAPI.updateStatus(status)
         if (response.resultCode === ResultCodes.Success) {
-            dispatch(profileActions.setUserStatus(status));
+            dispatch(profileActions.setUserStatus(status))
         }
     } catch (error) {
-        dispatch(appActions.setGlobalError(`Update status error: ${error.message}`));
-        dispatch(appActions.setIsVisibleGlobalError(true));
+        dispatch(appActions.setGlobalError(`Update status error: ${error.message}`))
+        dispatch(appActions.setIsVisibleGlobalError(true))
     }
 
 }
@@ -132,13 +132,13 @@ export const updateUserStatus = (status: string): ThunkType<ProfileActionsTypes 
 export const updateUserPhoto = (file: string | Blob): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     if (file) {
         try {
-            let data = await profileAPI.updatePhoto(file);
+            let data = await profileAPI.updatePhoto(file)
             if (data.resultCode === ResultCodes.Success) {
-                dispatch(profileActions.setUserPhoto(data.data.photos));
+                dispatch(profileActions.setUserPhoto(data.data.photos))
             }
         } catch (error) {
-            dispatch(appActions.setGlobalError(`Update user photo error: ${error.message}`));
-            dispatch(appActions.setIsVisibleGlobalError(true));
+            dispatch(appActions.setGlobalError(`Update user photo error: ${error.message}`))
+            dispatch(appActions.setIsVisibleGlobalError(true))
         }
     }
 }
@@ -146,19 +146,19 @@ export const updateUserPhoto = (file: string | Blob): ThunkType<ProfileActionsTy
 export const updateProfile = (values: ProfileType): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     try {
         dispatch(profileActions.setProfileFormErrors(null))
-        let data = await profileAPI.updateProfile(values);
+        let data = await profileAPI.updateProfile(values)
         if (data.resultCode === ResultCodes.Success) {
-            dispatch(profileActions.setSubmittingSuccess(true));
-            await dispatch(getUserProfile(values.userId));
-            dispatch(profileActions.setSubmittingSuccess(false));
+            dispatch(profileActions.setSubmittingSuccess(true))
+            await dispatch(getUserProfile(values.userId))
+            dispatch(profileActions.setSubmittingSuccess(false))
         } else {
-            dispatch(profileActions.setSubmittingSuccess(false));
-            dispatch(profileActions.setProfileFormErrors(data.messages[0]));
+            dispatch(profileActions.setSubmittingSuccess(false))
+            dispatch(profileActions.setProfileFormErrors(data.messages[0]))
         }
     } catch (error) {
-        dispatch(appActions.setGlobalError(`Update user profile error: ${error.message}`));
-        dispatch(appActions.setIsVisibleGlobalError(true));
+        dispatch(appActions.setGlobalError(`Update user profile error: ${error.message}`))
+        dispatch(appActions.setIsVisibleGlobalError(true))
     }
 }
 
-export default profileReducer;
+export default profileReducer

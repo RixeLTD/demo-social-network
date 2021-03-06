@@ -1,44 +1,48 @@
 import {connect, ConnectedProps} from 'react-redux'
-import {requestUsers, followUnfollow} from '../../redux/users-reduces'
-import {profileActions} from "../../redux/profile-reducer"
+import {requestUsers, followUnfollow, requestSearchUsers} from '../../redux/users-reduces'
 import Users from './Users'
 import React from 'react'
 import Preloader from "../common/preloader/Preloader"
 import {
-    getCurrentPage,
+    getCurrentPage, getCurrentSearchPage,
     getFollowingInProgress,
     getIsFetching,
-    getPageSize,
+    getPageSize, getSearchUsers, getTotalSearchUsersCount, getTotalUsersCount,
     getUsers
 } from "../../redux/users-selectors"
 import {getIsAuth} from "../../redux/auth-selectors"
 import {AppStateType} from "../../redux/redux-store"
 
 const UsersContainer: React.FC<PropsFromRedux> = ({
-                            requestUsers,
-                            currentPage,
-                            pageSize,
-                            users,
-                            isAuth,
-                            followingInProgress,
-                            followUnfollow,
-                            isFetching
-                        }) => {
-
-    const onPageChanged = (pageNumber: number) => {
-        requestUsers(pageNumber, pageSize)
-    }
+                                                      requestUsers,
+                                                      currentPage,
+                                                      users,
+                                                      searchUsers,
+                                                      isAuth,
+                                                      followingInProgress,
+                                                      followUnfollow,
+                                                      isFetching,
+                                                      requestSearchUsers,
+                                                      currentSearchPage,
+                                                      totalUsersCount,
+                                                      totalSearchUsersCount,
+                                                  }) => {
 
     return (
         <>
             {isFetching ? <Preloader/> : null}
-            <Users 
-                   onPageChanged={onPageChanged}
-                   currentPage={currentPage}
-                   followingInProgress={followingInProgress}
-                   followUnfollow={followUnfollow}
-                   users={users}
-                   isAuth={isAuth}
+            <Users
+                requestUsers={requestUsers}
+                currentPage={currentPage}
+                currentSearchPage={currentSearchPage}
+                followingInProgress={followingInProgress}
+                followUnfollow={followUnfollow}
+                users={users}
+                searchUsers={searchUsers}
+                isAuth={isAuth}
+                requestSearchUsers={requestSearchUsers}
+                totalUsersCount={totalUsersCount}
+                totalSearchUsersCount={totalSearchUsersCount}
             />
         </>
     )
@@ -48,15 +52,20 @@ const mapStateToProps = (state: AppStateType) => {
     return {
         pageSize: getPageSize(state),
         users: getUsers(state),
+        searchUsers: getSearchUsers(state),
         currentPage: getCurrentPage(state),
+        currentSearchPage: getCurrentSearchPage(state),
         isFetching: getIsFetching(state),
         followingInProgress: getFollowingInProgress(state),
-        isAuth: getIsAuth(state)
+        isAuth: getIsAuth(state),
+        totalUsersCount: getTotalUsersCount(state),
+        totalSearchUsersCount: getTotalSearchUsersCount(state)
     }
 }
 
 const mapDispatchToProps = {
     requestUsers,
+    requestSearchUsers,
     followUnfollow
 }
 
