@@ -1,54 +1,63 @@
 import React, {useEffect, useState} from 'react'
-import MyPosts from "./MyPosts/MyPosts"
+import {MyPosts} from './MyPosts/MyPosts'
 import s from './Profile.module.scss'
-import noImage from "../../assets/images/noImage.png"
-import ProfileBlockForm from "./ProfileBlock/ProfileBlockForm"
-import ProfileBlock from "./ProfileBlock/ProfileBlock"
-import {PostsType, ProfileType, UpdateUserPhotoType} from "../../types/types";
+import noImage from '../../assets/images/noImage.png'
+import {ProfileBlockForm} from './ProfileBlock/ProfileBlockForm'
+import {ProfileBlock} from './ProfileBlock/ProfileBlock'
+import {UpdateUserPhotoType} from '../../types/types'
+import {useDispatch, useSelector} from 'react-redux'
+import {getProfile} from '../../redux/profile-selectors'
+import {getUserProfile, getUserStatus, profileActions, updateUserPhoto} from '../../redux/profile-reducer'
+import {Preloader} from '../common/preloader/Preloader'
+import {RouteComponentProps, withRouter} from 'react-router-dom'
+import {getAuthUserId} from '../../redux/auth-selectors'
 
-type ProfileComponentType = {
-    ownProfile: boolean
-    errorMessage: string | null
-    profile: ProfileType
-    status: string
-    isSubmittingSuccess: boolean
-    posts: Array<PostsType>
+const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
+                                                                        match,
+                                                                        history,
+                                                                    }) => {
 
-    onUpdateUserPhoto: (event: UpdateUserPhotoType) => void
-    updateProfile: (value: ProfileType) => void
-    updateUserStatus: (value: string) => void
-    addPost: (postText: string) => void
-    removePost: (id: number) => void
-}
-
-const Profile: React.FC<ProfileComponentType> = ({
-                                  ownProfile,
-                                  errorMessage,
-                                  profile,
-                                  onUpdateUserPhoto,
-                                  updateProfile,
-                                  isSubmittingSuccess,
-                                  status,
-                                  updateUserStatus,
-                                  posts,
-                                  addPost,
-                                  removePost
-                              }) => {
-    let [editMode, setEditMode] = useState(false);
-    let [localErrorMessage, setLocalErrorMessage] = useState(errorMessage)
+    const profile = useSelector(getProfile)
+    const authUserId = useSelector(getAuthUserId)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        setLocalErrorMessage(errorMessage)
-    }, [errorMessage])
+        let userId: number | null = +match.params.userId
+        if (!userId) {
+            userId = authUserId
+            if (!userId) {
+                history.push('/login/')
+            }
+        }
+        if (userId && userId !== profile?.userId) {
+            dispatch(getUserProfile(userId))
+            dispatch(getUserStatus(userId))
+        }
+    }, [authUserId, match.params.userId, getUserProfile, getUserStatus, history, profile?.userId])
+
+    let [editMode, setEditMode] = useState(false)
 
     const enableEditMode = () => {
-        setLocalErrorMessage(null)
+        dispatch(profileActions.setProfileFormErrors(null))
         setEditMode(true)
     }
 
     const disableEditMode = () => {
         setEditMode(false)
     }
+
+    const onUpdateUserPhoto = (event: UpdateUserPhotoType) => {
+        if (event.target.files) {
+            updateUserPhoto(event.target.files[0])
+        }
+    }
+
+    if (!profile) {
+        return <Preloader/>
+    }
+
+    const ownProfile: boolean = authUserId === profile.userId
+
     return (
         <div className={s.profileBlock}>
             <div className={s.profileImageContainer}>
@@ -77,24 +86,18 @@ const Profile: React.FC<ProfileComponentType> = ({
                 {editMode
                     ? <ProfileBlockForm disableEditMode={disableEditMode}
                                         profile={profile}
-                                        updateProfile={updateProfile}
-                                        localErrorMessage={localErrorMessage}
-                                        isSubmittingSuccess={isSubmittingSuccess}/>
+                    />
                     : <ProfileBlock profile={profile}
                                     ownProfile={ownProfile}
-                                    status={status}
-                                    updateUserStatus={updateUserStatus}
-                                    />
+                    />
                 }
                 <MyPosts ownProfile={ownProfile}
-                         posts={posts}
-                         addPost={addPost}
                          photo={profile.photos.small}
                          userName={profile.fullName}
-                         removePost={removePost}/>
+                />
             </div>
         </div>
     )
 }
 
-export default Profile;
+export default withRouter(Profile)

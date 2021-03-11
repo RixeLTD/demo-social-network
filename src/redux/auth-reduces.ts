@@ -11,7 +11,7 @@ let initialState = {
     fullName: null as string | null,
     photo: null as string | null,
     isAuth: false,
-    isCaptcha: null as string | null,
+    isCaptcha: '',
     errorMessage: null as string | null,
 }
 
@@ -21,7 +21,7 @@ export const authActions = {
         type: "AUTH_SET_USER_DATA",
         payload: {userId, email, login, fullName, photo, isAuth}
     } as const),
-    setCaptcha: (url: string | null) => ({
+    setCaptcha: (url: string) => ({
         type: "AUTH_SET_CAPTCHA",
         url: url
     } as const),
@@ -91,7 +91,7 @@ export const loginUser = (formData: LoginFormDataType): ThunkType<AuthActionsTyp
         dispatch(authActions.setLoginFormErrors(null));
         if (response.resultCode === ResultCodes.Success) {
             await dispatch(getUserData());
-            dispatch(authActions.setCaptcha(null));
+            dispatch(authActions.setCaptcha(''));
         } else {
             if (response.resultCode === ResultCodes.CaptchaIsRequired) {
                 await dispatch(getCaptcha());

@@ -1,19 +1,17 @@
 import React from 'react'
-import s from "./GlobalError.module.scss"
-import {connect, ConnectedProps} from "react-redux"
-import {appActions} from "../../redux/app-reduces"
-import {AppStateType} from "../../redux/redux-store";
+import s from './GlobalError.module.scss'
+import {useDispatch, useSelector} from 'react-redux'
+import {appActions} from '../../redux/app-reduces'
+import {getGlobalError, getIsVisibleGlobalError} from '../../redux/app-selectors'
 
-const GlobalError: React.FC<PropsFromRedux> = ({
-                         isVisibleGlobalError,
-                         setGlobalError,
-                         globalError,
-                         setIsVisibleGlobalError
-                     }) => {
+export const GlobalError: React.FC = () => {
+    const isVisibleGlobalError = useSelector(getIsVisibleGlobalError)
+    const globalError = useSelector(getGlobalError)
+    const dispatch = useDispatch()
 
     const closeError = () => {
-        setIsVisibleGlobalError(false);
-        setGlobalError("");
+        dispatch(appActions.setIsVisibleGlobalError(false))
+        dispatch(appActions.setGlobalError(''))
     }
 
     return (
@@ -26,19 +24,3 @@ const GlobalError: React.FC<PropsFromRedux> = ({
         </>
     )
 }
-
-const mapStateToProps = (state: AppStateType) => {
-    return {
-        globalError: state.app.globalError,
-        isVisibleGlobalError: state.app.isVisibleGlobalError,
-    }
-}
-
-const mapDispatchToProps = {
-    setIsVisibleGlobalError: appActions.setIsVisibleGlobalError,
-    setGlobalError: appActions.setGlobalError
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps)
-type PropsFromRedux = ConnectedProps<typeof connector>
-export default connector(GlobalError);

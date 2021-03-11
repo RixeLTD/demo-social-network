@@ -70,8 +70,8 @@ test('request users', async () => {
     expect(dispatchMock).toBeCalledTimes(5)
     expect(dispatchMock).toHaveBeenNthCalledWith(1, usersActions.setCurrentPage(2))
     expect(dispatchMock).toHaveBeenNthCalledWith(2, usersActions.toggleIsFetching(true))
-    expect(dispatchMock).toHaveBeenNthCalledWith(3, usersActions.toggleIsFetching(false))
-    expect(dispatchMock).toHaveBeenNthCalledWith(4, usersActions.setUsers(responseUsers.items))
+    expect(dispatchMock).toHaveBeenNthCalledWith(3, usersActions.setUsers(responseUsers.items))
+    expect(dispatchMock).toHaveBeenNthCalledWith(4, usersActions.toggleIsFetching(false))
     expect(dispatchMock).toHaveBeenNthCalledWith(5, usersActions.setTotalUsersCount(responseUsers.totalCount))
 })
 

@@ -110,14 +110,13 @@ export const dialogsActions = {
         activeDialog,
         id
     } as const)
-
 }
 
 const dialogsReducer = (state = initialState, action: DialogsActionTypes): InitialStateType => {
-    let currentUser
+    let currentUser: DialogElementType
     switch (action.type) {
         case 'DIALOGS_ADD-MESSAGE':
-            currentUser = {...state.dialogs.find(u => u.data.userId === action.activeDialog)}
+            currentUser = {...state.dialogs.find(u => u.data.userId === action.activeDialog)} as DialogElementType
             currentUser.counter = currentUser.counter + 1
             currentUser.messages = [...currentUser.messages, {
                 id: currentUser.counter,
@@ -128,7 +127,7 @@ const dialogsReducer = (state = initialState, action: DialogsActionTypes): Initi
                 dialogs: [...state.dialogs.filter(u => u.data.userId !== action.activeDialog), currentUser]
             } as InitialStateType
         case 'DIALOGS_REMOVE_MESSAGE':
-            currentUser = {...state.dialogs.find(u => u.data.userId === action.activeDialog)}
+            currentUser = {...state.dialogs.find(u => u.data.userId === action.activeDialog)} as DialogElementType
             currentUser.messages = [...currentUser.messages.filter(m => m.id !== action.id)]
             return {
                 ...state,

@@ -1,5 +1,5 @@
-import {profileAPI, ResultCodes} from '../api/api'
-import {AppActionsTypes, appActions} from './app-reduces'
+import {profileAPI, ResultCodes, updateProfileType} from '../api/api'
+import {appActions, AppActionsTypes} from './app-reduces'
 import {PhotosType, PostsType, ProfileType, ThunkType} from '../types/types'
 import {InferActionTypes} from './redux-store'
 
@@ -143,7 +143,7 @@ export const updateUserPhoto = (file: string | Blob): ThunkType<ProfileActionsTy
     }
 }
 
-export const updateProfile = (values: ProfileType): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
+export const updateProfile = (values: updateProfileType): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     try {
         dispatch(profileActions.setProfileFormErrors(null))
         let data = await profileAPI.updateProfile(values)

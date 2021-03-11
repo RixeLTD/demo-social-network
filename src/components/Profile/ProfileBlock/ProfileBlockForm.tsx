@@ -1,68 +1,52 @@
-import React from "react";
-import {Field, Formik, FormikErrors, useFormikContext} from "formik";
-import s from "../Profile.module.scss";
-import {ContactsType, ProfileType} from "../../../types/types";
-
-type StopSubmittingType = {
-    localErrorMessage: string | null
-    isSubmittingSuccess: boolean
-
-    disableEditMode: () => void
-}
-
-const StopSubmitting: React.FC<StopSubmittingType> = ({
-                                                          localErrorMessage,
-                                                          disableEditMode,
-                                                          isSubmittingSuccess
-                                                      }) => {
-    const {setSubmitting} = useFormikContext();
-    React.useEffect(() => {
-        if (localErrorMessage) {
-            setSubmitting(false);
-        }
-        if (isSubmittingSuccess) {
-            disableEditMode();
-        }
-    }, [disableEditMode, localErrorMessage, setSubmitting, isSubmittingSuccess]);
-    return null;
-};
+import React, {useEffect} from 'react'
+import {Field, Formik, FormikErrors, useFormikContext} from 'formik'
+import s from '../Profile.module.scss'
+import {ContactsType, ProfileType} from '../../../types/types'
+import {useDispatch, useSelector} from 'react-redux'
+import {updateProfile} from '../../../redux/profile-reducer'
+import {getIsSubmittingSuccess, getProfileFormErrors} from '../../../redux/profile-selectors'
+import {updateProfileType} from '../../../api/api'
 
 type ProfileBlockFormType = {
     profile: ProfileType
-    updateProfile: (value: ProfileType) => void
-    localErrorMessage: string | null
-    isSubmittingSuccess: boolean
-
     disableEditMode: () => void
 }
 
-const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
+export const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
                                                               profile,
                                                               disableEditMode,
-                                                              updateProfile,
-                                                              localErrorMessage,
-                                                              isSubmittingSuccess
                                                           }) => {
-type Values = {
-    aboutMe: string | null,
-    lookingForAJobDescription: string | null
-}
+    const errorMessage = useSelector(getProfileFormErrors)
+    const isSubmittingSuccess = useSelector(getIsSubmittingSuccess)
+    const dispatch = useDispatch()
+
+    type Values = {
+        aboutMe: string | null,
+        lookingForAJobDescription: string | null
+    }
+    const initialValues = {
+        userId: profile.userId,
+        lookingForAJob: profile.lookingForAJob,
+        lookingForAJobDescription: profile.lookingForAJobDescription,
+        fullName: profile.fullName,
+        contacts: profile.contacts,
+        aboutMe: profile.aboutMe
+    }
     return (
-        <Formik
-            initialValues={profile}
+        <Formik<updateProfileType>
+            initialValues={initialValues}
             validate={values => {
                 const errors: FormikErrors<Values> = {}
                 if (!values.aboutMe) {
-                    errors.aboutMe = 'Required';
+                    errors.aboutMe = 'Required'
                 }
                 if (!values.lookingForAJobDescription) {
-                    errors.lookingForAJobDescription = 'Required';
+                    errors.lookingForAJobDescription = 'Required'
                 }
                 return errors
             }}
-
             onSubmit={(values) => {
-                updateProfile(values);
+                dispatch(updateProfile(values))
             }}
         >
             {({
@@ -73,7 +57,6 @@ type Values = {
                   handleSubmit,
                   handleBlur,
                   isSubmitting,
-                  /* and other goodies */
               }) => (
                 <form onSubmit={handleSubmit}>
                     <div className={s.profileInfoSection}>
@@ -145,9 +128,9 @@ type Values = {
                                         className={s.clearInputStyle}
                                         id={contact}
                                         type="url"
-                                        name={"contacts." + contact}
+                                        name={`contacts.${contact}`}
                                         onChange={handleChange}
-                                        value={profile.contacts[contact as keyof ContactsType]}
+                                        value={values.contacts[contact as keyof ContactsType]}
                                         autoComplete="off"
                                     />
                                 </div>
@@ -163,8 +146,8 @@ type Values = {
                             Сохранить
                         </button>
                     </div>
-                    <div className={s.formError}>{localErrorMessage}</div>
-                    <StopSubmitting localErrorMessage={localErrorMessage}
+                    <div className={s.formError}>{errorMessage}</div>
+                    <StopSubmitting errorMessage={errorMessage}
                                     disableEditMode={disableEditMode}
                                     isSubmittingSuccess={isSubmittingSuccess}/>
                 </form>
@@ -172,5 +155,25 @@ type Values = {
         </Formik>
     )
 }
-export default ProfileBlockForm;
 
+type StopSubmittingType = {
+    errorMessage: string | null
+    isSubmittingSuccess: boolean
+    disableEditMode: () => void
+}
+const StopSubmitting: React.FC<StopSubmittingType> = ({
+                                                          errorMessage,
+                                                          disableEditMode,
+                                                          isSubmittingSuccess
+                                                      }) => {
+    const {setSubmitting} = useFormikContext()
+    useEffect(() => {
+        if (errorMessage) {
+            setSubmitting(false)
+        }
+        if (isSubmittingSuccess) {
+            disableEditMode()
+        }
+    }, [disableEditMode, errorMessage, setSubmitting, isSubmittingSuccess])
+    return null
+}

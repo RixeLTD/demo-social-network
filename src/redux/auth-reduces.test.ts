@@ -12,7 +12,7 @@ beforeEach(() => {
         fullName: null,
         photo: null,
         isAuth: false,
-        isCaptcha: null,
+        isCaptcha: '',
         errorMessage: null,
     }
 })
@@ -103,7 +103,7 @@ test('login user', async () => {
     expect(dispatchMock).toBeCalledTimes(3)
     expect(dispatchMock).toHaveBeenNthCalledWith(1, authActions.setLoginFormErrors(null))
     // expect(dispatchMock).toHaveBeenNthCalledWith(2, getUserData())
-    expect(dispatchMock).toHaveBeenNthCalledWith(3, authActions.setCaptcha(null))
+    expect(dispatchMock).toHaveBeenNthCalledWith(3, authActions.setCaptcha(''))
 })
 test('logout user', async () => {
 

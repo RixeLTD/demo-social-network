@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useEffect, useRef} from "react";
+import React, {ChangeEvent, useEffect, useRef} from 'react'
 
 type Props = {
     className?: string
@@ -14,16 +14,18 @@ const AutoHeightTextarea: React.FC<Props> = ({
                                                  value,
                                                  onChange,
                                                  name,
-                                                 autoFocus}) => {
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
+                                                 autoFocus
+                                             }) => {
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     useEffect(() => {
         if (textareaRef && textareaRef.current) {
-            textareaRef.current.style.height = "0px";
-            const scrollHeight = textareaRef.current.scrollHeight;
-            textareaRef.current.style.height = scrollHeight + "px";
+            textareaRef.current.style.height = '0px'
+            const scrollHeight = textareaRef.current.scrollHeight
+            textareaRef.current.style.height = scrollHeight + 'px'
+            textareaRef.current.focus()
         }
-    }, [value]);
+    }, [value])
 
     return (
         <textarea
@@ -35,7 +37,7 @@ const AutoHeightTextarea: React.FC<Props> = ({
             name={name}
             autoFocus={autoFocus}
         />
-    );
-};
+    )
+}
 
 export default AutoHeightTextarea

@@ -1,20 +1,31 @@
 import React from 'react'
 import s from './Navbar.module.scss'
-import {NavLink} from "react-router-dom"
+import {NavLink} from 'react-router-dom'
+import {useDispatch, useSelector} from 'react-redux'
+import {profileActions} from '../../redux/profile-reducer'
+import {getAuthUserId} from '../../redux/auth-selectors'
+import {getProfile} from '../../redux/profile-selectors'
 
 type PropsType = {
     setMobileNav: (mobileNav: boolean) => void
 }
-const Navbar: React.FC<PropsType> = ({setMobileNav}) => {
+export const Navbar: React.FC<PropsType> = ({setMobileNav}) => {
+    const authUserId = useSelector(getAuthUserId)
+    const profile = useSelector(getProfile)
+    const dispatch = useDispatch()
 
     const onClick = () => {
+        window.scrollTo({top: 0})
         setMobileNav(false)
     }
+
     return (
         <>
             <NavLink to={'/profile/'} className={s.navLink} activeClassName={s.active} onClick={() => {
-                window.scrollTo({top: 0})
                 onClick()
+                if (authUserId !== profile?.userId) {
+                    dispatch(profileActions.setUserProfile(null))
+                }
             }}>
                 <div className={s.navLinkText}>Профиль</div>
             </NavLink>
@@ -25,7 +36,5 @@ const Navbar: React.FC<PropsType> = ({setMobileNav}) => {
                 <div className={s.navLinkText}>Пользователи</div>
             </NavLink>
         </>
-    );
+    )
 }
-
-export default Navbar

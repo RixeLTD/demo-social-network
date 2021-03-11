@@ -80,13 +80,7 @@ test('initialize app', async () => {
 
     await thunk(dispatchMock, getState, {})
 
-    expect(dispatchMock).toBeCalledTimes(7)
+    expect(dispatchMock).toBeCalledTimes(2)
     expect(dispatchMock).toHaveBeenNthCalledWith(1, getUserData())
-    expect(dispatchMock).toHaveBeenNthCalledWith(2, usersActions.toggleIsFetching(true))
-    expect(dispatchMock).toHaveBeenNthCalledWith(3, usersActions.setUsers(responseUsers.items))
-    const newCurrentPage = responseUsers["totalCount"] % 10 === 0 ? responseUsers["totalCount"] / 10 : Math.floor(responseUsers["totalCount"] / 10) + 1;
-    expect(dispatchMock).toHaveBeenNthCalledWith(4, usersActions.setCurrentPage(newCurrentPage - 1))
-    expect(dispatchMock).toHaveBeenNthCalledWith(5, usersActions.toggleIsFetching(false))
-    expect(dispatchMock).toHaveBeenNthCalledWith(6, usersActions.setUsers(responseUsers.items))
-    expect(dispatchMock).toHaveBeenNthCalledWith(7, appActions.initializedSuccess())
+    expect(dispatchMock).toHaveBeenNthCalledWith(2, appActions.initializedSuccess())
 })

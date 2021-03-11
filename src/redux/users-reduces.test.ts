@@ -47,12 +47,9 @@ beforeEach(() => {
                 }
             }
         ],
-        searchUsers: [],
         pageSize: 10,
         totalUsersCount: 0,
-        totalSearchUsersCount: 0,
         currentPage: 1,
-        currentSearchPage: 1,
         isFetching: true,
         followingInProgress: [] // array of users id
     }
@@ -115,7 +112,7 @@ test('set users', () => {
             }
         }
     ]
-    const newState = usersReducer(state, usersActions.setUsers(users.reverse()))
+    const newState = usersReducer(state, usersActions.setUsers(users))
 
     expect(newState.users[0].id).toBe(0)
     expect(newState.users[6].id).toBe(6)
@@ -149,4 +146,10 @@ test('toggle following', () => {
     newState = usersReducer(newState, usersActions.toggleFollowing(false, 14))
     newState = usersReducer(newState, usersActions.toggleFollowing(false, 15))
     expect(newState.followingInProgress).toEqual([])
+})
+test('clear users', () => {
+
+    const newState = usersReducer(state, usersActions.clearUsers())
+
+    expect(newState.users).toStrictEqual([])
 })

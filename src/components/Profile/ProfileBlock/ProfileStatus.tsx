@@ -1,35 +1,36 @@
-import React, {ChangeEvent, useEffect, useState} from 'react';
-import s from "../Profile.module.scss";
+import React, {ChangeEvent, useEffect, useState} from 'react'
+import s from '../Profile.module.scss'
+import {useDispatch} from 'react-redux'
+import {updateUserStatus} from '../../../redux/profile-reducer'
 
 type Props = {
     ownProfile: boolean
     status: string
-    updateUserStatus: (status: string) => void
 }
-const ProfileStatus: React.FC<Props> = ({
+export const ProfileStatus: React.FC<Props> = ({
                                             status,
-                                            updateUserStatus,
                                             ownProfile
                                         }) => {
+    const dispatch = useDispatch()
 
-    let [editMode, setEditMode] = useState(false);
-    let [text, setText] = useState(status);
+    let [editMode, setEditMode] = useState(false)
+    let [text, setText] = useState(status)
 
     useEffect(() => {
-        setText(status);
+        setText(status)
     }, [status])
 
     const activateEditMode = () => {
-        setEditMode(true);
+        setEditMode(true)
     }
 
     const deactivateEditMode = () => {
-        setEditMode(false);
-        updateUserStatus(text);
+        setEditMode(false)
+        dispatch(updateUserStatus(text))
     }
 
     const onChangeStatus = (event: ChangeEvent<HTMLInputElement>) => {
-        setText(event.target.value);
+        setText(event.target.value)
     }
 
     return (
@@ -50,7 +51,7 @@ const ProfileStatus: React.FC<Props> = ({
                             value={text}
                             onChange={onChangeStatus}
                             onKeyUp={(event) => {
-                                if (event.key === "Enter" || event.key === "Enter" || event.keyCode === 13) {
+                                if (event.key === 'Enter' || event.key === 'Enter' || event.keyCode === 13) {
                                     deactivateEditMode()
                                 }
                             }}
@@ -63,4 +64,3 @@ const ProfileStatus: React.FC<Props> = ({
     )
 }
 
-export default ProfileStatus;

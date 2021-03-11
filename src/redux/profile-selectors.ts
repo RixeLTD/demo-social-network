@@ -8,10 +8,6 @@ export const getStatus = (state: AppStateType) => {
     return state.profilePage.status;
 }
 
-export const getAuthUserId = (state: AppStateType) => {
-    return state.me.userId;
-}
-
 export const getProfileFormErrors = (state: AppStateType) => {
     return state.profilePage.errorMessage;
 }

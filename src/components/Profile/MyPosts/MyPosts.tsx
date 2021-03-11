@@ -1,35 +1,29 @@
-import React from "react";
-import Post from "./Post/Post";
-import {Formik, FormikErrors} from 'formik';
-import s from "../Profile.module.scss";
-import AutoHeightTextarea from "../../../utils/AutoHeightTextarea";
-import {PostsType} from "../../../types/types";
+import React from 'react'
+import Post from './Post/Post'
+import {Formik} from 'formik'
+import s from '../Profile.module.scss'
+import AutoHeightTextarea from '../../../utils/AutoHeightTextarea'
+import {useDispatch, useSelector} from 'react-redux'
+import {profileActions} from '../../../redux/profile-reducer'
+import {getPosts} from '../../../redux/profile-selectors'
 
-type MyPostsFormikType = {
-    addPost: (postText: string) => void
-}
-const MyPostsFormik: React.FC<MyPostsFormikType> = ({
-                           addPost
-                       }) => {
-type Values = {
-    post: string
-}
+const MyPostsFormik: React.FC = () => {
+    const dispatch = useDispatch()
+
     return (
-        <Formik
-            initialValues={{post: ""}}
-            validate={(values: Values) => {
-                const errors: FormikErrors<Values> = {};
+        <Formik<{ post: string }>
+            initialValues={{post: ''}}
+            validate={values => {
+                const errors: { post?: string } = {}
                 if (values.post.length > 200) {
-                    errors.post = 'Вы ввели больше 200 символов';
+                    errors.post = 'Вы ввели больше 200 символов'
                 }
-                return errors;
+                return errors
             }}
-            onSubmit={(values: Values, {setSubmitting}) => {
-                setTimeout(() => {
-                    addPost(values.post);
-                    values.post = '';
-                    setSubmitting(false);
-                }, 400);
+            onSubmit={(values, {setSubmitting}) => {
+                dispatch(profileActions.addPost(values.post))
+                values.post = ''
+                setSubmitting(false)
             }}
         >
             {({
@@ -37,8 +31,7 @@ type Values = {
                   errors,
                   handleChange,
                   handleSubmit,
-                  isSubmitting,
-                  /* and other goodies */
+                  isSubmitting
               }) => (
                 <form onSubmit={handleSubmit} className={s.profileInfoSection}>
                     <div className={s.textareaContainer}>
@@ -58,26 +51,20 @@ type Values = {
                 </form>
             )}
         </Formik>
-    );
+    )
 }
 
 type MyPostsType = {
     ownProfile: boolean
-    posts: Array<PostsType>
     photo: string | null
     userName: string
-
-    addPost: (postText: string) => void
-    removePost: (id: number) => void
 }
-const MyPosts: React.FC<MyPostsType> = ({
-                                            ownProfile,
-                                            posts,
-                                            photo,
-                                            userName,
-                                            addPost,
-                                            removePost
-                                        }) => {
+export const MyPosts: React.FC<MyPostsType> = ({
+                                                   ownProfile,
+                                                   photo,
+                                                   userName,
+                                               }) => {
+    const posts = useSelector(getPosts)
 
     let postsElements = posts.map(p => <Post message={p.message}
                                              likesCount={p.likesCount}
@@ -85,16 +72,12 @@ const MyPosts: React.FC<MyPostsType> = ({
                                              key={p.id}
                                              photo={photo}
                                              userName={userName}
-                                             removePost={removePost}
     />)
-
 
     return (
         <>
-            {ownProfile ? <MyPostsFormik addPost={addPost}/> : null}
+            {ownProfile ? <MyPostsFormik/> : null}
             {postsElements}
         </>
-    );
+    )
 }
-
-export default MyPosts;

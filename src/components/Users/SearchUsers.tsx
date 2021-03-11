@@ -1,34 +1,46 @@
-import React from "react"
+import React from 'react'
 import s from './users.module.scss'
-import {Formik} from "formik";
-import {UserType} from "../../types/types";
+import {Formik} from 'formik'
+import {useDispatch} from 'react-redux'
 
 type PropsType = {
-    requestSearchUsers: (currentSearchPage: number, pageSize: number, term: string, friend: boolean | null) => void
-    currentSearchPage: number
-    searchUsers: Array<UserType>
+    term: string
+    friend: boolean | null
     setTerm: (term: string) => void
     setFriend: (friend: boolean | null) => void
-    friend: boolean | null
+    requestUsers: (page: number, pageSize: number, term: string, friend: null | boolean) => void
+    pageSize: number
+    clearUsers: () => void
 }
-const SearchUsers: React.FC<PropsType> = ({
-                                              requestSearchUsers,
-                                              currentSearchPage,
-                                              setTerm,
-                                              setFriend,
-                                              friend
-                                          }) => {
-
+export const SearchUsers: React.FC<PropsType> = React.memo(({
+                                                     term,
+                                                     friend,
+                                                     setTerm,
+                                                     setFriend,
+                                                     requestUsers,
+                                                     pageSize,
+                                                     clearUsers
+                                                 }) => {
+    const dispatch = useDispatch()
+    type FriendFormType = 'null' | 'true' | 'false'
     type Props = {
-        text: string
+        term: string
+        friend: FriendFormType
     }
     return (
         <Formik<Props>
+            enableReinitialize
             initialValues={{
-                text: ""
+                term: term,
+                friend: String(friend) as FriendFormType
             }}
-            onSubmit={(values) => {
-                requestSearchUsers(currentSearchPage, 10, values.text, friend)
+            onSubmit={(values, {setSubmitting}) => {
+                setTerm(values.term)
+                let friend: null | boolean = values.friend === 'null' ? null : values.friend === 'true'
+                setFriend(friend)
+                dispatch(clearUsers())
+                dispatch(requestUsers(1, pageSize, values.term, friend))
+                setSubmitting(false)
             }}
         >
             {({
@@ -41,38 +53,43 @@ const SearchUsers: React.FC<PropsType> = ({
                     <form onSubmit={handleSubmit} className={s.searchContainer}>
                         <input
                             className={s.search}
-                            name="text"
-                            onChange={(e) => {
-                                handleChange(e)
-                                setTerm(e.target.value)
-                            }}
-                            value={values.text}
+                            name="term"
+                            onChange={handleChange}
+                            value={values.term}
                             placeholder="Поиск"
                             autoComplete="off"
                         />
-                        <input type="radio"
-                               name="friend"
-                               value="null"
-                               onChange={() => {
-                                   setFriend(null)
-                               }}
-                        />Все
-                        <input type="radio"
-                               name="friend"
-                               value="true"
-                               onChange={() => {
-                                   setFriend(true)
-                               }}
-                        />Друзья
-                        <input type="radio"
-                               name="friend"
-                               value="false"
-                               onChange={() => {
-                                   setFriend(false)
-                               }}
-                        />Не друзья
+                        <div className={s.radio}>
+                            <input type="radio"
+                                   name="friend"
+                                   value="null"
+                                   onChange={(e) => {
+                                       handleChange(e)
+                                       setFriend(null)
+                                   }}
+                                   checked={friend ===  null}
+                            />Все
+                            <input type="radio"
+                                   name="friend"
+                                   value="true"
+                                   onChange={(e) => {
+                                       handleChange(e)
+                                       setFriend(true)
+                                   }}
+                                   checked={friend === true}
+                            />Друзья
+                            <input type="radio"
+                                   name="friend"
+                                   value="false"
+                                   onChange={(e) => {
+                                       handleChange(e)
+                                       setFriend(false)
+                                   }}
+                                   checked={friend === false}
+                            />Не друзья
+                        </div>
                         <button className={s.buttonSearch} type="submit"
-                                // disabled={Boolean(isSubmitting || !values.text)}
+                                disabled={Boolean(isSubmitting)}
                         >
                             Поиск
                         </button>
@@ -81,6 +98,4 @@ const SearchUsers: React.FC<PropsType> = ({
             }}
         </Formik>
     )
-}
-
-export default SearchUsers
+})

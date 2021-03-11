@@ -1,8 +1,8 @@
-import React from 'react';
-import s from "./Preloader.module.scss";
+import React from 'react'
+import s from './Preloader.module.scss'
 
-const Preloader: React.FC = () => {
-    
+export const Preloader: React.FC = () => {
+
     return (
         <div className={s.ldsBlock}>
             <div className={s.ldsDefault}>
@@ -22,5 +22,3 @@ const Preloader: React.FC = () => {
         </div>
     )
 }
-
-export default Preloader;

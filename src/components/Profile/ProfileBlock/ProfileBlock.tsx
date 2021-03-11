@@ -1,21 +1,19 @@
 import React from 'react';
 import s from "../Profile.module.scss";
-import ProfileStatus from "./ProfileStatus";
+import {ProfileStatus} from "./ProfileStatus";
 import {ContactsType, ProfileType} from "../../../types/types";
+import {useSelector} from 'react-redux'
+import {getStatus} from '../../../redux/profile-selectors'
 
 type ProfileBlockType = {
     profile: ProfileType
     ownProfile: boolean
-    status: string
-
-    updateUserStatus: (value: string) => void
 }
-const ProfileBlock: React.FC<ProfileBlockType> = ({
+export const ProfileBlock: React.FC<ProfileBlockType> = ({
                           profile,
                           ownProfile,
-                          status,
-                          updateUserStatus
                       }) => {
+    const status = useSelector(getStatus)
 
     return (
         <>
@@ -26,7 +24,6 @@ const ProfileBlock: React.FC<ProfileBlockType> = ({
                 </div>
                 <ProfileStatus ownProfile={ownProfile}
                                status={status}
-                               updateUserStatus={updateUserStatus}
                 />
             </div>
             <div className={s.profileInfoSection}>
@@ -75,4 +72,3 @@ const Contacts: React.FC<ContactsComponentType> = ({
     )
 }
 
-export default ProfileBlock

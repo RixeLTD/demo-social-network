@@ -1,52 +1,63 @@
-import React from 'react';
-import {Formik, useFormikContext} from 'formik';
-import {loginUser} from "../../redux/auth-reduces";
-import {connect, ConnectedProps} from "react-redux";
-import {Redirect} from "react-router-dom";
-import s from "./Login.module.scss";
-import {getIsAuth, getIsCaptcha, getLoginFormErrors} from "../../redux/auth-selectors";
-import {AppStateType} from "../../redux/redux-store";
+import React, {useEffect} from 'react'
+import {Formik, useFormikContext} from 'formik'
+import {LoginFormDataType, loginUser} from '../../redux/auth-reduces'
+import {useDispatch, useSelector} from 'react-redux'
+import {Redirect} from 'react-router-dom'
+import s from './Login.module.scss'
+import {getIsAuth, getIsCaptcha, getLoginFormErrors} from '../../redux/auth-selectors'
 
-type StopSubmittingType = {
-    errorMessage: string | null
-}
-const StopSubmitting: React.FC<StopSubmittingType> = ({errorMessage}) => {
-    const {setSubmitting} = useFormikContext();
-    React.useEffect(() => {
-        if (errorMessage) {
-            setSubmitting(false);
-        }
-    }, [errorMessage, setSubmitting]);
-    return null;
-};
+export const Login: React.FC = () => {
 
-const LoginFormik: React.FC<PropsFromRedux> = ({loginUser, isCaptcha, errorMessage}) => {
-    type Props = {
-        email: string
-        password: string
-        rememberMe: boolean
-        captcha: string
+    const isAuth = useSelector(getIsAuth)
+    const isCaptcha = useSelector(getIsCaptcha)
+    const errorMessage = useSelector(getLoginFormErrors)
+
+    if (isAuth) {
+        return <Redirect to={'/profile'}/>
     }
+
     return (
-        <Formik<Props>
-            initialValues={{email: "", password: "", rememberMe: false, captcha: ""}}
+        <>
+            <div className={s.loginBlock}>
+                <h1>Login</h1>
+                <LoginFormik isCaptcha={isCaptcha}
+                             loginUser={loginUser}
+                             errorMessage={errorMessage}/>
+                <div className={s.formError}>{errorMessage}</div>
+                <span>Данные тестового аккаунта:</span>
+                <span>Email: free@samuraijs.com</span>
+                <span>Password: free</span>
+            </div>
+        </>
+    )
+}
+
+type PropsType = {
+    isCaptcha: string
+    errorMessage: string | null
+    loginUser: (values: LoginFormDataType) => void
+}
+const LoginFormik: React.FC<PropsType> = ({loginUser, isCaptcha, errorMessage}) => {
+    const dispatch = useDispatch()
+
+    return (
+        <Formik<LoginFormDataType>
+            initialValues={{email: '', password: '', rememberMe: false, captcha: ''}}
             onSubmit={values => {
-                loginUser(values);
-                values.captcha = "";
+                dispatch(loginUser(values))
+                values.captcha = ''
             }}
         >
             {({
                   values,
-                  errors,
                   handleChange,
                   handleBlur,
                   handleSubmit,
                   isSubmitting,
-                  /* and other goodies */
               }) => {
                 return (
                     <form onSubmit={handleSubmit} className={s.form}>
-                        <input className={`${s.input} ${errors.email ? s.errorInput : null}`}
+                        <input className={`${s.input}`}
                                type="email"
                                name="email"
                                onChange={handleChange}
@@ -55,7 +66,7 @@ const LoginFormik: React.FC<PropsFromRedux> = ({loginUser, isCaptcha, errorMessa
                                placeholder="Email"
                                required
                         />
-                        <input className={`${s.input} ${errors.password ? s.errorInput : null}`}
+                        <input className={`${s.input}`}
                                autoComplete="off"
                                type="password"
                                name="password"
@@ -78,7 +89,7 @@ const LoginFormik: React.FC<PropsFromRedux> = ({loginUser, isCaptcha, errorMessa
                         {isCaptcha ?
                             <>
                                 <img src={isCaptcha} className={s.captchaImage} alt=""/>
-                                <input className={`${s.input} ${errors.captcha ? s.errorInput : null}`}
+                                <input className={`${s.input}`}
                                        type="text"
                                        name="captcha"
                                        onChange={handleChange}
@@ -97,42 +108,15 @@ const LoginFormik: React.FC<PropsFromRedux> = ({loginUser, isCaptcha, errorMessa
                 )
             }}
         </Formik>
-    );
-}
-
-const Login: React.FC<PropsFromRedux> = ({loginUser, isAuth, isCaptcha, errorMessage,}) => {
-
-    if (isAuth) {
-        return <Redirect to={'/profile'}/>
-    }
-
-    return (
-        <>
-            <div className={s.loginBlock}>
-                <h1>Login</h1>
-                <LoginFormik isAuth={isAuth} isCaptcha={isCaptcha} loginUser={loginUser}
-                             errorMessage={errorMessage}/>
-                <div className={s.formError}>{errorMessage}</div>
-                <span>Данные тестового аккаунта:</span>
-                <span>Email: free@samuraijs.com</span>
-                <span>Password: free</span>
-            </div>
-        </>
     )
 }
 
-const mapStateToProps = (state: AppStateType) => {
-    return {
-        isAuth: getIsAuth(state),
-        isCaptcha: getIsCaptcha(state),
-        errorMessage: getLoginFormErrors(state),
-    }
+const StopSubmitting: React.FC<{errorMessage: string | null}> = ({errorMessage}) => {
+    const {setSubmitting} = useFormikContext()
+    useEffect(() => {
+        if (errorMessage) {
+            setSubmitting(false)
+        }
+    }, [errorMessage, setSubmitting])
+    return null
 }
-
-const mapDispatchToProps = {
-    loginUser
-}
-
-const connector = connect(mapStateToProps, mapDispatchToProps)
-type PropsFromRedux = ConnectedProps<typeof connector>
-export default connector(Login)
