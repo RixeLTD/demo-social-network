@@ -6,16 +6,20 @@ import {useDispatch, useSelector} from 'react-redux'
 import {updateProfile} from '../../../redux/profile-reducer'
 import {getIsSubmittingSuccess, getProfileFormErrors} from '../../../redux/profile-selectors'
 import {updateProfileType} from '../../../api/api'
+import {Button, Col, Row} from 'antd'
 
 type ProfileBlockFormType = {
     profile: ProfileType
     disableEditMode: () => void
 }
 
+const flexLeftColumn = '180px'
+const flexRightColumn = '300px'
+
 export const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
-                                                              profile,
-                                                              disableEditMode,
-                                                          }) => {
+                                                                     profile,
+                                                                     disableEditMode,
+                                                                 }) => {
     const errorMessage = useSelector(getProfileFormErrors)
     const isSubmittingSuccess = useSelector(getIsSubmittingSuccess)
     const dispatch = useDispatch()
@@ -60,87 +64,99 @@ export const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
               }) => (
                 <form onSubmit={handleSubmit}>
                     <div className={s.profileInfoSection}>
-                        <div className={s.item}>
-                            <label htmlFor="fullName">
-                                <div className={s.itemKey}>Имя:</div>
-                            </label>
-                            <input
-                                className={s.clearInputStyle}
-                                id="fullName"
-                                type="text"
-                                name="fullName"
-                                onChange={handleChange}
-                                value={values.fullName}
-                                autoComplete="off"
-                            />
-                        </div>
-                    </div>
-                    <div className={s.profileInfoSection}>
-                        <div className={s.item}>
-                            <label htmlFor="aboutMe">
-                                <div className={s.itemKey}>Обо мне:</div>
-                            </label>
-                            <input
-                                className={s.clearInputStyle}
-                                id="aboutMe"
-                                type="text"
-                                name="aboutMe"
-                                onBlur={handleBlur}
-                                onChange={handleChange}
-                                value={values.aboutMe as string}
-                                required
-                                autoComplete="off"
-                            />
-                            {errors.aboutMe && touched.aboutMe && errors.aboutMe}
-                        </div>
-                        <div className={s.item}>
-                            <label className={s.itemKey}>
-                                <div>В поисках работы:</div>
-                                <Field type="checkbox" name="lookingForAJob"/>
-                            </label>
-                        </div>
-                        {values.lookingForAJob
-                            ? <div className={s.item}>
-                                <label className={s.itemKey} htmlFor="lookingForAJobDescription">
-                                    <div>Статус поиска работы:</div>
-                                </label>
+                        <Row align='middle'>
+                            <Col flex={flexLeftColumn}>
+                                <b>Имя:</b>
+                            </Col>
+                            <Col flex={flexRightColumn}>
                                 <input
                                     className={s.clearInputStyle}
-                                    id="lookingForAJobDescription"
+                                    id="fullName"
                                     type="text"
-                                    name="lookingForAJobDescription"
+                                    name="fullName"
+                                    onChange={handleChange}
+                                    value={values.fullName}
+                                    autoComplete="off"
+                                />
+                            </Col>
+                        </Row>
+                    </div>
+                    <div className={s.profileInfoSection}>
+                        <Row align='middle'>
+                            <Col flex={flexLeftColumn}>
+                                <b>Обо мне:</b>
+                            </Col>
+                            <Col flex={flexRightColumn}>
+                                <input
+                                    className={s.clearInputStyle}
+                                    id="aboutMe"
+                                    type="text"
+                                    name="aboutMe"
                                     onBlur={handleBlur}
                                     onChange={handleChange}
-                                    value={values.lookingForAJobDescription}
+                                    value={values.aboutMe as string}
                                     required
                                     autoComplete="off"
                                 />
-                                {errors.lookingForAJobDescription && touched.lookingForAJobDescription && errors.lookingForAJobDescription}
-                            </div> : null}
+                                {errors.aboutMe && touched.aboutMe && errors.aboutMe}
+                            </Col>
+                        </Row>
+                        <Row align='middle' style={{marginTop: 10}}>
+                            <Col flex={flexLeftColumn}>
+                                <b>В поисках работы:</b>
+                            </Col>
+                            <Col flex={flexRightColumn}>
+                                <Field type="checkbox" name="lookingForAJob"/>
+                            </Col>
+                        </Row>
+                        {values.lookingForAJob
+                            ? <Row align='middle' style={{marginTop: 10}}>
+                                <Col flex={flexLeftColumn}>
+                                    <b>Статус поиска работы:</b>
+                                </Col>
+                                <Col flex={flexRightColumn}>
+                                    <input
+                                        className={s.clearInputStyle}
+                                        id="lookingForAJobDescription"
+                                        type="text"
+                                        name="lookingForAJobDescription"
+                                        onBlur={handleBlur}
+                                        onChange={handleChange}
+                                        value={values.lookingForAJobDescription}
+                                        required
+                                        autoComplete="off"
+                                    />
+                                    {errors.lookingForAJobDescription && touched.lookingForAJobDescription && errors.lookingForAJobDescription}
+                                </Col>
+                            </Row> : null}
                     </div>
                     <div className={s.profileInfoSection}>
-                        <div className={s.itemKey}>Контакты:</div>
+                        <b>Контакты:</b>
                         <div className={s.contactContainer}>{Object.keys(profile.contacts).map(contact => {
                             return (
                                 <div key={contact} className={s.contactItem}>
-                                    <label htmlFor={contact} className={s.contactKey}>{contact}:</label>
-                                    <input
-                                        className={s.clearInputStyle}
-                                        id={contact}
-                                        type="url"
-                                        name={`contacts.${contact}`}
-                                        onChange={handleChange}
-                                        value={values.contacts[contact as keyof ContactsType]}
-                                        autoComplete="off"
-                                    />
+                                    <Row align='middle'>
+                                        <Col flex={flexLeftColumn}>
+                                            <b>{contact}:</b>
+                                        </Col>
+                                        <Col flex={flexRightColumn}>
+                                            <input
+                                                className={s.clearInputStyle}
+                                                id={contact}
+                                                type="url"
+                                                name={`contacts.${contact}`}
+                                                onChange={handleChange}
+                                                value={values.contacts[contact as keyof ContactsType]}
+                                                autoComplete="off"
+                                            />
+                                        </Col>
+                                    </Row>
                                 </div>
                             )
                         })}</div>
                     </div>
                     <div className={s.profileInfoSection}>
-                        <button className={s.buttonCancel} type="button" onClick={disableEditMode}>
-                            Отменить
-                        </button>
+                        <Button onClick={disableEditMode} style={{marginRight: '10px'}}>Отмена</Button>
                         <button className={s.buttonSave} type="submit"
                                 disabled={isSubmitting || Boolean(errors.aboutMe) || Boolean(errors.lookingForAJobDescription)}>
                             Сохранить

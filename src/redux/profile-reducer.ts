@@ -33,6 +33,7 @@ const initialState = {
     status: '',
     errorMessage: null as string | null,
     isSubmittingSuccess: false,
+    isFetching: false
 }
 
 export type ProfileActionsTypes = InferActionTypes<typeof profileActions>
@@ -47,6 +48,7 @@ export const profileActions = {
         message
     } as const),
     setSubmittingSuccess: (value: boolean) => ({type: 'PROFILE_SET_SUBMITTING_SUCCESS', value} as const),
+    setIsFetching: (value: boolean) => ({type: 'PROFILE_SET_IS_FETCHING', value} as const),
 }
 
 const profileReducer = (state = initialState, action: ProfileActionsTypes): InitialStateType => {
@@ -87,6 +89,11 @@ const profileReducer = (state = initialState, action: ProfileActionsTypes): Init
                 ...state,
                 isSubmittingSuccess: action.value,
             }
+        case 'PROFILE_SET_IS_FETCHING':
+            return {
+                ...state,
+                isFetching: action.value,
+            }
         default:
             return state
     }
@@ -95,8 +102,10 @@ const profileReducer = (state = initialState, action: ProfileActionsTypes): Init
 export const getUserProfile = (userId: number): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     if (userId) {
         try {
-            let data = await profileAPI.getProfile(userId)
+            dispatch(profileActions.setIsFetching(true))
+            const data = await profileAPI.getProfile(userId)
             dispatch(profileActions.setUserProfile(data))
+            dispatch(profileActions.setIsFetching(false))
         } catch (error) {
             dispatch(appActions.setGlobalError(`Get user profile error: ${error.message}`))
             dispatch(appActions.setIsVisibleGlobalError(true))
@@ -107,7 +116,7 @@ export const getUserProfile = (userId: number): ThunkType<ProfileActionsTypes | 
 export const getUserStatus = (userId: number): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
     if (userId) {
         try {
-            let status = await profileAPI.getStatus(userId)
+            const status = await profileAPI.getStatus(userId)
             dispatch(profileActions.setUserStatus(status))
         } catch (error) {
             dispatch(appActions.setGlobalError(`Get user status error: ${error.message}`))
@@ -125,21 +134,6 @@ export const updateUserStatus = (status: string): ThunkType<ProfileActionsTypes 
     } catch (error) {
         dispatch(appActions.setGlobalError(`Update status error: ${error.message}`))
         dispatch(appActions.setIsVisibleGlobalError(true))
-    }
-
-}
-
-export const updateUserPhoto = (file: string | Blob): ThunkType<ProfileActionsTypes | AppActionsTypes> => async (dispatch) => {
-    if (file) {
-        try {
-            let data = await profileAPI.updatePhoto(file)
-            if (data.resultCode === ResultCodes.Success) {
-                dispatch(profileActions.setUserPhoto(data.data.photos))
-            }
-        } catch (error) {
-            dispatch(appActions.setGlobalError(`Update user photo error: ${error.message}`))
-            dispatch(appActions.setIsVisibleGlobalError(true))
-        }
     }
 }
 

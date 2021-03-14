@@ -1,6 +1,6 @@
 import {profileAPI, ResponseDataType, ResultCodes} from '../api/api'
 import {profile} from './profile-reduces.test'
-import {getUserProfile, getUserStatus, profileActions, updateProfile, updateUserPhoto, updateUserStatus} from './profile-reducer'
+import {getUserProfile, getUserStatus, profileActions, updateProfile, updateUserStatus} from './profile-reducer'
 
 jest.mock('../api/api')
 let profileAPIMock = profileAPI as jest.Mocked<typeof profileAPI>
@@ -49,15 +49,15 @@ const resultPhotos = {
         }
     }
 }
-test('update user photo', async () => {
-    profileAPIMock.updatePhoto.mockReturnValue(Promise.resolve(resultPhotos))
-    const thunk = updateUserPhoto("file")
-
-    await thunk(dispatchMock, getState, {})
-
-    expect(dispatchMock).toBeCalledTimes(1)
-    expect(dispatchMock).toHaveBeenNthCalledWith(1, profileActions.setUserPhoto(resultPhotos.data.photos))
-})
+// test('update user photo', async () => {
+//     profileAPIMock.updatePhoto.mockReturnValue(Promise.resolve(resultPhotos))
+//     const thunk = updateUserPhoto("file")
+//
+//     await thunk(dispatchMock, getState, {})
+//
+//     expect(dispatchMock).toBeCalledTimes(1)
+//     expect(dispatchMock).toHaveBeenNthCalledWith(1, profileActions.setUserPhoto(resultPhotos.data.photos))
+// })
 test('update user profile', async () => {
     profileAPIMock.updateProfile.mockReturnValue(Promise.resolve(result))
     const thunk = updateProfile(profile)

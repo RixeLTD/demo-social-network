@@ -4,22 +4,30 @@ import s from './Profile.module.scss'
 import noImage from '../../assets/images/noImage.png'
 import {ProfileBlockForm} from './ProfileBlock/ProfileBlockForm'
 import {ProfileBlock} from './ProfileBlock/ProfileBlock'
-import {UpdateUserPhotoType} from '../../types/types'
 import {useDispatch, useSelector} from 'react-redux'
-import {getProfile} from '../../redux/profile-selectors'
-import {getUserProfile, getUserStatus, profileActions, updateUserPhoto} from '../../redux/profile-reducer'
+import {getProfile, selectIsFetching} from '../../redux/profile-selectors'
+import {getUserProfile, getUserStatus, profileActions} from '../../redux/profile-reducer'
 import {Preloader} from '../common/preloader/Preloader'
 import {RouteComponentProps, withRouter} from 'react-router-dom'
 import {getAuthUserId} from '../../redux/auth-selectors'
+import {Button, Col, Grid, Image, Row} from 'antd'
+import {UploadComponent} from './UploadComponent'
 
 const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
                                                                         match,
                                                                         history,
                                                                     }) => {
-
     const profile = useSelector(getProfile)
     const authUserId = useSelector(getAuthUserId)
+    const isFetching = useSelector(selectIsFetching)
     const dispatch = useDispatch()
+    const {useBreakpoint} = Grid
+    const {lg} = useBreakpoint()
+
+
+    useEffect(() => {
+        window.scrollTo({top: 0})
+    }, [])
 
     useEffect(() => {
         let userId: number | null = +match.params.userId
@@ -46,57 +54,46 @@ const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
         setEditMode(false)
     }
 
-    const onUpdateUserPhoto = (event: UpdateUserPhotoType) => {
-        if (event.target.files) {
-            updateUserPhoto(event.target.files[0])
-        }
-    }
-
-    if (!profile) {
+    if (!profile || isFetching) {
         return <Preloader/>
     }
 
     const ownProfile: boolean = authUserId === profile.userId
 
     return (
-        <div className={s.profileBlock}>
-            <div className={s.profileImageContainer}>
-                <div className={s.profileImageBlock}>
-                    <img className={s.userImage} src={profile.photos.large || noImage}
-                         alt=""/>
-                    {ownProfile
-                        ? <>
-                            <label className={s.uploadPhoto}>Загрузить фотографию
-                                <input id={'file'} type={'file'} onChange={onUpdateUserPhoto} accept="image/*"
-                                       hidden/>
-                            </label>
-                            {
-                                editMode
-                                    ?
-                                    <div className={s.editProfile} onClick={disableEditMode}>Отмена</div>
-                                    :
-                                    <div className={s.editProfile} onClick={enableEditMode}>Редактировать профиль</div>
-                            }
-                        </> : null
-                    }
-
-                </div>
-            </div>
-            <div className={s.profileInfoContainer}>
-                {editMode
-                    ? <ProfileBlockForm disableEditMode={disableEditMode}
-                                        profile={profile}
-                    />
-                    : <ProfileBlock profile={profile}
-                                    ownProfile={ownProfile}
-                    />
-                }
-                <MyPosts ownProfile={ownProfile}
-                         photo={profile.photos.small}
-                         userName={profile.fullName}
+        <Row wrap={!lg}>
+            <Col flex={!lg ? 'auto' : 'none'} className={s.profileLeftBlock}>
+                <Image width={175} className={s.userImage}
+                       src={profile.photos.large || noImage}
                 />
-            </div>
-        </div>
+                {ownProfile
+                    ? <>
+                        <UploadComponent className={s.uploadPhoto}/>
+                        {
+                            editMode
+                                ? <Button onClick={disableEditMode} className={s.editModeButton}>Отмена</Button>
+                                : <Button onClick={enableEditMode} type="primary" className={s.editModeButton}>Редактировать профиль</Button>
+                        }
+                    </> : null
+                }
+            </Col>
+            <Col flex='auto'>
+                <div className={s.profileRightBlock}>
+                    {editMode
+                        ? <ProfileBlockForm disableEditMode={disableEditMode}
+                                            profile={profile}
+                        />
+                        : <ProfileBlock profile={profile}
+                                        ownProfile={ownProfile}
+                        />
+                    }
+                    <MyPosts ownProfile={ownProfile}
+                             photo={profile.photos.small}
+                             userName={profile.fullName}
+                    />
+                </div>
+            </Col>
+        </Row>
     )
 }
 

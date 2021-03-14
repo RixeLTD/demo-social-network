@@ -19,6 +19,10 @@ const Dialogs: React.FC<RouteComponentProps<{ userId: string }>> = ({match}) => 
     let [currentUser, setCurrentUser] = useState<DialogElementType | null>(null)
 
     useEffect(() => {
+        window.scrollTo({top: 0})
+    }, [])
+
+    useEffect(() => {
         let userId: number = +match.params.userId
         if (userId) {
             setActiveDialog(userId)

@@ -6,8 +6,8 @@ import {useDispatch, useSelector} from 'react-redux'
 import {getCurrentPage, getFollowingInProgress, getIsFetching, getPageSize, getTotalUsersCount, getUsers} from '../../redux/users-selectors'
 import {getIsAuth} from '../../redux/auth-selectors'
 import {followUnfollow, requestUsers, usersActions} from '../../redux/users-reduces'
-import {Preloader} from '../common/preloader/Preloader'
 import {NumberParam, StringParam, useQueryParam} from 'use-query-params'
+import {Button} from 'antd'
 
 export const Users: React.FC = React.memo(() => {
     const users = useSelector(getUsers)
@@ -25,6 +25,10 @@ export const Users: React.FC = React.memo(() => {
     const [queryTerm, setQueryTerm] = useQueryParam('term', StringParam)
     const [queryFriend, setQueryFriend] = useQueryParam('friend', StringParam)
     const [queryPage, setQueryPage] = useQueryParam('page', NumberParam)
+
+    useEffect(() => {
+        window.scrollTo({top: 0})
+    }, [])
 
     useEffect(() => {
         const page = queryPage || currentPage
@@ -65,14 +69,13 @@ export const Users: React.FC = React.memo(() => {
     }, [])
 
 
-    let mapUsers = users.map(user => {
-        return <User user={user}
-                     followingInProgress={followingInProgress}
-                     followUnfollow={followUnfollow}
-                     key={user.id}
-                     isAuth={isAuth}
+    let mapUsers = users.map(user => <User user={user}
+                                           followingInProgress={followingInProgress}
+                                           followUnfollow={followUnfollow}
+                                           key={user.id}
+                                           isAuth={isAuth}
         />
-    })
+    )
 
     const onPageChange = () => {
         dispatch(requestUsers(currentPage + 1, pageSize, term, friend))
@@ -89,13 +92,13 @@ export const Users: React.FC = React.memo(() => {
                          pageSize={pageSize}
                          clearUsers={usersActions.clearUsers}
             />
-
             {mapUsers}
-            {isFetching ? <Preloader/> : currentPage < pages ?
-                <button className={s.buttonMore} onClick={onPageChange}>
+            {currentPage < pages ?
+                <Button type='primary' loading={isFetching} onClick={onPageChange} className={s.buttonMore}>
                     Показать еще
-                </button> : null
-            }
+                </Button>
+                : null}
+
         </div>
     )
 })

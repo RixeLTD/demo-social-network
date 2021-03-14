@@ -1,13 +1,13 @@
 import React from 'react'
-import s from './ButtonFollowUnfollow.module.scss'
-import {UserType} from "../../types/types";
+import {UserType} from '../../types/types'
 import {useDispatch} from 'react-redux'
+import {Button} from 'antd'
 
 type ButtonFollowUnfollowType = {
     followingInProgress: Array<number>
     user: UserType
 
-    followUnfollow: (userId: number, action: "following" | "unfollowing") => void
+    followUnfollow: (userId: number, action: 'following' | 'unfollowing') => void
 }
 
 const ButtonFollowUnfollow: React.FC<ButtonFollowUnfollowType> = ({
@@ -15,15 +15,19 @@ const ButtonFollowUnfollow: React.FC<ButtonFollowUnfollowType> = ({
                                                                       user,
                                                                       followUnfollow
                                                                   }) => {
-const dispatch = useDispatch()
+    const dispatch = useDispatch()
     return (
-        <button disabled={followingInProgress.some(id => id === user.id)}
-                className={`${s.button} ${user.followed ? s.buttonUnfollow : s.buttonFollow}`}
+        <Button type={user.followed ? undefined : 'primary'}
+                size='small'
                 onClick={() => user.followed
                     ? dispatch(followUnfollow(user.id, 'unfollowing'))
-                    : dispatch(followUnfollow(user.id, 'following'))}>
-            {user.followed ? 'Отписаться' : 'Подписаться'}</button>
+                    : dispatch(followUnfollow(user.id, 'following'))}
+                disabled={followingInProgress.some(id => id === user.id)}
+        >
+            {user.followed ? 'Отписаться' : 'Подписаться'}
+        </Button>
+
     )
 }
 
-export default ButtonFollowUnfollow;
+export default ButtonFollowUnfollow

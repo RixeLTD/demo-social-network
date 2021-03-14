@@ -1,21 +1,6 @@
-@mixin clearButtonStyle {
-    align-self: flex-end;
-    border: none;
-    outline: none;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-}
-
 .container {
     display: flex;
     flex-direction: column;
-}
-
-.searchBlock {
-    background-color: #ffffff;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 
 .searchContainer {
@@ -42,7 +27,6 @@
 .userBlock {
     background-color: #ffffff;
     border-radius: 5px;
-    display: flex;
     margin-bottom: 10px;
 }
 
@@ -50,45 +34,14 @@
     display: flex;
     flex-direction: column;
     padding: 10px;
-    width: 110px;
 }
 
-.photoContainer {
-    position: relative;
-    overflow: hidden;
-    width: 75px;
-    height: 75px;
-    margin: auto auto 10px auto;
-}
-
-.photo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 75px;
-    height: 75px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-@media (max-width: 768px) {
-    .photoAndButton {
-        width: 95px;
-    }
-    .photoContainer {
-        width: 50px;
-        height: 50px;
-    }
-    .photo {
-        width: 50px;
-        height: 50px;
-    }
-
+.avatar {
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 .nameAndStatus {
-    flex-grow: 2;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -98,27 +51,12 @@
 
 .name {
     text-decoration: none;
-    color: #2a5895;
+    color: #000000;
     font-weight: bold;
     font-size: 16px;
-    &:hover {
-        text-decoration: underline;
-    }
 }
 
 .buttonMore {
-    @include clearButtonStyle;
-    font-size: 14px;
-    margin: 10px auto 50px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: #ffffff;
-    background-color: #5181b8;
-    &:hover {
-        background-color: #6c99cd;
-    }
-    &:active {
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
+    align-self: center;
+    margin-top: 10px;
 }

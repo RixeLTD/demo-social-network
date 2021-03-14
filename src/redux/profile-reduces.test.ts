@@ -21,6 +21,7 @@ beforeEach(() => {
         status: '',
         errorMessage: null,
         isSubmittingSuccess: false,
+        isFetching: false
     }
 })
 

@@ -1,51 +1,14 @@
 .block {
-    background-color: #ffffff;
-    display: flex;
-    align-items: center;
     margin: 10px auto;
-    padding-left: 15px;
-}
-
-.photoContainer {
-    position: relative;
-    overflow:hidden;
-    width:40px;
-    height:40px;
-}
-
-.photo {
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:40px;
-    height:40px;
-    object-fit:cover;
-    border-radius: 50%;
+    padding: 0 15px;
 }
 
 .userNameAndMessage {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 2;
     margin-left: 15px;
 }
 
 .userName {
-    color: #2a5895;
     font-weight: bold;
-    font-size: 14px;
-    padding-top: 5px;
-}
-
-.message {
-    padding: 5px 0;
-}
-
-.sendBlock {
-    background-color: #ffffff;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
 }
 
 .textareaContainer {
@@ -94,12 +57,7 @@
     }
 }
 
-.remove {
+.removeMessage {
     align-self: flex-start;
-    margin-right: 10px;
     color: #9d9c9d;
-    &:hover {
-        cursor: pointer;
-        color: #000000;
-    }
 }

@@ -3,7 +3,8 @@ import s from '../../Profile.module.scss'
 import noImage from '../../../../assets/images/noImage.png'
 import {useDispatch} from 'react-redux'
 import {profileActions} from '../../../../redux/profile-reducer'
-
+import {Avatar, Tooltip} from 'antd'
+import {CloseCircleFilled, CloseOutlined, HeartTwoTone} from '@ant-design/icons'
 
 type PropsType = {
     message: string
@@ -13,17 +14,24 @@ type PropsType = {
     userName: string
 }
 const Post: React.FC<PropsType> = ({
-                                      message,
-                                      likesCount,
-                                      id,
-                                      photo,
-                                      userName,
-                                  }) => {
+                                       message,
+                                       likesCount,
+                                       id,
+                                       photo,
+                                       userName,
+                                   }) => {
     const dispatch = useDispatch()
 
-    let [count, setCount] = useState(likesCount)
-    let [isLiked, setIsLiked] = useState(false)
+    const [count, setCount] = useState(likesCount)
+    const [isLiked, setIsLiked] = useState(false)
+    const [mouseEnter, setMouseEnter] = useState(false)
 
+    const onMouseEnter = () => {
+        setMouseEnter(true)
+    }
+    const onMouseLeave = () => {
+        setMouseEnter(false)
+    }
     const onClick = () => {
         if (isLiked) {
             setCount(count - 1)
@@ -41,19 +49,21 @@ const Post: React.FC<PropsType> = ({
     return (
         <div className={s.profileInfoSection}>
             <div className={s.postPhotoAndName}>
-                <div className={s.postPhotoContainer}>
-                    <img className={s.postPhoto} src={photo || noImage} alt=""/>
-                </div>
+                <Avatar src={photo || noImage}/>
                 <div className={s.postUserName}>{userName}</div>
-                <div className={s.removePost} onClick={removePost}>X
-                </div>
+                <Tooltip key="remove post" title={'Remove post'}>
+                    <div className={s.removePost} onClick={removePost} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+                        {mouseEnter ? <CloseCircleFilled/> : <CloseOutlined/>}
+                    </div>
+                </Tooltip>
             </div>
             <div className={s.postText}>{message}</div>
-            <div className={s.heartContainer}>
-                <div className={`${s.heart} ${isLiked ? s.heartLiked : null}`} onClick={onClick}>
-                    <span className={s.likesCount}>{count}</span>
-                </div>
-            </div>
+            <Tooltip key="like" title={isLiked ? 'Remove Like' : 'Like'}>
+                    <span onClick={onClick}>
+                        <HeartTwoTone twoToneColor={isLiked ? '#eb2f96' : ''}/>
+                        <span> {count}</span>
+                    </span>
+            </Tooltip>
         </div>
     )
 }

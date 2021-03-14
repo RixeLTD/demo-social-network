@@ -1,40 +1,33 @@
 import React from 'react'
-import s from './Navbar.module.scss'
-import {NavLink} from 'react-router-dom'
-import {useDispatch, useSelector} from 'react-redux'
-import {profileActions} from '../../redux/profile-reducer'
-import {getAuthUserId} from '../../redux/auth-selectors'
-import {getProfile} from '../../redux/profile-selectors'
+import './Navbar.scss'
+import {Link} from 'react-router-dom'
+import {Menu} from 'antd'
+import {TeamOutlined, UserOutlined} from '@ant-design/icons'
 
-type PropsType = {
-    setMobileNav: (mobileNav: boolean) => void
-}
-export const Navbar: React.FC<PropsType> = ({setMobileNav}) => {
-    const authUserId = useSelector(getAuthUserId)
-    const profile = useSelector(getProfile)
-    const dispatch = useDispatch()
-
-    const onClick = () => {
-        window.scrollTo({top: 0})
-        setMobileNav(false)
-    }
+export const Navbar: React.FC = () => {
 
     return (
-        <>
-            <NavLink to={'/profile/'} className={s.navLink} activeClassName={s.active} onClick={() => {
-                onClick()
-                if (authUserId !== profile?.userId) {
-                    dispatch(profileActions.setUserProfile(null))
-                }
-            }}>
-                <div className={s.navLinkText}>Профиль</div>
-            </NavLink>
-            <NavLink to={'/dialogs/'} className={s.navLink} activeClassName={s.active} onClick={onClick}>
-                <div className={s.navLinkText}>Сообщения</div>
-            </NavLink>
-            <NavLink to={'/users/'} className={s.navLink} activeClassName={s.active} onClick={onClick}>
-                <div className={s.navLinkText}>Пользователи</div>
-            </NavLink>
-        </>
+        <Menu
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            defaultOpenKeys={['sub1']}
+            style={{height: '100%', borderRight: 0, fontSize: 16, fontWeight: 'bold', backgroundColor: '#f0f2f5'}}
+        >
+            <Menu.Item key="1" icon={<UserOutlined/>}>
+                <Link to={'/profile/'}>
+                    Профиль
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="2" icon={<UserOutlined/>}>
+                <Link to={'/dialogs/'}>
+                    Сообщения
+                </Link>
+            </Menu.Item>
+            <Menu.Item key="3" icon={<TeamOutlined/>}>
+                <Link to={'/users/'}>
+                    Пользователи
+                </Link>
+            </Menu.Item>
+        </Menu>
     )
 }

@@ -1,11 +1,12 @@
 import React from 'react'
 import s from './users.module.scss'
 import noImage from '../../assets/images/noImage.png'
-import {NavLink} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import ButtonFollowUnfollow from '../../utils/ButtonFollowUnfollow/ButtonFollowUnfollow'
 import {UserType} from '../../types/types'
 import {useDispatch} from 'react-redux'
 import {profileActions} from '../../redux/profile-reducer'
+import {Avatar, Col, Row} from 'antd'
 
 type UserComponentType = {
     user: UserType
@@ -15,22 +16,22 @@ type UserComponentType = {
 }
 
 export const User: React.FC<UserComponentType> = ({
-                                               user,
-                                               followingInProgress,
-                                               followUnfollow,
-                                               isAuth
-                                           }) => {
+                                                      user,
+                                                      followingInProgress,
+                                                      followUnfollow,
+                                                      isAuth
+                                                  }) => {
     const dispatch = useDispatch()
     const clearUserProfile = () => {
         dispatch(profileActions.setUserProfile(null))
     }
     return (
-        <div className={s.userBlock}>
-            <div className={s.photoAndButton}>
-                <div className={s.photoContainer}>
-                    <NavLink to={'/profile/' + user.id}>
-                        <img src={user.photos.small || noImage} onClick={clearUserProfile} className={s.photo} alt=""/>
-                    </NavLink>
+        <Row justify={'center'} className={s.userBlock}>
+            <Col flex='120px' className={s.photoAndButton}>
+                <div onClick={clearUserProfile} className={s.avatar}>
+                    <Link to={'/profile/' + user.id}>
+                        <Avatar src={user.photos.small || noImage} size={60}/>
+                    </Link>
                 </div>
                 {isAuth
                     ? <ButtonFollowUnfollow followingInProgress={followingInProgress}
@@ -38,17 +39,15 @@ export const User: React.FC<UserComponentType> = ({
                                             followUnfollow={followUnfollow}/>
                     : null
                 }
-
-
-            </div>
-            <div className={s.nameAndStatus}>
+            </Col>
+            <Col flex='auto' className={s.nameAndStatus}>
                 <div>
-                    <NavLink to={'/profile/' + user.id} onClick={clearUserProfile} className={s.name}>
+                    <Link to={'/profile/' + user.id} onClick={clearUserProfile} className={s.name}>
                         {user.name}
-                    </NavLink>
+                    </Link>
                 </div>
-                <div><span>{user.status}</span></div>
-            </div>
-        </div>
+                <span>{user.status}</span>
+            </Col>
+        </Row>
     )
 }

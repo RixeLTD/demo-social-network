@@ -1,52 +1,62 @@
-import React from 'react';
-import s from "../Profile.module.scss";
-import {ProfileStatus} from "./ProfileStatus";
-import {ContactsType, ProfileType} from "../../../types/types";
+import React from 'react'
+import s from '../Profile.module.scss'
+import {ProfileStatus} from './ProfileStatus'
+import {ContactsType, ProfileType} from '../../../types/types'
 import {useSelector} from 'react-redux'
 import {getStatus} from '../../../redux/profile-selectors'
+import {Col, Row} from 'antd'
 
 type ProfileBlockType = {
     profile: ProfileType
     ownProfile: boolean
 }
 export const ProfileBlock: React.FC<ProfileBlockType> = ({
-                          profile,
-                          ownProfile,
-                      }) => {
+                                                             profile,
+                                                             ownProfile,
+                                                         }) => {
     const status = useSelector(getStatus)
 
     return (
         <>
+            <Row className={s.profileInfoSection}>
+                <Col flex='300px'>
+                    <span><b>{profile.fullName}</b></span>
+                    <ProfileStatus ownProfile={ownProfile}
+                                   status={status}
+                    />
+                </Col>
+            </Row>
             <div className={s.profileInfoSection}>
-                <div className={s.item}>
-                    <div className={s.itemKey}>Имя:</div>
-                    <span className={s.itemValue}>{profile.fullName}</span>
-                </div>
-                <ProfileStatus ownProfile={ownProfile}
-                               status={status}
-                />
+                <Row>
+                    <Col flex={'180px'}>
+                        <b>Обо мне:</b>
+                    </Col>
+                    <Col>
+                        {profile.aboutMe}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col flex={'180px'}>
+                        <b>В поисках работы:</b>
+                    </Col>
+                    <Col>
+                        {profile.lookingForAJob ? 'YES' : 'NO'}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col flex={'180px'}>
+                        <b>Статус поиска работы:</b>
+                    </Col>
+                    <Col>
+                        {profile.lookingForAJobDescription}
+                    </Col>
+                </Row>
             </div>
             <div className={s.profileInfoSection}>
-                <div className={s.item}>
-                    <div className={s.itemKey}>Обо мне:</div>
-                    <span className={s.itemValue}>{profile.aboutMe}</span>
-                </div>
-                <div className={s.item}>
-                    <div className={s.itemKey}>В поисках работы:</div>
-                    <span className={s.itemValue}>{profile.lookingForAJob ? 'YES' : 'NO'}</span>
-                </div>
-                {profile.lookingForAJob &&
-                <div className={s.item}>
-                    <div className={s.itemKey}>Статус поиска работы:</div>
-                    <span className={s.itemValue}>{profile.lookingForAJobDescription}</span>
-                </div>
-                }
-            </div>
-            <div className={s.profileInfoSection}>
-                <div className={s.itemKey}>Контакты:</div>
+                <b>Контакты:</b>
                 <div className={s.contactContainer}>
                     {Object.keys(profile.contacts).map((contact) => {
-                        return <Contacts key={contact} contactTitle={contact} contactValue={profile.contacts[contact as keyof ContactsType]}/>
+                        return <Contacts key={contact} contactValue={profile.contacts[contact as keyof ContactsType]}/>
                     })}
                 </div>
             </div>
@@ -55,17 +65,14 @@ export const ProfileBlock: React.FC<ProfileBlockType> = ({
 }
 
 type ContactsComponentType = {
-    contactTitle: string
     contactValue: string
 }
 const Contacts: React.FC<ContactsComponentType> = ({
-                      contactTitle,
-                      contactValue
-                  }) => {
+                                                       contactValue
+                                                   }) => {
 
     return (
         contactValue ? <div className={s.contactItem}>
-            <div className={s.contactKey}>{contactTitle}:</div>
             <a href={contactValue} className={s.contactLink}>{contactValue}</a>
         </div> : null
 

@@ -1,7 +1,10 @@
-import React from 'react'
+import React, {useState} from 'react'
 import s from './Message.module.scss'
 import noImage from '../../../assets/images/noImage.png'
 import {useDispatch} from 'react-redux'
+import {Avatar, Col, Row, Tooltip} from 'antd'
+import {dialogsActions} from '../../../redux/dialogs-reducer'
+import {CloseCircleFilled, CloseOutlined} from '@ant-design/icons'
 
 type PropsType = {
     message: string
@@ -9,32 +12,41 @@ type PropsType = {
     messageId: number
     userName: string | null
     photo: string | null
-    removeMessage: (activeDialog: number, id: number) => void
 }
 export const Message: React.FC<PropsType> = ({
-                     message,
-                     removeMessage,
-                     activeDialog,
-                     messageId,
-                     userName,
-                     photo
-                 }) => {
+                                                 message,
+                                                 activeDialog,
+                                                 messageId,
+                                                 userName,
+                                                 photo
+                                             }) => {
     const dispatch = useDispatch()
+    const [mouseEnter, setMouseEnter] = useState(false)
+
+    const onMouseEnter = () => {
+        setMouseEnter(true)
+    }
+    const onMouseLeave = () => {
+        setMouseEnter(false)
+    }
+    const removeMessage = () => {
+        dispatch(dialogsActions.removeMessage(activeDialog, messageId))
+    }
+
     return (
-        <div className={s.block}>
-            <div>
-                <div className={s.photoContainer}>
-                    <img className={s.photo} src={photo || noImage} alt=""/>
-                </div>
-            </div>
-            <div className={s.userNameAndMessage}>
+        <Row wrap={false} className={s.block}>
+            <Col flex='none'>
+                <Avatar src={photo || noImage}/>
+            </Col>
+            <Col flex='auto' className={s.userNameAndMessage}>
                 <div className={s.userName}>{userName}</div>
-                <div className={s.message}>{message}</div>
-            </div>
-            <div className={s.remove} onClick={() => {
-                dispatch(removeMessage(activeDialog, messageId))
-            }}>X
-            </div>
-        </div>
+                <div>{message}</div>
+            </Col>
+            <Tooltip key="remove message" title={'Remove message'}>
+                <div className={s.removeMessage} onClick={removeMessage} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+                    {mouseEnter ? <CloseCircleFilled/> : <CloseOutlined/>}
+                </div>
+            </Tooltip>
+        </Row>
     )
 }

@@ -8,9 +8,9 @@ type Props = {
     status: string
 }
 export const ProfileStatus: React.FC<Props> = ({
-                                            status,
-                                            ownProfile
-                                        }) => {
+                                                   status,
+                                                   ownProfile
+                                               }) => {
     const dispatch = useDispatch()
 
     let [editMode, setEditMode] = useState(false)
@@ -36,28 +36,25 @@ export const ProfileStatus: React.FC<Props> = ({
     return (
         <>
             {!editMode
-                ? <div className={s.status}>
-                    <div className={s.statusValue}>{status}</div>
+                ? <>
+                    <div>{status}</div>
                     {ownProfile ?
-                        <div><span className={s.changeStatus} onClick={activateEditMode}>изменить статус</span>
-                        </div> : null}
-                </div>
+                        <span className={s.changeStatus} onClick={activateEditMode}>изменить статус</span>
+                        : null}
+                </>
                 : <>
-                    <div className={s.search}>
-                        <input
-                            className={s.clearInputStyle}
-                            autoFocus={true}
-                            onBlur={deactivateEditMode}
-                            value={text}
-                            onChange={onChangeStatus}
-                            onKeyUp={(event) => {
-                                if (event.key === 'Enter' || event.key === 'Enter' || event.keyCode === 13) {
-                                    deactivateEditMode()
-                                }
-                            }}
-                        />
-
-                    </div>
+                    <input
+                        className={s.clearInputStyle}
+                        autoFocus={true}
+                        onBlur={deactivateEditMode}
+                        value={text}
+                        onChange={onChangeStatus}
+                        onKeyUp={(event) => {
+                            if (event.key === 'Enter' || event.key === 'Enter' || event.keyCode === 13) {
+                                deactivateEditMode()
+                            }
+                        }}
+                    />
                 </>
             }
         </>

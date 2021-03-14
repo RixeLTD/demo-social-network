@@ -4,99 +4,30 @@
     border-bottom: 1px solid #e7e8ec;
 }
 
-.search {
-    border-bottom: 1px solid #e7e8ec;
-    display: flex;
-}
-
-.searchInput {
-    flex-grow: 1;
-    padding: 10px 20px;
-    border: none;
-    outline: none;
-    -moz-appearance: none;
-    font-size: 14px;
-}
-
 .link {
     text-decoration: none;
-    color: black;
+    color: black !important;
 }
 
 .block {
-    background-color: #ffffff;
-    display: flex;
     align-items: center;
     padding-left: 15px;
     border-bottom: 1px solid #e7e8ec;
     &:hover {
         background-color: #dbdbde;
-        cursor: pointer;
     }
 }
 
-.photoContainer {
-    position: relative;
-    overflow:hidden;
-    width:50px;
-    height:50px;
-}
-
-.photo {
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:50px;
-    height:50px;
-    object-fit:cover;
-    border-radius: 50%;
-}
-
 .userNameAndMessage {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 2;
     margin-left: 15px;
     padding-right: 5px;
 }
 
 .userName {
-    color: #2a5895;
     font-weight: bold;
-    font-size: 14px;
     padding-top: 10px;
 }
 
 .messageContainer {
-    padding: 10px 0;
-    display: flex;
-    align-items: center;
+    padding: 5px 0;
 }
-
-.myPhotoContainer {
-    position: relative;
-    overflow:hidden;
-    min-width:30px;
-    height:30px;
-    margin-right: 10px;
-}
-
-.myPhoto {
-    position: absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:30px;
-    height:30px;
-    object-fit:cover;
-    border-radius: 50%;
-}
-
-.message {
-    flex-grow: 2;
-}
-
-
-
-

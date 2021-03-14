@@ -7,6 +7,34 @@ import {useDispatch, useSelector} from 'react-redux'
 import {profileActions} from '../../../redux/profile-reducer'
 import {getPosts} from '../../../redux/profile-selectors'
 
+type MyPostsType = {
+    ownProfile: boolean
+    photo: string | null
+    userName: string
+}
+export const MyPosts: React.FC<MyPostsType> = ({
+                                                   ownProfile,
+                                                   photo,
+                                                   userName,
+                                               }) => {
+    const posts = useSelector(getPosts)
+
+    let postsElements = posts.map(p => <Post message={p.message}
+                                             likesCount={p.likesCount}
+                                             id={p.id}
+                                             key={p.id}
+                                             photo={photo}
+                                             userName={userName}
+    />)
+
+    return (
+        <>
+            {ownProfile ? <MyPostsFormik/> : null}
+            {postsElements}
+        </>
+    )
+}
+
 const MyPostsFormik: React.FC = () => {
     const dispatch = useDispatch()
 
@@ -54,30 +82,4 @@ const MyPostsFormik: React.FC = () => {
     )
 }
 
-type MyPostsType = {
-    ownProfile: boolean
-    photo: string | null
-    userName: string
-}
-export const MyPosts: React.FC<MyPostsType> = ({
-                                                   ownProfile,
-                                                   photo,
-                                                   userName,
-                                               }) => {
-    const posts = useSelector(getPosts)
 
-    let postsElements = posts.map(p => <Post message={p.message}
-                                             likesCount={p.likesCount}
-                                             id={p.id}
-                                             key={p.id}
-                                             photo={photo}
-                                             userName={userName}
-    />)
-
-    return (
-        <>
-            {ownProfile ? <MyPostsFormik/> : null}
-            {postsElements}
-        </>
-    )
-}

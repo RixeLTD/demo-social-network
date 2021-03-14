@@ -1,7 +1,7 @@
-import {ThunkAction} from "redux-thunk";
-import {AppStateType} from "../redux/redux-store";
-import {Action} from "redux";
-import React from "react";
+import {ThunkAction} from 'redux-thunk'
+import {AppStateType} from '../redux/redux-store'
+import {Action} from 'redux'
+import React from 'react'
 
 export type ProfileType = {
     userId: number

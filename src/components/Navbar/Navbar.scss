@@ -1,0 +1,9 @@
+.ant-menu-item-selected {
+    background-color: #f0f2f5 !important;
+}
+
+.ant-menu-item {
+    &:active {
+        background-color: #f0f2f5 !important;
+    }
+}

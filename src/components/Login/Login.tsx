@@ -6,6 +6,8 @@ import {Redirect} from 'react-router-dom'
 import s from './Login.module.scss'
 import {getIsAuth, getIsCaptcha, getLoginFormErrors} from '../../redux/auth-selectors'
 
+//todo Переделать все формы
+
 export const Login: React.FC = () => {
 
     const isAuth = useSelector(getIsAuth)
@@ -111,7 +113,7 @@ const LoginFormik: React.FC<PropsType> = ({loginUser, isCaptcha, errorMessage}) 
     )
 }
 
-const StopSubmitting: React.FC<{errorMessage: string | null}> = ({errorMessage}) => {
+const StopSubmitting: React.FC<{ errorMessage: string | null }> = ({errorMessage}) => {
     const {setSubmitting} = useFormikContext()
     useEffect(() => {
         if (errorMessage) {

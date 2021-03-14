@@ -17,12 +17,11 @@ const MessageContainer: React.FC<PropsType> = ({
                                                }) => {
 
     let messagesElements = currentUser?.messages.map(m => <Message key={m.id}
-                                                                  messageId={m.id}
-                                                                  activeDialog={activeDialog}
-                                                                  message={m.message}
-                                                                  userName={m.isMe ? myName : currentUser.data.userName}
-                                                                  photo={m.isMe ? myPhoto : currentUser.data.photo}
-                                                                  removeMessage={dialogsActions.removeMessage}
+                                                                   messageId={m.id}
+                                                                   activeDialog={activeDialog}
+                                                                   message={m.message}
+                                                                   userName={m.isMe ? myName : currentUser.data.userName}
+                                                                   photo={m.isMe ? myPhoto : currentUser.data.photo}
     />)
 
     return (

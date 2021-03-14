@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react'
-import s from './App.module.scss'
+import './index.scss'
 import {Navbar} from './components/Navbar/Navbar'
 import Profile from './components/Profile/Profile'
 import {Users} from './components/Users/Users'
 import {Redirect, Route, Switch} from 'react-router-dom'
 import Dialogs from './components/Dialogs/Dialogs'
-import {Header} from './components/Header/Header'
+import {AppHeader} from './components/Header/AppHeader'
 import {Login} from './components/Login/Login'
 import {useDispatch, useSelector} from 'react-redux'
 import {initializeApp} from './redux/app-reduces'
@@ -14,6 +14,8 @@ import {GlobalError} from './utils/GlobalError/GlobalError'
 import {getCurrentPage, getPageSize} from './redux/users-selectors'
 import {requestUsers} from './redux/users-reduces'
 import {getGlobalError, getInitialized} from './redux/app-selectors'
+import {BackTop, Layout} from 'antd'
+import 'antd/dist/antd.css'
 
 export const App: React.FC = () => {
     const initialized = useSelector(getInitialized)
@@ -21,8 +23,9 @@ export const App: React.FC = () => {
     const currentPage = useSelector(getCurrentPage)
     const pageSize = useSelector(getPageSize)
     const dispatch = useDispatch()
+    const [style, setStyle] = useState({})
 
-    let [mobileNav, setMobileNav] = useState(false)
+    const {Header, Content, Sider} = Layout
 
     useEffect(() => {
         dispatch(requestUsers(currentPage, pageSize))
@@ -35,41 +38,61 @@ export const App: React.FC = () => {
         }
         return <Preloader/>
     }
-
     return (
-        <div className={s.mainContainer}>
-            <header className={s.header}>
-                <Header setMobileNav={setMobileNav}
-                        mobileNav={mobileNav}/>
-            </header>
-            <div className={s.mainBlock}>
-                <nav className={`${s.nav} ${mobileNav ? s.navVisible : null}`}>
-                    <Navbar setMobileNav={setMobileNav}/>
-                </nav>
-                <main className={s.content}>
-                    <Switch>
-                        <Route path="/" exact>
-                            <Redirect to="/profile"/>
-                        </Route>
-                        <Route path="/profile/:userId?">
-                            <Profile/>
-                        </Route>
-                        <Route path="/dialogs/:userId?">
-                            <Dialogs/>
-                        </Route>
-                        <Route path="/users">
-                            <Users/>
-                        </Route>
-                        <Route path="/login">
-                            <Login/>
-                        </Route>
-                        <Route path="*">
-                            <div>404 Not Found</div>
-                        </Route>
-                    </Switch>
-                </main>
-            </div>
-            <GlobalError/>
-        </div>
+        <>
+            <Layout>
+                <BackTop duration={200}/>
+                <Header style={{padding: '0 10px'}}>
+                    <AppHeader/>
+                </Header>
+                <Layout>
+                    <Sider width={180}
+                           breakpoint='md'
+                           onBreakpoint={(b) => {
+                               if (b) {
+
+                                   setStyle({position: 'absolute', zIndex: 1})
+                               } else {
+                                   setStyle({})
+                               }
+                           }}
+                           collapsedWidth={'0'}
+                           style={style}
+                    >
+                        <Navbar/>
+                    </Sider>
+                    <Layout style={{padding: '0 24px 24px'}}>
+                        <Content
+                            style={{
+                                paddingTop: '24px',
+                                margin: 0,
+                                minHeight: 300
+                            }}
+                        >
+                            <Switch>
+                                <Route path="/" exact>
+                                    <Redirect to="/profile"/>
+                                </Route>
+                                <Route path="/profile/:userId?">
+                                    <Profile/>
+                                </Route>
+                                <Route path="/dialogs/:userId?">
+                                    <Dialogs/>
+                                </Route>
+                                <Route path="/users">
+                                    <Users/>
+                                </Route>
+                                <Route path="/login">
+                                    <Login/>
+                                </Route>
+                                <Route path="*">
+                                    <div>404 Not Found</div>
+                                </Route>
+                            </Switch>
+                        </Content>
+                    </Layout>
+                </Layout>
+            </Layout>
+        </>
     )
 }

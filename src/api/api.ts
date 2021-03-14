@@ -56,14 +56,29 @@ export const profileAPI = {
     updateStatus(status: string) {
         return instance.put<ResponseDataType>('profile/status', {status: status}).then(response => response.data)
     },
-    updatePhoto(file: string | Blob) {
+    updatePhoto: async (options: any) => {
+        const {onSuccess, onError, file} = options
+
         const formData = new FormData()
+        const config = {
+            headers: {'Content-Type': 'multipart/form-data'},
+        }
         formData.append('image', file)
-        return instance.put<ResponseDataType & { data: { photos: PhotosType } }>('profile/photo', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        }).then(response => response.data)
+        try {
+            const res = await instance.put<ResponseDataType & {data: { photos: PhotosType}}>(
+                'profile/photo',
+                formData,
+                config
+            )
+
+            onSuccess('Ok')
+            return res.data
+        } catch (err) {
+            console.log('Eroor: ', err)
+            const error = new Error('Some error')
+
+            onError({err})
+        }
     },
     updateProfile(values: updateProfileType) {
         return instance.put<ResponseDataType>('profile', values).then(response => response.data)

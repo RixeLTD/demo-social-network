@@ -13,14 +13,14 @@ type PropsType = {
     clearUsers: () => void
 }
 export const SearchUsers: React.FC<PropsType> = React.memo(({
-                                                     term,
-                                                     friend,
-                                                     setTerm,
-                                                     setFriend,
-                                                     requestUsers,
-                                                     pageSize,
-                                                     clearUsers
-                                                 }) => {
+                                                                term,
+                                                                friend,
+                                                                setTerm,
+                                                                setFriend,
+                                                                requestUsers,
+                                                                pageSize,
+                                                                clearUsers
+                                                            }) => {
     const dispatch = useDispatch()
     type FriendFormType = 'null' | 'true' | 'false'
     type Props = {
@@ -67,7 +67,7 @@ export const SearchUsers: React.FC<PropsType> = React.memo(({
                                        handleChange(e)
                                        setFriend(null)
                                    }}
-                                   checked={friend ===  null}
+                                   checked={friend === null}
                             />Все
                             <input type="radio"
                                    name="friend"
@@ -88,7 +88,7 @@ export const SearchUsers: React.FC<PropsType> = React.memo(({
                                    checked={friend === false}
                             />Не друзья
                         </div>
-                        <button className={s.buttonSearch} type="submit"
+                        <button type="submit"
                                 disabled={Boolean(isSubmitting)}
                         >
                             Поиск

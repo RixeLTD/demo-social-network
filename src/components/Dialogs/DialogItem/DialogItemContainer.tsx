@@ -1,6 +1,6 @@
-import React from 'react';
-import DialogItem from "./DialogItem";
-import {DialogElementType} from "../../../redux/dialogs-reducer";
+import React from 'react'
+import DialogItem from './DialogItem'
+import {DialogElementType} from '../../../redux/dialogs-reducer'
 
 type PropsType = {
     dialogs: Array<DialogElementType>
@@ -19,7 +19,7 @@ const DialogItemContainer: React.FC<PropsType> = ({myPhoto, dialogs}) => {
         <>
             {dialogsElements.reverse()}
         </>
-    );
+    )
 }
 
 export default DialogItemContainer

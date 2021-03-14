@@ -19,3 +19,7 @@ export const getIsSubmittingSuccess = (state: AppStateType) => {
 export const getPosts = (state: AppStateType) => {
     return state.profilePage.posts;
 }
+
+export const selectIsFetching = (state: AppStateType) => {
+    return state.profilePage.isFetching;
+}
