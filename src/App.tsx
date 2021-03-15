@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './index.scss'
-import {Navbar} from './components/Navbar/Navbar'
+import Navbar from './components/Navbar/Navbar'
 import Profile from './components/Profile/Profile'
 import {Users} from './components/Users/Users'
 import {Redirect, Route, Switch} from 'react-router-dom'
@@ -23,8 +23,8 @@ export const App: React.FC = () => {
     const currentPage = useSelector(getCurrentPage)
     const pageSize = useSelector(getPageSize)
     const dispatch = useDispatch()
+    const [collapsed, setCollapsed] = useState(false)
     const [style, setStyle] = useState({})
-
     const {Header, Content, Sider} = Layout
 
     useEffect(() => {
@@ -47,19 +47,21 @@ export const App: React.FC = () => {
                 </Header>
                 <Layout>
                     <Sider width={180}
-                           breakpoint='md'
-                           onBreakpoint={(b) => {
-                               if (b) {
-
-                                   setStyle({position: 'absolute', zIndex: 1})
-                               } else {
-                                   setStyle({})
-                               }
-                           }}
+                           breakpoint={'md'}
                            collapsedWidth={'0'}
+                           onBreakpoint={(b) => {
+                               setStyle(b ? {position: 'absolute', zIndex: 1} : {})
+                           }}
+                           zeroWidthTriggerStyle={{
+                               top: 3
+                           }}
                            style={style}
+                           collapsed={collapsed}
+                           onCollapse={(value) => {
+                               setCollapsed(value)
+                           }}
                     >
-                        <Navbar/>
+                        <Navbar setCollapsed={setCollapsed}/>
                     </Sider>
                     <Layout style={{padding: '0 24px 24px'}}>
                         <Content
@@ -71,7 +73,7 @@ export const App: React.FC = () => {
                         >
                             <Switch>
                                 <Route path="/" exact>
-                                    <Redirect to="/profile"/>
+                                    <Redirect to="/profile/"/>
                                 </Route>
                                 <Route path="/profile/:userId?">
                                     <Profile/>
@@ -79,10 +81,10 @@ export const App: React.FC = () => {
                                 <Route path="/dialogs/:userId?">
                                     <Dialogs/>
                                 </Route>
-                                <Route path="/users">
+                                <Route path="/users/">
                                     <Users/>
                                 </Route>
-                                <Route path="/login">
+                                <Route path="/login/">
                                     <Login/>
                                 </Route>
                                 <Route path="*">

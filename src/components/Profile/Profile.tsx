@@ -24,11 +24,6 @@ const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
     const {useBreakpoint} = Grid
     const {lg} = useBreakpoint()
 
-
-    useEffect(() => {
-        window.scrollTo({top: 0})
-    }, [])
-
     useEffect(() => {
         let userId: number | null = +match.params.userId
         if (!userId) {

@@ -27,10 +27,6 @@ export const Users: React.FC = React.memo(() => {
     const [queryPage, setQueryPage] = useQueryParam('page', NumberParam)
 
     useEffect(() => {
-        window.scrollTo({top: 0})
-    }, [])
-
-    useEffect(() => {
         const page = queryPage || currentPage
         let newTerm = term
         let newFriend = friend

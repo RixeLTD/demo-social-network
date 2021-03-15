@@ -68,7 +68,9 @@ const MyPostsFormik: React.FC = () => {
                             name="post"
                             onChange={handleChange}
                             value={values.post}
-                            placeholder="Что у вас нового?"/>
+                            placeholder="Что у вас нового?"
+                            focus={false}
+                        />
                     </div>
                     <div className={s.errorLength}>{errors.post}</div>
                     <button className={s.buttonAddPost} type="submit"

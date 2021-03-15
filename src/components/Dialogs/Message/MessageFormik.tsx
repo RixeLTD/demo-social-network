@@ -53,7 +53,7 @@ export const MessageFormik: React.FC<PropsType> = ({
                                 onChange={handleChange}
                                 value={values.message}
                                 placeholder="Напишите сообщение"
-                                autoFocus={true}
+                                focus={true}
                             />
                             <button className={s.buttonSend} type="submit"
                                     disabled={Boolean(isSubmitting || errors.message || !values.message)}

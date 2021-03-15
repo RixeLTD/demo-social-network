@@ -6,7 +6,7 @@ type Props = {
     value: string
     onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
     name?: string
-    autoFocus?: boolean
+    focus?: boolean
 }
 const AutoHeightTextarea: React.FC<Props> = ({
                                                  className,
@@ -14,7 +14,7 @@ const AutoHeightTextarea: React.FC<Props> = ({
                                                  value,
                                                  onChange,
                                                  name,
-                                                 autoFocus
+                                                 focus
                                              }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -23,7 +23,9 @@ const AutoHeightTextarea: React.FC<Props> = ({
             textareaRef.current.style.height = '0px'
             const scrollHeight = textareaRef.current.scrollHeight
             textareaRef.current.style.height = scrollHeight + 'px'
-            textareaRef.current.focus()
+            if (focus) {
+                textareaRef.current.focus()
+            }
         }
     }, [value])
 
@@ -35,7 +37,6 @@ const AutoHeightTextarea: React.FC<Props> = ({
             placeholder={placeholder}
             onChange={onChange}
             name={name}
-            autoFocus={autoFocus}
         />
     )
 }
