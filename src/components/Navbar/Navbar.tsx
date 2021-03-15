@@ -9,13 +9,16 @@ type PropsType = {
     setCollapsed: (collapsed: boolean) => void
 }
 const Navbar: React.FC<PropsType & RouteComponentProps<{ key: string }>> = ({
-                                      setCollapsed,
-                                     location
-                                  }) => {
+                                                                                setCollapsed,
+                                                                                location
+                                                                            }) => {
     const [key, setKey] = useState<string>('')
 
     useEffect(() => {
-        setKey(location.pathname)
+        if (location.pathname === '/') {
+            setKey('/profile/')
+        } else setKey(location.pathname)
+
     }, [location.pathname])
 
     const {useBreakpoint} = Grid
@@ -29,7 +32,7 @@ const Navbar: React.FC<PropsType & RouteComponentProps<{ key: string }>> = ({
     }
 
     if (!key) {
-        return <Preloader />
+        return <Preloader/>
     }
 
     return (
@@ -38,17 +41,17 @@ const Navbar: React.FC<PropsType & RouteComponentProps<{ key: string }>> = ({
             defaultSelectedKeys={[key]}
             style={{height: '100%', borderRight: 0, fontSize: 16, fontWeight: 'bold', backgroundColor: '#f0f2f5'}}
         >
-            <Menu.Item key="/profile/" icon={<UserOutlined/>}>
+            <Menu.Item title={null} key="/profile/" icon={<UserOutlined/>}>
                 <Link to={'/profile/'} onClick={onClick}>
                     Профиль
                 </Link>
             </Menu.Item>
-            <Menu.Item key="/dialogs/" icon={<UserOutlined/>}>
+            <Menu.Item title={null} key="/dialogs/" icon={<UserOutlined/>}>
                 <Link to={'/dialogs/'} onClick={onClick}>
                     Сообщения
                 </Link>
             </Menu.Item>
-            <Menu.Item key="/users/" icon={<TeamOutlined/>}>
+            <Menu.Item title={null} key="/users/" icon={<TeamOutlined/>}>
                 <Link to={'/users/'} onClick={onClick}>
                     Пользователи
                 </Link>

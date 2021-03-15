@@ -50,7 +50,7 @@ export const App: React.FC = () => {
                            breakpoint={'md'}
                            collapsedWidth={'0'}
                            onBreakpoint={(b) => {
-                               setStyle(b ? {position: 'absolute', zIndex: 1} : {})
+                               setStyle(b ? {position: 'absolute', zIndex: 10} : {})
                            }}
                            zeroWidthTriggerStyle={{
                                top: 3
