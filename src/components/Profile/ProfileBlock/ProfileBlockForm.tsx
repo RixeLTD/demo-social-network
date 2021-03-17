@@ -127,11 +127,11 @@ export const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
                                             <Form.Item label={contact}
                                                        className={s.input}
                                             >
-                                                <Input type="text"
+                                                <Input type="url"
                                                        name={`contacts.${contact}`}
                                                        value={values.contacts[contact as keyof ContactsType]}
                                                        onChange={handleChange}
-                                                       placeholder={`${contact}.com`}
+                                                       placeholder={`http://${contact}.com`}
                                                 />
                                             </Form.Item>
                                         </div>

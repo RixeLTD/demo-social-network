@@ -73,7 +73,10 @@ const Contacts: React.FC<ContactsComponentType> = ({
 
     return (
         contactValue ? <div className={s.contactItem}>
-            <a href={contactValue} className={s.contactLink}>{contactValue}</a>
+            <a href={contactValue} className={s.contactLink}
+               target="_blank" rel="noreferrer">
+                {contactValue}
+            </a>
         </div> : null
 
     )
