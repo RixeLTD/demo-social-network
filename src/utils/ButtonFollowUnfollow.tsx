@@ -1,19 +1,17 @@
 import React from 'react'
-import {UserType} from '../../types/types'
+import {UserType} from '../types/types'
 import {useDispatch} from 'react-redux'
 import {Button} from 'antd'
+import {followUnfollow} from '../redux/users-reduces'
 
 type ButtonFollowUnfollowType = {
     followingInProgress: Array<number>
     user: UserType
-
-    followUnfollow: (userId: number, action: 'following' | 'unfollowing') => void
 }
 
 const ButtonFollowUnfollow: React.FC<ButtonFollowUnfollowType> = ({
                                                                       followingInProgress,
-                                                                      user,
-                                                                      followUnfollow
+                                                                      user
                                                                   }) => {
     const dispatch = useDispatch()
     return (

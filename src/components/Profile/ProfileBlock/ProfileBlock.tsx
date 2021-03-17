@@ -19,7 +19,7 @@ export const ProfileBlock: React.FC<ProfileBlockType> = ({
     return (
         <>
             <Row className={s.profileInfoSection}>
-                <Col flex='300px'>
+                <Col flex='auto'>
                     <span><b>{profile.fullName}</b></span>
                     <ProfileStatus ownProfile={ownProfile}
                                    status={status}

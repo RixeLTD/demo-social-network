@@ -13,48 +13,7 @@
 
 .textareaContainer {
     display: flex;
-}
-
-.textarea {
-    flex-grow: 1;
-    padding: 10px;
-    border: none;
-    outline: none;
-    -moz-appearance: none;
-    resize: none;
-    overflow: hidden;
-    font-size: 14px;
-}
-
-.errorTextarea {
-    border: 1px solid red;
-}
-
-.errorLength {
-    color: red;
-    margin: 5px 0 5px 5px;
-}
-
-.buttonSend {
-    align-self: flex-end;
-    border: none;
-    outline: none;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 5px 5px 0 0;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: #ffffff;
-    background-color: #5181b8;
-    &:hover {
-        background-color: #6c99cd;
-    }
-    &:active {
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
+    padding: 15px;
 }
 
 .removeMessage {

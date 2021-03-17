@@ -1,6 +1,7 @@
 import authReducer, {authActions, getCaptcha, getUserData, InitialStateType, loginUser, logoutUser} from './auth-reduces'
 import {authAPI, profileAPI, AuthMeType, ResponseDataType, ResultCodes, AuthLoginType} from '../api/api'
 import {profile} from './profile-reduces.test'
+import {isBoolean} from 'util'
 
 let state: InitialStateType
 
@@ -14,6 +15,7 @@ beforeEach(() => {
         isAuth: false,
         isCaptcha: '',
         errorMessage: null,
+        isFetching: false
     }
 })
 

@@ -1,61 +1,18 @@
-.loginBlock {
+.container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    min-height: 500px;
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-}
-
-.input {
-    padding: 5px 10px;
-    margin-bottom: 10px;
-}
-
-.errorInput {
-    border: 1px solid red;
-}
-
-.rememberMe {
-    display: flex;
-    align-items: baseline;
-    margin-bottom: 10px;
-}
-
-.button {
-    width: 100px;
-    align-self: flex-end;
-    border: none;
-    outline: none;
+.error {
     text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 10px auto;
-    padding: 5px 10px;
-    border-radius: 5px;
-    color: #ffffff;
-    background-color: #5181b8;
-    &:hover {
-        background-color: #6c99cd;
-    }
-    &:active {
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
-}
-
-.captchaImage {
-    margin-bottom: 10px;
-}
-
-.formError {
+    margin-bottom: 20px;
     color: red;
 }
 
-.testAcc {
-
+.captchaImage {
+    margin: 10px auto 20px;
+    width: 100%;
 }

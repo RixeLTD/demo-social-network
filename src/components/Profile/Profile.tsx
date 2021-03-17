@@ -13,6 +13,7 @@ import {getAuthUserId} from '../../redux/auth-selectors'
 import {Button, Col, Grid, Image, Row} from 'antd'
 import {UploadComponent} from './UploadComponent'
 
+
 const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
                                                                         match,
                                                                         history,
@@ -29,7 +30,7 @@ const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
         if (!userId) {
             userId = authUserId
             if (!userId) {
-                history.push('/login/')
+                history.push('/login')
             }
         }
         if (userId && userId !== profile?.userId) {
@@ -37,6 +38,7 @@ const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
             dispatch(getUserStatus(userId))
         }
     }, [authUserId, match.params.userId, getUserProfile, getUserStatus, history, profile?.userId])
+
 
     let [editMode, setEditMode] = useState(false)
 
@@ -46,6 +48,7 @@ const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
     }
 
     const disableEditMode = () => {
+        dispatch(profileActions.setProfileFormErrors(null))
         setEditMode(false)
     }
 
@@ -57,37 +60,37 @@ const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
 
     return (
         <Row wrap={!lg}>
-            <Col flex={!lg ? 'auto' : 'none'} className={s.profileLeftBlock}>
-                <Image width={175} className={s.userImage}
-                       src={profile.photos.large || noImage}
-                />
-                {ownProfile
-                    ? <>
-                        <UploadComponent className={s.uploadPhoto}/>
-                        {
-                            editMode
-                                ? <Button onClick={disableEditMode} className={s.editModeButton}>Отмена</Button>
-                                : <Button onClick={enableEditMode} type="primary" className={s.editModeButton}>Редактировать профиль</Button>
-                        }
-                    </> : null
-                }
-            </Col>
-            <Col flex='auto'>
-                <div className={s.profileRightBlock}>
-                    {editMode
-                        ? <ProfileBlockForm disableEditMode={disableEditMode}
-                                            profile={profile}
-                        />
-                        : <ProfileBlock profile={profile}
-                                        ownProfile={ownProfile}
-                        />
-                    }
-                    <MyPosts ownProfile={ownProfile}
-                             photo={profile.photos.small}
-                             userName={profile.fullName}
+            {editMode
+                ? <Col flex='auto'>
+                    <ProfileBlockForm disableEditMode={disableEditMode}
+                                      profile={profile}
                     />
-                </div>
-            </Col>
+                </Col>
+                : <>
+                    <Col flex={!lg ? 'auto' : 'none'} className={s.profileLeftBlock}>
+                        <Image width={175} className={s.userImage}
+                               src={profile.photos.large || noImage}
+                        />
+                        {ownProfile
+                            ? <>
+                                <UploadComponent className={s.uploadPhoto}/>
+                                <Button onClick={enableEditMode} type="primary" className={s.editModeButton}>Редактировать
+                                    профиль</Button>
+                            </> : null
+                        }
+                    </Col>
+                    <Col flex='auto'>
+                        <ProfileBlock profile={profile}
+                                      ownProfile={ownProfile}
+                        />
+                        <MyPosts ownProfile={ownProfile}
+                                 photo={profile.photos.small}
+                                 userName={profile.fullName}
+                        />
+                    </Col>
+                </>
+            }
+
         </Row>
     )
 }

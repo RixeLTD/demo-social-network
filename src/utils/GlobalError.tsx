@@ -1,8 +1,8 @@
 import React from 'react'
-import s from './GlobalError.module.scss'
 import {useDispatch, useSelector} from 'react-redux'
-import {appActions} from '../../redux/app-reduces'
-import {getGlobalError, getIsVisibleGlobalError} from '../../redux/app-selectors'
+import {appActions} from '../redux/app-reduces'
+import {getGlobalError, getIsVisibleGlobalError} from '../redux/app-selectors'
+import { Alert } from 'antd'
 
 export const GlobalError: React.FC = () => {
     const isVisibleGlobalError = useSelector(getIsVisibleGlobalError)
@@ -16,10 +16,14 @@ export const GlobalError: React.FC = () => {
 
     return (
         <>
-            {isVisibleGlobalError ? <div className={s.modal}>
-                <div className={s.text}>{globalError}</div>
-                <button className={s.button} onClick={closeError}>X</button>
-            </div> : null
+            {isVisibleGlobalError ?  <Alert
+                message={globalError}
+                onClose={closeError}
+                type="error"
+                showIcon
+                closable
+                style={{alignSelf: 'center', position: 'fixed', bottom: 50, zIndex: 10}}
+            /> : null
             }
         </>
     )

@@ -18,3 +18,6 @@ export const getMyName = (state: AppStateType) => {
 export const getAuthUserId = (state: AppStateType) => {
     return state.me.userId
 }
+export const selectIsFetching = (state: AppStateType) => {
+    return state.me.isFetching
+}

@@ -49,13 +49,6 @@ const usersReducer = (state = initialState, action: UsersActionsTypes | AppActio
             }
         case 'USERS_CLEAR_USERS':
             return {...state, users: []}
-        // todo: сделать пользователей в обратном порядке
-        // case 'USERS_REVERSE':
-        //     const arrayId: Array<number> = (state.users as Array<UserType>).map((item: UserType) => item.id)
-        //     return {
-        //         ...state,
-        //         users: [...state.users, ...action.users.filter((user: UserType) => !arrayId.includes(user.id)).reverse()],
-        //     }
         case 'USERS_SET_CURRENT_PAGE':
             return {...state, currentPage: action.currentPage}
         case 'USERS_SET_TOTAL_USERS_COUNT':

@@ -2,7 +2,7 @@ import React from 'react'
 import s from './users.module.scss'
 import noImage from '../../assets/images/noImage.png'
 import {Link} from 'react-router-dom'
-import ButtonFollowUnfollow from '../../utils/ButtonFollowUnfollow/ButtonFollowUnfollow'
+import ButtonFollowUnfollow from '../../utils/ButtonFollowUnfollow'
 import {UserType} from '../../types/types'
 import {useDispatch} from 'react-redux'
 import {profileActions} from '../../redux/profile-reducer'
@@ -12,13 +12,11 @@ type UserComponentType = {
     user: UserType
     isAuth: boolean
     followingInProgress: Array<number>
-    followUnfollow: (userId: number, action: 'following' | 'unfollowing') => void
 }
 
 export const User: React.FC<UserComponentType> = ({
                                                       user,
                                                       followingInProgress,
-                                                      followUnfollow,
                                                       isAuth
                                                   }) => {
     const dispatch = useDispatch()
@@ -36,7 +34,7 @@ export const User: React.FC<UserComponentType> = ({
                 {isAuth
                     ? <ButtonFollowUnfollow followingInProgress={followingInProgress}
                                             user={user}
-                                            followUnfollow={followUnfollow}/>
+                    />
                     : null
                 }
             </Col>

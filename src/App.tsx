@@ -10,7 +10,7 @@ import {Login} from './components/Login/Login'
 import {useDispatch, useSelector} from 'react-redux'
 import {initializeApp} from './redux/app-reduces'
 import {Preloader} from './components/common/preloader/Preloader'
-import {GlobalError} from './utils/GlobalError/GlobalError'
+import {GlobalError} from './utils/GlobalError'
 import {getCurrentPage, getPageSize} from './redux/users-selectors'
 import {requestUsers} from './redux/users-reduces'
 import {getGlobalError, getInitialized} from './redux/app-selectors'
@@ -55,7 +55,7 @@ export const App: React.FC = () => {
                            zeroWidthTriggerStyle={{
                                top: 3
                            }}
-                           style={style}
+                           style={style && {background: '#f0f2f5'}}
                            collapsed={collapsed}
                            onCollapse={(value) => {
                                setCollapsed(value)
@@ -73,7 +73,7 @@ export const App: React.FC = () => {
                         >
                             <Switch>
                                 <Route path="/" exact>
-                                    <Redirect to="/profile/"/>
+                                    <Redirect to="/profile"/>
                                 </Route>
                                 <Route path="/profile/:userId?">
                                     <Profile/>
@@ -81,10 +81,10 @@ export const App: React.FC = () => {
                                 <Route path="/dialogs/:userId?">
                                     <Dialogs/>
                                 </Route>
-                                <Route path="/users/">
+                                <Route path="/users">
                                     <Users/>
                                 </Route>
-                                <Route path="/login/">
+                                <Route path="/login">
                                     <Login/>
                                 </Route>
                                 <Route path="*">
@@ -94,6 +94,7 @@ export const App: React.FC = () => {
                         </Content>
                     </Layout>
                 </Layout>
+                <GlobalError/>
             </Layout>
         </>
     )

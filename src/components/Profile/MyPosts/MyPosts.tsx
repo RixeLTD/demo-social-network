@@ -2,10 +2,11 @@ import React from 'react'
 import Post from './Post/Post'
 import {Formik} from 'formik'
 import s from '../Profile.module.scss'
-import AutoHeightTextarea from '../../../utils/AutoHeightTextarea'
 import {useDispatch, useSelector} from 'react-redux'
 import {profileActions} from '../../../redux/profile-reducer'
 import {getPosts} from '../../../redux/profile-selectors'
+import {AutoSizeTextarea} from '../../../utils/AutoSizeTextarea'
+import {Button} from 'antd'
 
 type MyPostsType = {
     ownProfile: boolean
@@ -17,7 +18,7 @@ export const MyPosts: React.FC<MyPostsType> = ({
                                                    photo,
                                                    userName,
                                                }) => {
-    const posts = useSelector(getPosts)
+    const posts = [...useSelector(getPosts)].reverse()
 
     let postsElements = posts.map(p => <Post message={p.message}
                                              likesCount={p.likesCount}
@@ -41,13 +42,6 @@ const MyPostsFormik: React.FC = () => {
     return (
         <Formik<{ post: string }>
             initialValues={{post: ''}}
-            validate={values => {
-                const errors: { post?: string } = {}
-                if (values.post.length > 200) {
-                    errors.post = 'Вы ввели больше 200 символов'
-                }
-                return errors
-            }}
             onSubmit={(values, {setSubmitting}) => {
                 dispatch(profileActions.addPost(values.post))
                 values.post = ''
@@ -56,28 +50,26 @@ const MyPostsFormik: React.FC = () => {
         >
             {({
                   values,
-                  errors,
                   handleChange,
                   handleSubmit,
                   isSubmitting
               }) => (
                 <form onSubmit={handleSubmit} className={s.profileInfoSection}>
                     <div className={s.textareaContainer}>
-                        <AutoHeightTextarea
-                            className={`${s.textarea} ${errors.post ? s.errorTextarea : null}`}
-                            name="post"
-                            onChange={handleChange}
-                            value={values.post}
-                            placeholder="Что у вас нового?"
-                            focus={false}
+                        <AutoSizeTextarea sharedProps={{
+                            name: 'post',
+                            onChange: handleChange,
+                            value: values.post,
+                            placeholder: 'Что у вас нового?',
+                            style: {flexGrow: 2, marginBottom: 10},
+                            maxLength: 200,
+                            autoSize: {minRows: 1}
+                        }}
                         />
                     </div>
-                    <div className={s.errorLength}>{errors.post}</div>
-                    <button className={s.buttonAddPost} type="submit"
-                            disabled={isSubmitting || Boolean(errors.post) || !values.post}
-                    >
+                    <Button htmlType='submit' disabled={isSubmitting || !values.post}>
                         Опубликовать
-                    </button>
+                    </Button>
                 </form>
             )}
         </Formik>

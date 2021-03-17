@@ -2,13 +2,14 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import logo from './../../logo.png'
 import {useDispatch, useSelector} from 'react-redux'
-import {getIsAuth, getMyName} from '../../redux/auth-selectors'
+import {getIsAuth, getMyName, selectIsFetching} from '../../redux/auth-selectors'
 import {logoutUser} from '../../redux/auth-reduces'
 import {Button, Col, Row} from 'antd'
 
 export const AppHeader: React.FC = () => {
     const isAuth = useSelector(getIsAuth)
     const myName = useSelector(getMyName)
+    const isFetching = useSelector(selectIsFetching)
     const dispatch = useDispatch()
 
     const logout = () => {
@@ -18,7 +19,7 @@ export const AppHeader: React.FC = () => {
     return <>
         <Row wrap={false}>
             <Col flex='none'>
-                <Link to={'/'}>
+                <Link to={'/profile'}>
                     <img src={logo} style={{width: '30px'}} alt=''/>
                 </Link>
             </Col>
@@ -26,7 +27,7 @@ export const AppHeader: React.FC = () => {
                 {isAuth
                     ? <>
                         <span>{myName}&nbsp;&nbsp;</span>
-                        <Button onClick={logout}>Выйти</Button>
+                        <Button onClick={logout} loading={isFetching}>Выйти</Button>
                     </>
                     : <Button><Link to={'/login'}>Войти</Link></Button>}
             </Col>

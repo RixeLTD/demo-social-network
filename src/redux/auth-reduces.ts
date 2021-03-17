@@ -13,6 +13,7 @@ let initialState = {
     isAuth: false,
     isCaptcha: '',
     errorMessage: null as string | null,
+    isFetching: false
 }
 
 export type AuthActionsTypes = InferActionTypes<typeof authActions>
@@ -29,6 +30,10 @@ export const authActions = {
         type: "AUTH_SET_ERRORS",
         message
     } as const),
+    setIsFetching: (value: boolean) => ({
+        type: "AUTH_SET_IS_FETCHING",
+        value
+    } as const)
 }
 const authReducer = (state = initialState, action: AuthActionsTypes): InitialStateType => {
     switch (action.type) {
@@ -46,6 +51,11 @@ const authReducer = (state = initialState, action: AuthActionsTypes): InitialSta
             return {
                 ...state,
                 errorMessage: action.message
+            }
+        case "AUTH_SET_IS_FETCHING":
+            return {
+                ...state,
+                isFetching: action.value
             }
         default:
             return state;
@@ -87,36 +97,43 @@ export type LoginFormDataType = {
 }
 export const loginUser = (formData: LoginFormDataType): ThunkType<AuthActionsTypes | AppActionsTypes> => async (dispatch) => {
     try {
-        let response = await authAPI.login(formData.email, formData.password, formData.rememberMe, formData.captcha);
+        dispatch(authActions.setIsFetching(true))
+        const response = await authAPI.login(formData.email, formData.password, formData.rememberMe, formData.captcha);
         dispatch(authActions.setLoginFormErrors(null));
         if (response.resultCode === ResultCodes.Success) {
             await dispatch(getUserData());
             dispatch(authActions.setCaptcha(''));
+            dispatch(authActions.setIsFetching(false))
         } else {
             if (response.resultCode === ResultCodes.CaptchaIsRequired) {
                 await dispatch(getCaptcha());
             }
             dispatch(authActions.setLoginFormErrors(response.messages[0]));
+            dispatch(authActions.setIsFetching(false))
         }
     } catch (error) {
         dispatch(appActions.setGlobalError(`Login user error: ${error.message}`));
         dispatch(appActions.setIsVisibleGlobalError(true));
+        dispatch(authActions.setIsFetching(false))
     }
 }
 
 export const logoutUser = (): ThunkType<AuthActionsTypes | AppActionsTypes> => async (dispatch) => {
     try {
-        let data = await authAPI.logout();
+        dispatch(authActions.setIsFetching(true))
+        const data = await authAPI.logout();
         if (data.resultCode === ResultCodes.Success) {
             dispatch(authActions.setUserData(null, null, null, null, null, false));
-            dispatch(authActions.setLoginFormErrors(null));
+            dispatch(authActions.setLoginFormErrors(null))
         }
         if (data.resultCode === ResultCodes.Error) {
             dispatch(authActions.setLoginFormErrors(data.messages[0]));
         }
+        dispatch(authActions.setIsFetching(false))
     } catch (error) {
         dispatch(appActions.setGlobalError(`Logout user error: ${error.message}`));
         dispatch(appActions.setIsVisibleGlobalError(true));
+        dispatch(authActions.setIsFetching(false))
     }
 }
 

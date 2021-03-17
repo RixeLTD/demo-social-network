@@ -1,33 +1,27 @@
 import React, {useEffect} from 'react'
-import {Field, Formik, FormikErrors, useFormikContext} from 'formik'
+import {Formik, useFormikContext} from 'formik'
 import s from '../Profile.module.scss'
 import {ContactsType, ProfileType} from '../../../types/types'
 import {useDispatch, useSelector} from 'react-redux'
-import {updateProfile} from '../../../redux/profile-reducer'
 import {getIsSubmittingSuccess, getProfileFormErrors} from '../../../redux/profile-selectors'
 import {updateProfileType} from '../../../api/api'
-import {Button, Col, Row} from 'antd'
+import {Button, Checkbox, Divider, Form, Input} from 'antd'
+import {profileActions, updateProfile} from '../../../redux/profile-reducer'
+import {Error} from '../../../utils/Error'
 
 type ProfileBlockFormType = {
     profile: ProfileType
     disableEditMode: () => void
 }
-
-const flexLeftColumn = '180px'
-const flexRightColumn = '300px'
-
 export const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
                                                                      profile,
                                                                      disableEditMode,
                                                                  }) => {
-    const errorMessage = useSelector(getProfileFormErrors)
     const isSubmittingSuccess = useSelector(getIsSubmittingSuccess)
+    const errorMessage = useSelector(getProfileFormErrors)
     const dispatch = useDispatch()
 
-    type Values = {
-        aboutMe: string | null,
-        lookingForAJobDescription: string | null
-    }
+
     const initialValues = {
         userId: profile.userId,
         lookingForAJob: profile.lookingForAJob,
@@ -36,139 +30,132 @@ export const ProfileBlockForm: React.FC<ProfileBlockFormType> = ({
         contacts: profile.contacts,
         aboutMe: profile.aboutMe
     }
+    const formItemLayout = {
+        labelCol: {
+            span: 8
+        },
+        wrapperCol: {
+            span: 12
+
+        },
+    }
+    const tailLayout = {
+        wrapperCol: {xs: {span: 16}, sm: {offset: 8, span: 16}},
+    }
+
     return (
-        <Formik<updateProfileType>
-            initialValues={initialValues}
-            validate={values => {
-                const errors: FormikErrors<Values> = {}
-                if (!values.aboutMe) {
-                    errors.aboutMe = 'Required'
-                }
-                if (!values.lookingForAJobDescription) {
-                    errors.lookingForAJobDescription = 'Required'
-                }
-                return errors
-            }}
-            onSubmit={(values) => {
-                dispatch(updateProfile(values))
-            }}
-        >
-            {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleSubmit,
-                  handleBlur,
-                  isSubmitting,
-              }) => (
-                <form onSubmit={handleSubmit}>
-                    <div className={s.profileInfoSection}>
-                        <Row align='middle'>
-                            <Col flex={flexLeftColumn}>
-                                <b>Имя:</b>
-                            </Col>
-                            <Col flex={flexRightColumn}>
-                                <input
-                                    className={s.clearInputStyle}
-                                    id="fullName"
-                                    type="text"
-                                    name="fullName"
-                                    onChange={handleChange}
-                                    value={values.fullName}
-                                    autoComplete="off"
-                                />
-                            </Col>
-                        </Row>
-                    </div>
-                    <div className={s.profileInfoSection}>
-                        <Row align='middle'>
-                            <Col flex={flexLeftColumn}>
-                                <b>Обо мне:</b>
-                            </Col>
-                            <Col flex={flexRightColumn}>
-                                <input
-                                    className={s.clearInputStyle}
-                                    id="aboutMe"
-                                    type="text"
-                                    name="aboutMe"
-                                    onBlur={handleBlur}
-                                    onChange={handleChange}
-                                    value={values.aboutMe as string}
-                                    required
-                                    autoComplete="off"
-                                />
-                                {errors.aboutMe && touched.aboutMe && errors.aboutMe}
-                            </Col>
-                        </Row>
-                        <Row align='middle' style={{marginTop: 10}}>
-                            <Col flex={flexLeftColumn}>
-                                <b>В поисках работы:</b>
-                            </Col>
-                            <Col flex={flexRightColumn}>
-                                <Field type="checkbox" name="lookingForAJob"/>
-                            </Col>
-                        </Row>
-                        {values.lookingForAJob
-                            ? <Row align='middle' style={{marginTop: 10}}>
-                                <Col flex={flexLeftColumn}>
-                                    <b>Статус поиска работы:</b>
-                                </Col>
-                                <Col flex={flexRightColumn}>
-                                    <input
-                                        className={s.clearInputStyle}
-                                        id="lookingForAJobDescription"
-                                        type="text"
-                                        name="lookingForAJobDescription"
-                                        onBlur={handleBlur}
-                                        onChange={handleChange}
-                                        value={values.lookingForAJobDescription}
-                                        required
-                                        autoComplete="off"
+        <>
+            <Error errorMessage={errorMessage} action={profileActions.setProfileFormErrors(null)}/>
+            <Formik<updateProfileType>
+                initialValues={initialValues}
+                onSubmit={(values) => {
+                    dispatch(updateProfile(values))
+                }}
+            >
+                {({
+                      values,
+                      handleChange,
+                      handleSubmit,
+                      isSubmitting
+                  }) => {
+                    return (
+                        <div className={s.profileInfoSection}>
+                            <Form onFinish={handleSubmit}
+                                  {...formItemLayout}
+                            >
+                                <Divider plain>Профиль</Divider>
+
+                                <Form.Item label="Имя:"
+                                           hasFeedback
+                                           validateStatus={values.fullName?.length !== 0 ? '' : 'warning'}
+                                           className={s.input}
+                                >
+                                    <Input type="text"
+                                           name="fullName"
+                                           value={values.fullName}
+                                           onChange={handleChange}
+                                           placeholder="Нельзя оставлять пустым"
                                     />
-                                    {errors.lookingForAJobDescription && touched.lookingForAJobDescription && errors.lookingForAJobDescription}
-                                </Col>
-                            </Row> : null}
-                    </div>
-                    <div className={s.profileInfoSection}>
-                        <b>Контакты:</b>
-                        <div className={s.contactContainer}>{Object.keys(profile.contacts).map(contact => {
-                            return (
-                                <div key={contact} className={s.contactItem}>
-                                    <Row align='middle'>
-                                        <Col flex={flexLeftColumn}>
-                                            <b>{contact}:</b>
-                                        </Col>
-                                        <Col flex={flexRightColumn}>
-                                            <input
-                                                className={s.clearInputStyle}
-                                                id={contact}
-                                                type="url"
-                                                name={`contacts.${contact}`}
-                                                onChange={handleChange}
-                                                value={values.contacts[contact as keyof ContactsType]}
-                                                autoComplete="off"
-                                            />
-                                        </Col>
-                                    </Row>
-                                </div>
-                            )
-                        })}</div>
-                    </div>
-                    <div className={s.profileInfoSection}>
-                        <Button onClick={disableEditMode} style={{marginRight: '10px'}}>Отмена</Button>
-                        <button className={s.buttonSave} type="submit"
-                                disabled={isSubmitting || Boolean(errors.aboutMe) || Boolean(errors.lookingForAJobDescription)}>
-                            Сохранить
-                        </button>
-                    </div>
-                    <div className={s.formError}>{errorMessage}</div>
-                    <StopSubmitting errorMessage={errorMessage}
-                                    disableEditMode={disableEditMode}
-                                    isSubmittingSuccess={isSubmittingSuccess}/>
-                </form>
-            )}
-        </Formik>
+                                </Form.Item>
+
+                                <Form.Item label="Обо мне"
+                                           hasFeedback
+                                           validateStatus={values.aboutMe?.length !== 0 ? '' : 'warning'}
+                                           className={s.input}
+                                >
+                                    <Input.TextArea name="aboutMe"
+                                                    value={values.aboutMe as string}
+                                                    onChange={handleChange}
+                                                    placeholder="Нельзя оставлять пустым"
+                                                    autoSize={true}
+                                    />
+
+                                </Form.Item>
+
+                                <Form.Item {...tailLayout}
+                                           className={s.input}
+                                >
+                                    <Checkbox
+                                        name="lookingForAJob"
+                                        onChange={handleChange}
+                                        checked={values.lookingForAJob}
+                                    >
+                                        В поисках работы:
+                                    </Checkbox>
+                                </Form.Item>
+
+                                {values.lookingForAJob ?
+                                    <Form.Item label="Описание"
+                                               hasFeedback
+                                               validateStatus={values.lookingForAJobDescription?.length !== 0 ? '' : 'warning'}
+                                               className={s.input}
+                                    >
+                                        <Input.TextArea name="lookingForAJobDescription"
+                                                        value={values.lookingForAJobDescription}
+                                                        onChange={handleChange}
+                                                        placeholder="Нельзя оставлять пустым"
+                                                        autoSize={true}
+                                        />
+
+                                    </Form.Item> : null}
+
+                                <Divider plain>Контакты</Divider>
+
+                                {Object.keys(profile.contacts).map(contact => {
+                                    return (
+                                        <div key={contact} className={s.contactItem}>
+                                            <Form.Item label={contact}
+                                                       className={s.input}
+                                            >
+                                                <Input type="text"
+                                                       name={`contacts.${contact}`}
+                                                       value={values.contacts[contact as keyof ContactsType]}
+                                                       onChange={handleChange}
+                                                       placeholder={`${contact}.com`}
+                                                />
+                                            </Form.Item>
+                                        </div>
+                                    )
+                                })}
+                                <Form.Item {...tailLayout}>
+                                    <Button onClick={disableEditMode} style={{margin: '10px 10px 0 0'}}>Отмена</Button>
+                                    <Button htmlType='submit'
+                                            type='primary'
+                                            loading={isSubmitting}
+                                            disabled={!values.aboutMe || !values.lookingForAJobDescription || !values.fullName}>
+                                        Сохранить
+                                    </Button>
+                                </Form.Item>
+
+                                <StopSubmitting errorMessage={errorMessage}
+                                                disableEditMode={disableEditMode}
+                                                isSubmittingSuccess={isSubmittingSuccess}/>
+                            </Form>
+                        </div>
+                    )
+                }}
+            </Formik>
+        </>
     )
 }
 

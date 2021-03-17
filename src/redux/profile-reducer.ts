@@ -26,7 +26,6 @@ const initialState = {
             message: 'Он веб-дизайнерами для вставки на название. Трактата, благодаря чему появляется возможность получить более длинный неповторяющийся набор слов..',
             likesCount: 13
         },
-
     ] as Array<PostsType>,
     counter: 4,
     profile: null as ProfileType | null,

@@ -5,7 +5,7 @@ import {SearchUsers} from './SearchUsers'
 import {useDispatch, useSelector} from 'react-redux'
 import {getCurrentPage, getFollowingInProgress, getIsFetching, getPageSize, getTotalUsersCount, getUsers} from '../../redux/users-selectors'
 import {getIsAuth} from '../../redux/auth-selectors'
-import {followUnfollow, requestUsers, usersActions} from '../../redux/users-reduces'
+import {requestUsers, usersActions} from '../../redux/users-reduces'
 import {NumberParam, StringParam, useQueryParam} from 'use-query-params'
 import {Button} from 'antd'
 
@@ -67,9 +67,9 @@ export const Users: React.FC = React.memo(() => {
 
     let mapUsers = users.map(user => <User user={user}
                                            followingInProgress={followingInProgress}
-                                           followUnfollow={followUnfollow}
                                            key={user.id}
                                            isAuth={isAuth}
+
         />
     )
 
@@ -87,6 +87,7 @@ export const Users: React.FC = React.memo(() => {
                          requestUsers={requestUsers}
                          pageSize={pageSize}
                          clearUsers={usersActions.clearUsers}
+                         isFetching={isFetching}
             />
             {mapUsers}
             {currentPage < pages ?
