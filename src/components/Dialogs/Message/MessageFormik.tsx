@@ -32,7 +32,6 @@ export const MessageFormik: React.FC<PropsType> = ({
                   isSubmitting,
               }) => {
                 return (
-                    // todo мобильная клавиатура закрывается при нажатии
                     <form onSubmit={handleSubmit}
                           className={s.textareaContainer}
                           onKeyUp={(event) => {

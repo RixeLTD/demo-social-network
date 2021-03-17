@@ -50,12 +50,12 @@ export const App: React.FC = () => {
                            breakpoint={'md'}
                            collapsedWidth={'0'}
                            onBreakpoint={(b) => {
-                               setStyle(b ? {position: 'absolute', zIndex: 10} : {})
+                               setStyle(b ? {position: 'absolute', zIndex: 10, background: '#f0f2f5'} : {background: '#f0f2f5'})
                            }}
                            zeroWidthTriggerStyle={{
                                top: 3
                            }}
-                           style={style && {background: '#f0f2f5'}}
+                           style={style}
                            collapsed={collapsed}
                            onCollapse={(value) => {
                                setCollapsed(value)
