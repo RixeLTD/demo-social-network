@@ -8,6 +8,7 @@ import {getIsAuth} from '../../redux/auth-selectors'
 import {requestUsers, usersActions} from '../../redux/users-reduces'
 import {NumberParam, StringParam, useQueryParam} from 'use-query-params'
 import {Button} from 'antd'
+import {Helmet} from 'react-helmet'
 
 export const Users: React.FC = React.memo(() => {
     const users = useSelector(getUsers)
@@ -80,6 +81,9 @@ export const Users: React.FC = React.memo(() => {
 
     return (
         <div className={s.container}>
+            <Helmet>
+                <title>Пользователи</title>
+            </Helmet>
             <SearchUsers term={term}
                          friend={friend}
                          setTerm={setTerm}

@@ -8,6 +8,7 @@ import DialogItemContainer from './DialogItem/DialogItemContainer'
 import {getDialogs} from '../../redux/dialogs-selectors'
 import {getMyName, getMyPhoto} from '../../redux/auth-selectors'
 import {withAuthRedirect} from '../../hoc/withAuthRedirect'
+import {Helmet} from 'react-helmet'
 
 const Dialogs: React.FC<RouteComponentProps<{ userId: string }>> = ({match}) => {
 
@@ -47,6 +48,9 @@ const Dialogs: React.FC<RouteComponentProps<{ userId: string }>> = ({match}) => 
     return (
         <>
             <div className={s.container}>
+                <Helmet>
+                    <title>Сообщения</title>
+                </Helmet>
                 <DialogItemContainer myPhoto={myPhoto}
                                      dialogs={dialogs}
                 />

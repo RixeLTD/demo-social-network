@@ -12,7 +12,7 @@ import {RouteComponentProps, withRouter} from 'react-router-dom'
 import {getAuthUserId} from '../../redux/auth-selectors'
 import {Button, Col, Grid, Image, Row} from 'antd'
 import {UploadComponent} from './UploadComponent'
-
+import {Helmet} from "react-helmet"
 
 const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
                                                                         match,
@@ -60,6 +60,9 @@ const Profile: React.FC<RouteComponentProps<{ userId: string }>> = ({
 
     return (
         <Row wrap={!lg}>
+            <Helmet>
+                <title>Профиль</title>
+            </Helmet>
             {editMode
                 ? <Col flex='auto'>
                     <ProfileBlockForm disableEditMode={disableEditMode}
