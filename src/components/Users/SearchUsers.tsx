@@ -60,7 +60,7 @@ export const SearchUsers: React.FC<PropsType> = React.memo(({
                 value={term}
                 onSearch={() => {onSubmit()}}
             />
-            <Select defaultValue="null" style={{ width: 110 }} onChange={onChange}>
+            <Select defaultValue="null" style={{ minWidth: 110 }} onChange={onChange}>
                 <Select.Option value="null">Все</Select.Option>
                 <Select.Option value="true">Друзья</Select.Option>
                 <Select.Option value="false">Не друзья</Select.Option>
