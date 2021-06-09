@@ -74,9 +74,7 @@ export const profileAPI = {
             onSuccess('Ok')
             return res.data
         } catch (err) {
-            console.log('Eroor: ', err)
-            const error = new Error('Some error')
-
+            console.log('Error: ', err)
             onError({err})
         }
     },
